@@ -4,6 +4,8 @@
 
 ## Getting Started
 
+Make sure you stopped the SlimeVR server before running this utility.
+
 ```shell
 git clone https://github.com/TheDevMinerTV/SlimeVR-Tracker-ESP
 cd SlimeVR-Tracker-ESP
@@ -18,7 +20,8 @@ git checkout feat/raw-data-inspection
 cd ..
 
 git clone https://github.com/TheDevMinerTV/SlimeVR-Tracker-Inspector
-node .
+cd SlimeVR-Tracker-Inspector
+node . # add flags from below to enable features
 ```
 
 ## Flags
