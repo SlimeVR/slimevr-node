@@ -42,8 +42,8 @@ server.on('message', (msg, rinfo) => {
   tracker.handle(msg);
 });
 
-setInterval(() => connectionTracker.sendDiscoveryPackets(), 1000);
-setInterval(() => connectionTracker.removeOldConnections(), 500);
-setInterval(() => connectionTracker.pingConnections(), 1000);
+setInterval(() => connectionTracker.sendDiscoveryPackets(), 1000).unref();
+setInterval(() => connectionTracker.removeOldConnections(), 500).unref();
+setInterval(() => connectionTracker.pingConnections(), 1000).unref();
 
 server.bind(6969, '0.0.0.0');
