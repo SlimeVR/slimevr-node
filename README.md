@@ -1,6 +1,10 @@
 # SlimeVR Tracker Inspector
 
-> Simple SlimeVR inspection utility written in JavaScript without any dependencies
+> Simple SlimeVR inspection utility written in JavaScript with (almost) no dependencies
+
+## Requirements
+
+- [Node.JS >= 14](https://nodejs.org)
 
 ## Getting Started
 
