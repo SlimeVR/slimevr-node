@@ -28,7 +28,10 @@ node . # add flags from below to enable features
 
 - `--dump-rotation-data-packets-raw`: Dump all RotationData packets to the console.
 - `--dump-rotation-data-packets-processed`: Process the RotationData packets with averaging and standard distribution and dump them to the console.
+- `--rotation-data-packets-file`: Dump all RotationData packets to a file in CSV format.
 - `--dump-fused-imu-data-raw`: Dump all FusedIMUData packets to the console.
 - `--dump-fused-imu-data-processed`: Process the FusedIMUData packets with averaging and standard distribution and dump them to the console.
+- `--fused-imu-data-file`: Dump all FusedIMUData packets to a file in CSV format.
 - `--dump-raw-imu-data-raw`: Dump all RawIMUData packets to the console.
 - `--dump-raw-imu-data-processed`: Process the RawIMUData packets with averaging and standard distribution and dump them to the console.
+- `--raw-imu-data-file`: Dump all RawIMUData packets to a file in CSV format.

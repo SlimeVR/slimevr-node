@@ -24,9 +24,13 @@ const {
   shouldDumpRawIMUDataProcessed,
   shouldDumpRawIMUDataRaw,
   shouldDumpFusedDataRaw,
-  shouldDumpFusedDataProcessed
+  shouldDumpFusedDataProcessed,
+  fusedIMUDataDumpFile,
+  rawIMUDataDumpFile,
+  rotationDataPacketDumpFile
 } = require('./utils');
 const FusedIMUDataPacket = require('./packets/inspection/FusedIMUDataPacket');
+const FS = require('node:fs');
 
 module.exports = class Tracker {
   /**
@@ -58,6 +62,33 @@ module.exports = class Tracker {
     this.rawRotation = new VectorAggregator(3);
     this.rawAcceleration = new VectorAggregator(3);
     this.rawMagnetometer = new VectorAggregator(3);
+
+    if (rotationDataPacketDumpFile() !== '') {
+      this._log(`Dumping rotation data to ${rotationDataPacketDumpFile()}`);
+
+      this.rotationDataPacketStream = FS.createWriteStream(rotationDataPacketDumpFile(), 'utf8');
+      this.rotationDataPacketStream.write('timestamp,x,y,z,w\n');
+    } else {
+      this.rotationDataPacketStream = null;
+    }
+
+    if (rawIMUDataDumpFile() !== '') {
+      this._log(`Dumping raw IMU data to ${rawIMUDataDumpFile()}`);
+
+      this.rawIMUDataRawStream = FS.createWriteStream(rawIMUDataDumpFile(), 'utf8');
+      this.rawIMUDataRawStream.write('timestamp,rX,rY,rZ,rA,aX,aY,aZ,aAmX,mY,mZ,mA\n');
+    } else {
+      this.rawIMUDataRawStream = null;
+    }
+
+    if (fusedIMUDataDumpFile() !== '') {
+      this._log(`Dumping fused IMU data to ${fusedIMUDataDumpFile()}`);
+
+      this.fusedIMUDataRawStream = FS.createWriteStream(fusedIMUDataDumpFile(), 'utf8');
+      this.fusedIMUDataRawStream.write('timestamp,x,y,z,w\n');
+    } else {
+      this.fusedIMUDataRawStream = null;
+    }
   }
 
   get alive() {
@@ -145,6 +176,11 @@ module.exports = class Tracker {
           this._log(`RotPac | ${this.rotation.toString()}`);
         }
 
+        if (this.rotationDataPacketStream !== null) {
+          const csv = [Date.now(), rotation.rotation[0], rotation.rotation[1], rotation.rotation[2], rotation.rotation[3]].join(',') + '\n';
+          this.rotationDataPacketStream.write(csv);
+        }
+
         break;
       }
 
@@ -206,6 +242,20 @@ module.exports = class Tracker {
           this._log(`Raw | MAG | ${this.rawMagnetometer.toString()}`);
         }
 
+        if (this.rawIMUDataRawStream !== null) {
+          const csv =
+            [
+              Date.now(),
+              ...raw.rotation,
+              raw.rotationAccuracy,
+              ...raw.acceleration,
+              raw.accelerationAccuracy,
+              ...raw.magnetometer,
+              raw.magnetometerAccuracy
+            ].join(',') + '\n';
+          this.rawIMUDataRawStream.write(csv);
+        }
+
         break;
       }
 
@@ -220,6 +270,11 @@ module.exports = class Tracker {
 
         if (shouldDumpFusedDataProcessed()) {
           this._log(`Fused | ${this.fusedRotation.toString()}`);
+        }
+
+        if (this.fusedIMUDataRawStream !== null) {
+          const csv = [Date.now(), ...fused.quaternion].join(',') + '\n';
+          this.fusedIMUDataRawStream.write(csv);
         }
 
         break;
