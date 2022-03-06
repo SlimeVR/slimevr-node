@@ -39,3 +39,6 @@ node . # add flags from below to enable features
 - `--dump-raw-imu-data-raw`: Dump all RawIMUData packets to the console.
 - `--dump-raw-imu-data-processed`: Process the RawIMUData packets with averaging and standard distribution and dump them to the console.
 - `--raw-imu-data-file <file.csv>`: Dump all RawIMUData packets to a file in CSV format.
+- `--dump-correction-data-raw`: Dump all CorrectionData packets to the console.
+- `--dump-correction-data-processed`: Process the CorrectionData packets with averaging and standard distribution and dump them to the console.
+- `--correction-data-file <file.csv>`: Dump all CorrectionData packets to a file in CSV format.

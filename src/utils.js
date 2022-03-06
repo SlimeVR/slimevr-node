@@ -79,3 +79,21 @@ module.exports.rawIMUDataDumpFile = () => {
 
   return process.argv[index + 1];
 };
+
+module.exports.shouldDumpCorrectionDataRaw = () => {
+  return process.argv.includes('--dump-correction-data-raw');
+};
+
+module.exports.shouldDumpCorrectionDataProcessed = () => {
+  return process.argv.includes('--dump-correction-data-processed');
+};
+
+module.exports.correctionDataDumpFile = () => {
+  const index = process.argv.indexOf('--correction-data-file');
+  if (index === -1) {
+    return '';
+  }
+
+  return process.argv[index + 1];
+};
+

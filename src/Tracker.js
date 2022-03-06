@@ -27,10 +27,14 @@ const {
   shouldDumpFusedDataProcessed,
   fusedIMUDataDumpFile,
   rawIMUDataDumpFile,
-  rotationDataPacketDumpFile
+  rotationDataPacketDumpFile,
+  shouldDumpCorrectionDataRaw,
+  shouldDumpCorrectionDataProcessed,
+  correctionDataDumpFile
 } = require('./utils');
 const FusedIMUDataPacket = require('./packets/inspection/FusedIMUDataPacket');
 const FS = require('node:fs');
+const CorrectionDataPacket = require('./packets/inspection/CorrectionDataPacket');
 
 module.exports = class Tracker {
   /**
@@ -59,6 +63,7 @@ module.exports = class Tracker {
 
     this.rotation = new VectorAggregator(4);
     this.fusedRotation = new VectorAggregator(4);
+    this.correctedRotation = new VectorAggregator(4);
     this.rawRotation = new VectorAggregator(3);
     this.rawAcceleration = new VectorAggregator(3);
     this.rawMagnetometer = new VectorAggregator(3);
@@ -88,6 +93,15 @@ module.exports = class Tracker {
       this.fusedIMUDataRawStream.write('timestamp,x,y,z,w\n');
     } else {
       this.fusedIMUDataRawStream = null;
+    }
+
+    if (correctionDataDumpFile()) {
+      this._log(`Dumping correction data to ${correctionDataDumpFile()}`);
+
+      this.correctionDataRawStream = FS.createWriteStream(correctionDataDumpFile(), 'utf8');
+      this.correctionDataRawStream.write('timestamp,x,y,z,w\n');
+    } else {
+      this.correctionDataRawStream = null;
     }
   }
 
@@ -275,6 +289,27 @@ module.exports = class Tracker {
         if (this.fusedIMUDataRawStream !== null) {
           const csv = [Date.now(), ...fused.quaternion].join(',') + '\n';
           this.fusedIMUDataRawStream.write(csv);
+        }
+
+        break;
+      }
+
+      case CorrectionDataPacket.type: {
+        const correction = /** @type {CorrectionDataPacket} */ (packet);
+
+        if (shouldDumpCorrectionDataRaw()) {
+          this._log(correction.toString());
+        }
+
+        this.correctedRotation.update(correction.quaternion);
+
+        if (shouldDumpCorrectionDataProcessed()) {
+          this._log(`Correction | ${this.correctedRotation.toString()}`);
+        }
+
+        if (this.correctionDataRawStream !== null) {
+          const csv = [Date.now(), ...correction.quaternion].join(',') + '\n';
+          this.correctionDataRawStream.write(csv);
         }
 
         break;
