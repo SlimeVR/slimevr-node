@@ -11,9 +11,8 @@
 Make sure you stopped the SlimeVR server before running this utility.
 
 ```shell
-git clone https://github.com/TheDevMinerTV/SlimeVR-Tracker-ESP
+git clone https://github.com/SlimeVR/SlimeVR-Tracker-ESP
 cd SlimeVR-Tracker-ESP
-git checkout feat/raw-data-inspection
 
 # Edit src/debug.h
 # Set `ENABLE_INSPECTION` to `true`
