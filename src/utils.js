@@ -96,4 +96,3 @@ module.exports.correctionDataDumpFile = () => {
 
   return process.argv[index + 1];
 };
-

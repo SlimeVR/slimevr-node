@@ -8,6 +8,8 @@ module.exports = class VectorAggregator {
     this.averages = new Array(components).fill(0);
     this.deviances = new Array(components).fill(0);
     this.variance = new Array(components).fill(0);
+    this.mins = new Array(components).fill(0);
+    this.maxs = new Array(components).fill(0);
 
     this.latestData = new Array(components).fill(0);
   }
@@ -37,6 +39,8 @@ module.exports = class VectorAggregator {
       this.variance[component] = variance;
       this.deviances[component] = deviance;
       this.samples[component] = samples;
+      this.mins[component] = Math.min(this.mins[component], value);
+      this.maxs[component] = Math.max(this.maxs[component], value);
     }
 
     this.latestData = raw;
@@ -46,7 +50,13 @@ module.exports = class VectorAggregator {
     const output = [`S: ${this.samples[0].toString().padStart(8, ' ')}`];
 
     for (let component = 0; component < this.components; component++) {
-      output.push(`${component}: ${this.averages[component].toFixed(12).padStart(18, ' ')} ${this.deviances[component].toFixed(12).padStart(18, ' ')}`);
+      output.push(
+        `${component}: ${this.averages[component].toFixed(12).padStart(18, ' ')} ${this.deviances[component].toFixed(12).padStart(18, ' ')} (${this.mins[
+          component
+        ]
+          .toFixed(12)
+          .padStart(18, ' ')} - ${this.maxs[component].toFixed(12).padStart(18, ' ')})`
+      );
     }
 
     return output.join(' | ');
