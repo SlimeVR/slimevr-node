@@ -1,12 +1,18 @@
+const IncomingAccelPacket = require('./IncomingAccelPacket');
 const IncomingBatteryLevelPacket = require('./IncomingBatteryLevelPacket');
 const IncomingErrorPacket = require('./IncomingErrorPacket');
 const IncomingHandshakePacket = require('./IncomingHandshakePacket');
 const IncomingHeartbeatPacket = require('./IncomingHeartbeatPacket');
 const IncomingPongPacket = require('./IncomingPongPacket');
+const IncomingRawCalibrationDataPacket = require('./IncomingRawCalibrationDataPacket');
 const IncomingRotationDataPacket = require('./IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./IncomingSensorInfoPacket');
 const IncomingSignalStrengthPacket = require('./IncomingSignalStrengthPacket');
 const InspectionPacketParser = require('./inspection/InspectionPacketParser');
+const IncomingCalibrationFinishedPacket = require('./IncomingCalibrationFinishedPacket');
+const IncomingTemperaturePacket = require('./IncomingTemperaturePacket');
+const IncomingMagnetometerAccuracyPacket = require('./IncomingMagnetometerAccuracy');
+const IncomingTapPacket = require('./IncomingTapPacket');
 
 module.exports = class PacketParser {
   /**
@@ -31,14 +37,14 @@ module.exports = class PacketParser {
       case IncomingHandshakePacket.type:
         return new IncomingHandshakePacket(data);
 
-      case IncomingSensorInfoPacket.type:
-        return new IncomingSensorInfoPacket(data);
+      case IncomingAccelPacket.type:
+        return new IncomingAccelPacket(data);
 
-      case IncomingRotationDataPacket.type:
-        return new IncomingRotationDataPacket(data);
+      case IncomingRawCalibrationDataPacket.type:
+        return new IncomingRawCalibrationDataPacket(data);
 
-      case IncomingSignalStrengthPacket.type:
-        return new IncomingSignalStrengthPacket(data);
+      case IncomingCalibrationFinishedPacket.type:
+        return new IncomingCalibrationFinishedPacket(data);
 
       case IncomingPongPacket.type:
         return new IncomingPongPacket(data);
@@ -46,8 +52,26 @@ module.exports = class PacketParser {
       case IncomingBatteryLevelPacket.type:
         return new IncomingBatteryLevelPacket(data);
 
+      case IncomingTapPacket.type:
+        return new IncomingTapPacket(data);
+
       case IncomingErrorPacket.type:
         return new IncomingErrorPacket(data);
+
+      case IncomingSensorInfoPacket.type:
+        return new IncomingSensorInfoPacket(data);
+
+      case IncomingRotationDataPacket.type:
+        return new IncomingRotationDataPacket(data);
+
+      case IncomingMagnetometerAccuracyPacket.type:
+        return new IncomingMagnetometerAccuracyPacket(data);
+
+      case IncomingSignalStrengthPacket.type:
+        return new IncomingSignalStrengthPacket(data);
+
+      case IncomingTemperaturePacket.type:
+        return new IncomingTemperaturePacket(data);
 
       case InspectionPacketParser.type:
         return InspectionPacketParser.parseRawDataPacket(data);

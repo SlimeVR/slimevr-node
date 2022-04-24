@@ -35,6 +35,11 @@ const {
   shouldDumpCorrectionDataProcessed,
   correctionDataDumpFile
 } = require('./utils');
+const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
+const IncomingAccelPacket = require('./packets/IncomingAccelPacket');
+const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
+const IncomingCalibrationFinishedPacket = require('./packets/IncomingCalibrationFinishedPacket');
+const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
 
 module.exports = class Tracker {
   /**
@@ -166,6 +171,63 @@ module.exports = class Tracker {
         break;
       }
 
+      case IncomingAccelPacket.type: {
+        const accel = /** @type {IncomingAccelPacket} */ (packet);
+
+        this._log(`Acceleration: ${accel.acceleration.join(', ')}`);
+
+        break;
+      }
+
+      case IncomingRawCalibrationDataPacket.type: {
+        const rawCalibrationData = /** @type {IncomingRawCalibrationDataPacket} */ (packet);
+
+        this.handleSensorPacket(rawCalibrationData);
+
+        break;
+      }
+
+      case IncomingCalibrationFinishedPacket.type: {
+        const calibrationFinished = /** @type {IncomingCalibrationFinishedPacket} */ (packet);
+
+        this.handleSensorPacket(calibrationFinished);
+
+        break;
+      }
+
+      case IncomingPongPacket.type: {
+        const pong = /** @type {IncomingPongPacket} */ (packet);
+
+        if (pong.pingId !== this.lastPingId + 1) {
+          this._log(`Ping ID does not match, ignoring`);
+        } else {
+          this._log(`Received pong`);
+
+          this.lastPingId = pong.pingId;
+        }
+
+        break;
+      }
+
+      case IncomingBatteryLevelPacket.type: {
+        const batteryLevel = /** @type {IncomingBatteryLevelPacket} */ (packet);
+
+        this.batteryVoltage = batteryLevel.voltage;
+        this.batteryPercentage = batteryLevel.percentage;
+
+        this._log(`Battery level changed to ${this.batteryVoltage}V (${this.batteryPercentage}%)`);
+
+        break;
+      }
+
+      case IncomingErrorPacket.type: {
+        const error = /** @type {IncomingErrorPacket} */ (packet);
+
+        this.handleSensorPacket(error);
+
+        break;
+      }
+
       case IncomingSensorInfoPacket.type: {
         const sensorInfo = /** @type {IncomingSensorInfoPacket} */ (packet);
 
@@ -199,16 +261,10 @@ module.exports = class Tracker {
         break;
       }
 
-      case IncomingPongPacket.type: {
-        const pong = /** @type {IncomingPongPacket} */ (packet);
+      case IncomingMagnetometerAccuracyPacket.type: {
+        const magnetometerAccuracy = /** @type {IncomingMagnetometerAccuracyPacket} */ (packet);
 
-        if (pong.pingId !== this.lastPingId + 1) {
-          this._log(`Ping ID does not match, ignoring`);
-        } else {
-          this._log(`Received pong`);
-
-          this.lastPingId = pong.pingId;
-        }
+        this.handleSensorPacket(magnetometerAccuracy);
 
         break;
       }
@@ -223,21 +279,10 @@ module.exports = class Tracker {
         break;
       }
 
-      case IncomingBatteryLevelPacket.type: {
-        const batteryLevel = /** @type {IncomingBatteryLevelPacket} */ (packet);
+      case IncomingTemperaturePacket.type: {
+        const temperature = /** @type {IncomingTemperaturePacket} */ (packet);
 
-        this.batteryVoltage = batteryLevel.voltage;
-        this.batteryPercentage = batteryLevel.percentage;
-
-        this._log(`Battery level changed to ${this.batteryVoltage}V (${this.batteryPercentage}%)`);
-
-        break;
-      }
-
-      case IncomingErrorPacket.type: {
-        const error = /** @type {IncomingErrorPacket} */ (packet);
-
-        this.handleSensorPacket(error);
+        this.handleSensorPacket(temperature);
 
         break;
       }
