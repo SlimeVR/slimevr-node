@@ -1,22 +1,25 @@
 // @ts-check
 
 const ConnectionTracker = require('./ConnectionTracker');
-const HandshakePacket = require('./packets/HandshakePacket');
-const HeartbeatPacket = require('./packets/HeartbeatPacket');
-const PacketParser = require('./packets/PacketParser');
-const RawIMUDataPacket = require('./packets/inspection/RawIMUDataPacket');
-const RotationDataPacket = require('./packets/RotationDataPacket');
-const BatteryLevelPacket = require('./packets/BatteryLevelPacket');
-const PingPacket = require('./packets/PingPacket');
+const FS = require('node:fs');
+const IncomingBatteryLevelPacket = require('./packets/IncomingBatteryLevelPacket');
+const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');
+const IncomingErrorPacket = require('./packets/IncomingErrorPacket');
+const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIMUDataPacket');
+const IncomingHandshakePacket = require('./packets/IncomingHandshakePacket');
+const IncomingHeartbeatPacket = require('./packets/IncomingHeartbeatPacket');
+const IncomingPongPacket = require('./packets/IncomingPongPacket');
+const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
+const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
+const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
+const IncomingSignalStrengthPacket = require('./packets/IncomingSignalStrengthPacket');
+const OutgoingHandshakeResponsePacket = require('./packets/OutgoingHandshakePacket');
+const OutgoingPingPacket = require('./packets/OutgoingPingPacket');
+const OutgoingSensorInfoPacket = require('./packets/OutgoingSensorInfoPacket');
 const { protocol } = require('./constants');
-const HandshakeResponsePacket = require('./packets/HandshakeResponsePacket');
 const Sensor = require('./Sensor');
-const PongPacket = require('./packets/PongPacket');
-const SensorInfoPacket = require('./packets/SensorInfoPacket');
-const SensorInfoResponsePacket = require('./packets/SensorInfoResponsePacket');
-const SignalStrengthPacket = require('./packets/SignalStrengthPacket');
 const Packet = require('./packets/Packet');
-const ErrorPacket = require('./packets/ErrorPacket');
+const PacketParser = require('./packets/PacketParser');
 const VectorAggregator = require('./VectorAggretator');
 const {
   shouldDumpRotationDataPacketsProcessed,
@@ -32,9 +35,6 @@ const {
   shouldDumpCorrectionDataProcessed,
   correctionDataDumpFile
 } = require('./utils');
-const FusedIMUDataPacket = require('./packets/inspection/FusedIMUDataPacket');
-const FS = require('node:fs');
-const CorrectionDataPacket = require('./packets/inspection/CorrectionDataPacket');
 
 module.exports = class Tracker {
   /**
@@ -118,25 +118,26 @@ module.exports = class Tracker {
 
   /** @param {Buffer} msg */
   handle(msg) {
-    // this._log(`Received message (${msg.length} bytes): ${msg.toString('hex')}`);
-
     const packet = PacketParser.parse(msg, this);
     if (packet === null) {
-      // this._log('Packet is not valid');
+      this._log(`Received unknown packet (${msg.length} bytes): ${msg.toString('hex')}`);
+
       return;
     }
 
     this.lastPacket = Date.now();
 
+    this._log(packet.toString());
+
     switch (packet.type) {
-      case HeartbeatPacket.type: {
+      case IncomingHeartbeatPacket.type: {
         this._log(`Received heartbeat`);
 
         break;
       }
 
-      case HandshakePacket.type: {
-        const handshake = /** @type {HandshakePacket} */ (packet);
+      case IncomingHandshakePacket.type: {
+        const handshake = /** @type {IncomingHandshakePacket} */ (packet);
 
         this._log(`Received handshake`);
         this._log(handshake.toString());
@@ -157,28 +158,28 @@ module.exports = class Tracker {
         this.handshook = true;
 
         if (this.protocol === protocol.OWO_LEGACY) {
-          this.handleSensorPacket({ type: SensorInfoPacket.type, sensorId: 0, sensorType: handshake.imuType, sensorStatus: 1 });
+          this.handleSensorPacket({ type: IncomingSensorInfoPacket.type, sensorId: 0, sensorType: handshake.imuType, sensorStatus: 1 });
         }
 
-        this.server.send(new HandshakeResponsePacket().encode(), this.port, this.ip);
+        this.server.send(new OutgoingHandshakeResponsePacket().encode(), this.port, this.ip);
 
         break;
       }
 
-      case SensorInfoPacket.type: {
-        const sensorInfo = /** @type {SensorInfoPacket} */ (packet);
+      case IncomingSensorInfoPacket.type: {
+        const sensorInfo = /** @type {IncomingSensorInfoPacket} */ (packet);
 
         this._log(`Received sensor info`);
 
         this.handleSensorPacket(sensorInfo);
 
-        this.server.send(new SensorInfoResponsePacket(sensorInfo.sensorId, sensorInfo.sensorStatus).encode(), this.port, this.ip);
+        this.server.send(new OutgoingSensorInfoPacket(sensorInfo.sensorId, sensorInfo.sensorStatus).encode(), this.port, this.ip);
 
         break;
       }
 
-      case RotationDataPacket.type: {
-        const rotation = /** @type {RotationDataPacket} */ (packet);
+      case IncomingRotationDataPacket.type: {
+        const rotation = /** @type {IncomingRotationDataPacket} */ (packet);
 
         if (shouldDumpRotationDataPacketsRaw()) {
           this._log(rotation.toString());
@@ -198,20 +199,22 @@ module.exports = class Tracker {
         break;
       }
 
-      case PongPacket.type: {
-        const pong = /** @type {PongPacket} */ (packet);
+      case IncomingPongPacket.type: {
+        const pong = /** @type {IncomingPongPacket} */ (packet);
 
-        if (pong.pingId !== this.lastPingId) {
+        if (pong.pingId !== this.lastPingId + 1) {
           this._log(`Ping ID does not match, ignoring`);
         } else {
           this._log(`Received pong`);
+
+          this.lastPingId = pong.pingId;
         }
 
         break;
       }
 
-      case SignalStrengthPacket.type: {
-        const signalStrength = /** @type {SignalStrengthPacket} */ (packet);
+      case IncomingSignalStrengthPacket.type: {
+        const signalStrength = /** @type {IncomingSignalStrengthPacket} */ (packet);
 
         this.signalStrength = signalStrength.signalStrength;
 
@@ -220,8 +223,8 @@ module.exports = class Tracker {
         break;
       }
 
-      case BatteryLevelPacket.type: {
-        const batteryLevel = /** @type {BatteryLevelPacket} */ (packet);
+      case IncomingBatteryLevelPacket.type: {
+        const batteryLevel = /** @type {IncomingBatteryLevelPacket} */ (packet);
 
         this.batteryVoltage = batteryLevel.voltage;
         this.batteryPercentage = batteryLevel.percentage;
@@ -231,16 +234,16 @@ module.exports = class Tracker {
         break;
       }
 
-      case ErrorPacket.type: {
-        const error = /** @type {ErrorPacket} */ (packet);
+      case IncomingErrorPacket.type: {
+        const error = /** @type {IncomingErrorPacket} */ (packet);
 
         this.handleSensorPacket(error);
 
         break;
       }
 
-      case RawIMUDataPacket.type: {
-        const raw = /** @type {RawIMUDataPacket} */ (packet);
+      case IncomingRawIMUDataPacket.type: {
+        const raw = /** @type {IncomingRawIMUDataPacket} */ (packet);
 
         if (shouldDumpRawIMUDataRaw()) {
           this._log(raw.toString());
@@ -273,8 +276,8 @@ module.exports = class Tracker {
         break;
       }
 
-      case FusedIMUDataPacket.type: {
-        const fused = /** @type {FusedIMUDataPacket} */ (packet);
+      case IncomingFusedIMUDataPacket.type: {
+        const fused = /** @type {IncomingFusedIMUDataPacket} */ (packet);
 
         if (shouldDumpFusedDataRaw()) {
           this._log(fused.toString());
@@ -294,8 +297,8 @@ module.exports = class Tracker {
         break;
       }
 
-      case CorrectionDataPacket.type: {
-        const correction = /** @type {CorrectionDataPacket} */ (packet);
+      case IncomingCorrectionDataPacket.type: {
+        const correction = /** @type {IncomingCorrectionDataPacket} */ (packet);
 
         if (shouldDumpCorrectionDataRaw()) {
           this._log(correction.toString());
@@ -325,7 +328,7 @@ module.exports = class Tracker {
       return true;
     }
 
-    if (this.packetNumber + BigInt(1) !== packetNumber) {
+    if (this.packetNumber < packetNumber) {
       return false;
     }
 
@@ -335,7 +338,9 @@ module.exports = class Tracker {
   }
 
   ping() {
-    this.server.send(new PingPacket().encode(), this.port, this.ip);
+    this.server.send(new OutgoingPingPacket().encode(this.lastPingId + 1), this.port, this.ip);
+
+    this._log('Sent ping');
   }
 
   /**
@@ -347,7 +352,7 @@ module.exports = class Tracker {
     if (!sensor) {
       this._log(`Setting up sensor ${packet.sensorId}`);
 
-      if (!(packet instanceof SensorInfoPacket)) {
+      if (!(packet instanceof IncomingSensorInfoPacket)) {
         this._log(`Could not handle sensor packet for sensor ${packet.sensorId}`);
 
         return;

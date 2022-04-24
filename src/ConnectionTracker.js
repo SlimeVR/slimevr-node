@@ -1,8 +1,3 @@
-const DiscoveryPacket = require('./packets/DiscoveryPacket');
-const utils = require('./utils');
-
-const [broadcastAddresses] = utils.getBroadcastAddresses();
-
 module.exports = class ConnectionTracker {
   /**
    * @type {ConnectionTracker}
@@ -106,18 +101,6 @@ module.exports = class ConnectionTracker {
     this._log(`Removed tracker ${mac}`);
   }
 
-  sendDiscoveryPackets() {
-    if (this._connectionsByIP.size > 0 || this._connectionsByMAC.size > 0) {
-      return;
-    }
-
-    this._log(`Sending discovery packets...`);
-
-    for (const ip of broadcastAddresses) {
-      this.socket.send(new DiscoveryPacket().encode(), 6969, ip);
-    }
-  }
-
   removeOldConnections() {
     for (const tracker of this._connectionsByIP.values()) {
       if (!tracker.alive) {
@@ -139,8 +122,6 @@ module.exports = class ConnectionTracker {
   pingConnections() {
     for (const tracker of this._connectionsByIP.values()) {
       tracker.ping();
-
-      this._log(`Pinged tracker ${tracker.ip}`);
     }
   }
 };

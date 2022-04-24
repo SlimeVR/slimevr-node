@@ -2,7 +2,6 @@
 
 const udp = require('node:dgram');
 const ConnectionTracker = require('./ConnectionTracker');
-const DiscoveryPacket = require('./packets/DiscoveryPacket');
 const Tracker = require('./Tracker');
 const utils = require('./utils');
 
@@ -42,7 +41,6 @@ server.on('message', (msg, rinfo) => {
   tracker.handle(msg);
 });
 
-setInterval(() => connectionTracker.sendDiscoveryPackets(), 1000).unref();
 setInterval(() => connectionTracker.removeOldConnections(), 500).unref();
 setInterval(() => connectionTracker.pingConnections(), 1000).unref();
 

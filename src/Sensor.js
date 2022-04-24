@@ -1,6 +1,6 @@
 const { sensorStatus } = require('./constants');
-const ErrorPacket = require('./packets/ErrorPacket');
-const SensorInfoPacket = require('./packets/SensorInfoPacket');
+const IncomingErrorPacket = require('./packets/IncomingErrorPacket');
+const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 
 module.exports = class Sensor {
   /**
@@ -28,8 +28,8 @@ module.exports = class Sensor {
    */
   handle(packet) {
     switch (packet.type) {
-      case SensorInfoPacket.type: {
-        const sensorInfo = /** @type {SensorInfoPacket} */ (packet);
+      case IncomingSensorInfoPacket.type: {
+        const sensorInfo = /** @type {IncomingSensorInfoPacket} */ (packet);
 
         this.status = sensorInfo.sensorStatus;
 
@@ -38,8 +38,8 @@ module.exports = class Sensor {
         break;
       }
 
-      case ErrorPacket.type: {
-        const error = /** @type {ErrorPacket} */ (packet);
+      case IncomingErrorPacket.type: {
+        const error = /** @type {IncomingErrorPacket} */ (packet);
 
         this._log(`Received error: ${error.reason}`);
 

@@ -1,7 +1,7 @@
 const constants = require('./constants');
-const FusedIMUDataPacket = require('./FusedIMUDataPacket');
-const CorrectionDataPacket = require('./CorrectionDataPacket');
-const RawIMUDataPacket = require('./RawIMUDataPacket');
+const IncomingFusedIMUDataPacket = require('./IncomingFusedIMUDataPacket');
+const IncomingCorrectionDataPacket = require('./IncomingCorrectionDataPacket');
+const IncomingRawIMUDataPacket = require('./IncomingRawIMUDataPacket');
 
 module.exports = class InspectionPacketParser {
   /**
@@ -14,13 +14,13 @@ module.exports = class InspectionPacketParser {
 
     switch (packetType) {
       case constants.packetType.raw:
-        return new RawIMUDataPacket(data);
+        return new IncomingRawIMUDataPacket(data);
 
       case constants.packetType.fused:
-        return new FusedIMUDataPacket(data);
+        return new IncomingFusedIMUDataPacket(data);
 
       case constants.packetType.correction:
-        return new CorrectionDataPacket(data);
+        return new IncomingCorrectionDataPacket(data);
 
       default:
       // console.log(`Unknown packet type: ${packetType}`);

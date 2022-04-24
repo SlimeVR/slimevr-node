@@ -1,12 +1,12 @@
-const BatteryLevelPacket = require('./BatteryLevelPacket');
-const ErrorPacket = require('./ErrorPacket');
-const HandshakePacket = require('./HandshakePacket');
-const HeartbeatPacket = require('./HeartbeatPacket');
+const IncomingBatteryLevelPacket = require('./IncomingBatteryLevelPacket');
+const IncomingErrorPacket = require('./IncomingErrorPacket');
+const IncomingHandshakePacket = require('./IncomingHandshakePacket');
+const IncomingHeartbeatPacket = require('./IncomingHeartbeatPacket');
+const IncomingPongPacket = require('./IncomingPongPacket');
+const IncomingRotationDataPacket = require('./IncomingRotationDataPacket');
+const IncomingSensorInfoPacket = require('./IncomingSensorInfoPacket');
+const IncomingSignalStrengthPacket = require('./IncomingSignalStrengthPacket');
 const InspectionPacketParser = require('./inspection/InspectionPacketParser');
-const PongPacket = require('./PongPacket');
-const RotationDataPacket = require('./RotationDataPacket');
-const SensorInfoPacket = require('./SensorInfoPacket');
-const SignalStrengthPacket = require('./SignalStrengthPacket');
 
 module.exports = class PacketParser {
   /**
@@ -25,29 +25,29 @@ module.exports = class PacketParser {
     data = data.slice(12);
 
     switch (type) {
-      case HeartbeatPacket.type:
-        return new HeartbeatPacket();
+      case IncomingHeartbeatPacket.type:
+        return new IncomingHeartbeatPacket();
 
-      case HandshakePacket.type:
-        return new HandshakePacket(data);
+      case IncomingHandshakePacket.type:
+        return new IncomingHandshakePacket(data);
 
-      case SensorInfoPacket.type:
-        return new SensorInfoPacket(data);
+      case IncomingSensorInfoPacket.type:
+        return new IncomingSensorInfoPacket(data);
 
-      case RotationDataPacket.type:
-        return new RotationDataPacket(data);
+      case IncomingRotationDataPacket.type:
+        return new IncomingRotationDataPacket(data);
 
-      case SignalStrengthPacket.type:
-        return new SignalStrengthPacket(data);
+      case IncomingSignalStrengthPacket.type:
+        return new IncomingSignalStrengthPacket(data);
 
-      case PongPacket.type:
-        return new PongPacket(data);
+      case IncomingPongPacket.type:
+        return new IncomingPongPacket(data);
 
-      case BatteryLevelPacket.type:
-        return new BatteryLevelPacket(data);
+      case IncomingBatteryLevelPacket.type:
+        return new IncomingBatteryLevelPacket(data);
 
-      case ErrorPacket.type:
-        return new ErrorPacket(data);
+      case IncomingErrorPacket.type:
+        return new IncomingErrorPacket(data);
 
       case InspectionPacketParser.type:
         return InspectionPacketParser.parseRawDataPacket(data);
