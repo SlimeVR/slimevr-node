@@ -162,7 +162,7 @@ module.exports = class Tracker {
 
         this.handshook = true;
 
-        if (this.protocol === protocol.OWO_LEGACY) {
+        if (this.protocol === protocol.OWO_LEGACY || this.firmwareBuild < 9) {
           this.handleSensorPacket({ type: IncomingSensorInfoPacket.type, sensorId: 0, sensorType: handshake.imuType, sensorStatus: 1 });
         }
 
@@ -397,16 +397,12 @@ module.exports = class Tracker {
     if (!sensor) {
       this._log(`Setting up sensor ${packet.sensorId}`);
 
-      if (!(packet instanceof IncomingSensorInfoPacket)) {
-        this._log(`Could not handle sensor packet for sensor ${packet.sensorId}`);
+      const sensorInfo = /** @type {IncomingSensorInfoPacket} */ (packet);
 
-        return;
-      }
+      sensor = new Sensor(this, sensorInfo.sensorType, sensorInfo.sensorId);
+      this.sensors[sensorInfo.sensorId] = sensor;
 
-      sensor = new Sensor(this, packet.sensorType, packet.sensorId);
-      this.sensors[packet.sensorId] = sensor;
-
-      this._log(`Added sensor ${packet.sensorId}`);
+      this._log(`Added sensor ${sensorInfo.sensorId}`);
     }
 
     sensor.handle(packet);

@@ -14,9 +14,10 @@ module.exports = class OutgoingHandshakePacket extends Packet {
   }
 
   encode() {
-    const buf = Buffer.alloc(1);
+    const buf = Buffer.alloc(14);
     buf.writeUint8(this.type);
+    buf.write('Hey OVR =D 5', 1, 'ascii');
+
     return buf;
   }
 };
-
