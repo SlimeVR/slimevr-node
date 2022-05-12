@@ -13,6 +13,8 @@ const IncomingCalibrationFinishedPacket = require('./IncomingCalibrationFinished
 const IncomingTemperaturePacket = require('./IncomingTemperaturePacket');
 const IncomingMagnetometerAccuracyPacket = require('./IncomingMagnetometerAccuracy');
 const IncomingTapPacket = require('./IncomingTapPacket');
+const IncomingRotationPacket = require('./IncomingRotationPacket');
+const IncomingGyroPacket = require('./IncomingGyroPacket');
 
 module.exports = class PacketParser {
   /**
@@ -33,6 +35,12 @@ module.exports = class PacketParser {
     switch (type) {
       case IncomingHeartbeatPacket.type:
         return new IncomingHeartbeatPacket();
+
+      case IncomingRotationPacket.type:
+        return new IncomingRotationPacket(data);
+
+      case IncomingGyroPacket.type:
+        return new IncomingGyroPacket(data);
 
       case IncomingHandshakePacket.type:
         return new IncomingHandshakePacket(data);
@@ -77,7 +85,7 @@ module.exports = class PacketParser {
         return InspectionPacketParser.parseRawDataPacket(data);
 
       default:
-      // console.log(`Unknown packet type: ${type}`);
+        console.log(`Unknown packet type: ${type}`);
     }
 
     return null;
