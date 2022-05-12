@@ -13,7 +13,7 @@ module.exports = class IncomingBatteryLevelPacket extends Packet {
     data = data.slice(4);
 
     if (data.length >= 4) {
-      this.percentage = data.readFloatBE(4) * 100;
+      this.percentage = data.readFloatBE(0) * 100;
       this.voltage = tmp;
     } else {
       this.percentage = tmp;
