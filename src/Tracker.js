@@ -61,6 +61,7 @@ module.exports = class Tracker {
     this.firmwareBuild = -1;
     this.protocol = protocol.UNKNOWN;
 
+    /** @type {Sensor[]} */
     this.sensors = [];
     this.signalStrength = 0;
     this.batteryVoltage = 0;
@@ -143,9 +144,6 @@ module.exports = class Tracker {
 
       case IncomingHandshakePacket.type: {
         const handshake = /** @type {IncomingHandshakePacket} */ (packet);
-
-        this._log(`Received handshake`);
-        this._log(handshake.toString());
 
         this.firmwareBuild = handshake.firmwareBuild;
         this.mac = handshake.mac;

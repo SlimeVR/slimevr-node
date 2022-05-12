@@ -1,3 +1,4 @@
+const { formatMACAddressDigit } = require('../utils');
 const Packet = require('./Packet');
 
 module.exports = class IncomingHandshakePacket extends Packet {
@@ -53,7 +54,9 @@ module.exports = class IncomingHandshakePacket extends Packet {
     data = data.slice(length);
 
     if (data.length >= 6) {
-      this.mac = `${data.readUint8(0)}:${data.readUint8(1)}:${data.readUint8(2)}:${data.readUint8(3)}:${data.readUint8(4)}:${data.readUint8(5)}`;
+      this.mac = [data.readUint8(0), data.readUint8(1), data.readUint8(2), data.readUint8(3), data.readUint8(4), data.readUint8(5)]
+        .map(formatMACAddressDigit)
+        .join(':');
     }
   }
 

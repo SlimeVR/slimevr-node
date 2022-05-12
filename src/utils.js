@@ -96,3 +96,11 @@ module.exports.correctionDataDumpFile = () => {
 
   return process.argv[index + 1];
 };
+
+/**
+ * @param {number} mac
+ * @returns {string}
+ */
+module.exports.formatMACAddressDigit = (mac) => {
+  return mac.toString(16).padStart(2, '0').toUpperCase();
+};
