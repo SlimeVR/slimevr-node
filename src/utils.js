@@ -29,6 +29,10 @@ module.exports.getBroadcastAddresses = () => {
   return [broadcasts, blacklist];
 };
 
+module.exports.shouldDumpAllPacketsRaw = () => {
+  return process.argv.includes('--dump-all-packets-raw');
+};
+
 module.exports.shouldDumpRotationDataPacketsRaw = () => {
   return process.argv.includes('--dump-rotation-data-packets-raw');
 };

@@ -4,11 +4,11 @@
 
 ## Requirements
 
-- [Node.JS >= 14](https://nodejs.org)
+- [Node.JS >= 8](https://nodejs.org)
 
 ## Getting Started
 
-Make sure you stopped the SlimeVR server before running this utility.
+⚠ **Make sure you have stopped the SlimeVR server before running this software!**
 
 ```shell
 git clone https://github.com/SlimeVR/SlimeVR-Tracker-ESP
@@ -29,6 +29,7 @@ node . # add flags from below to enable features
 
 ## Flags
 
+- `--dump-all-packets-raw`: Dump all packets to the console.
 - `--dump-rotation-data-packets-raw`: Dump all RotationData packets to the console.
 - `--dump-rotation-data-packets-processed`: Process the RotationData packets with averaging and standard distribution and dump them to the console.
 - `--rotation-data-packets-file <file.csv>`: Dump all RotationData packets to a file in CSV format.

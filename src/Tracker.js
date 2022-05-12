@@ -33,7 +33,8 @@ const {
   rotationDataPacketDumpFile,
   shouldDumpCorrectionDataRaw,
   shouldDumpCorrectionDataProcessed,
-  correctionDataDumpFile
+  correctionDataDumpFile,
+  shouldDumpAllPacketsRaw
 } = require('./utils');
 const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
 const IncomingAccelPacket = require('./packets/IncomingAccelPacket');
@@ -133,7 +134,9 @@ module.exports = class Tracker {
 
     this.lastPacket = Date.now();
 
+    if (shouldDumpAllPacketsRaw()) {
     this._log(packet.toString());
+    }
 
     switch (packet.type) {
       case IncomingHeartbeatPacket.type: {
