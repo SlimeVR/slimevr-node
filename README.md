@@ -1,6 +1,6 @@
-# SlimeVR Tracker Inspector
+# SlimeVR Protocol Debugger
 
-> Simple SlimeVR inspection utility written in JavaScript with (almost) no dependencies
+> Simple, dependency-less inspection utility written in JavaScript to debug packets sent by owoTrack and SlimeVR trackers
 
 ## Requirements
 
@@ -11,23 +11,12 @@
 ⚠ **Make sure you have stopped the SlimeVR server before running this software!**
 
 ```shell
-git clone https://github.com/SlimeVR/SlimeVR-Tracker-ESP
-cd SlimeVR-Tracker-ESP
-
-# Edit src/debug.h
-# Set `ENABLE_INSPECTION` to `true`
-# Set `POWERSAVING_MODE` to `POWER_SAVING_NONE`
-
-# Flash your ESP
-
-cd ..
-
 git clone https://github.com/TheDevMinerTV/SlimeVR-Tracker-Inspector
 cd SlimeVR-Tracker-Inspector
 node . # add flags from below to enable features
 ```
 
-## Flags
+## Command line flags
 
 - `--dump-all-packets-raw`: Dump all packets to the console.
 - `--dump-rotation-data-packets-raw`: Dump all RotationData packets to the console.
@@ -42,3 +31,15 @@ node . # add flags from below to enable features
 - `--dump-correction-data-raw`: Dump all CorrectionData packets to the console.
 - `--dump-correction-data-processed`: Process the CorrectionData packets with averaging and standard distribution and dump them to the console.
 - `--correction-data-file <file.csv>`: Dump all CorrectionData packets to a file in CSV format.
+
+## Enabling extra IMU debug packets
+
+```
+git clone https://github.com/SlimeVR/SlimeVR-Tracker-ESP
+cd SlimeVR-Tracker-ESP
+
+# Edit src/debug.h
+# Set `ENABLE_INSPECTION` to `true`
+# Set `POWERSAVING_MODE` to `POWER_SAVING_NONE`
+# Flash your ESP
+```
