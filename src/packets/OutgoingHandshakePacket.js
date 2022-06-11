@@ -10,7 +10,7 @@ module.exports = class OutgoingHandshakePacket extends Packet {
   }
 
   toString() {
-    return `OutgoingHandshakePacket{}`;
+    return 'OutgoingHandshakePacket{}';
   }
 
   encode() {

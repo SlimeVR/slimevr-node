@@ -4,7 +4,7 @@
 
 ## Requirements
 
-- [Node.JS >= 8](https://nodejs.org)
+- [Node.JS >= 16.0.0](https://nodejs.org)
 
 ## Getting Started
 

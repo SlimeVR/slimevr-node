@@ -10,7 +10,7 @@ module.exports = class OutgoingPingPacket extends Packet {
   }
 
   toString() {
-    return `OutgoingPingPacket{}`;
+    return 'OutgoingPingPacket{}';
   }
 
   /**

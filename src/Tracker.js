@@ -135,12 +135,12 @@ module.exports = class Tracker {
     this.lastPacket = Date.now();
 
     if (shouldDumpAllPacketsRaw()) {
-    this._log(packet.toString());
+      this._log(packet.toString());
     }
 
     switch (packet.type) {
       case IncomingHeartbeatPacket.type: {
-        this._log(`Received heartbeat`);
+        this._log('Received heartbeat');
 
         break;
       }
@@ -200,9 +200,9 @@ module.exports = class Tracker {
         const pong = /** @type {IncomingPongPacket} */ (packet);
 
         if (pong.pingId !== this.lastPingId + 1) {
-          this._log(`Ping ID does not match, ignoring`);
+          this._log('Ping ID does not match, ignoring');
         } else {
-          this._log(`Received pong`);
+          this._log('Received pong');
 
           this.lastPingId = pong.pingId;
         }
@@ -232,7 +232,7 @@ module.exports = class Tracker {
       case IncomingSensorInfoPacket.type: {
         const sensorInfo = /** @type {IncomingSensorInfoPacket} */ (packet);
 
-        this._log(`Received sensor info`);
+        this._log('Received sensor info');
 
         this.handleSensorPacket(sensorInfo);
 

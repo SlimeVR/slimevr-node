@@ -10,6 +10,6 @@ module.exports = class IncomingHeartbeatPacket extends Packet {
   }
 
   toString() {
-    return `IncomingHeartbeatPacket{}`;
+    return 'IncomingHeartbeatPacket{}';
   }
 };

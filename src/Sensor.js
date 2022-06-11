@@ -61,7 +61,7 @@ module.exports = class Sensor {
 
         this.status = sensorInfo.sensorStatus;
 
-        this._log(`Set up sensor`);
+        this._log('Set up sensor');
 
         break;
       }
