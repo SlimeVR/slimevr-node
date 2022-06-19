@@ -1,5 +1,7 @@
 // @ts-check
 
+import { VectorAggregator } from './VectorAggretator';
+
 const ConnectionTracker = require('./ConnectionTracker');
 const FS = require('node:fs');
 const IncomingBatteryLevelPacket = require('./packets/IncomingBatteryLevelPacket');
@@ -20,7 +22,6 @@ const { protocol } = require('./constants');
 const Sensor = require('./Sensor');
 const Packet = require('./packets/Packet');
 const PacketParser = require('./packets/PacketParser');
-const VectorAggregator = require('./VectorAggretator');
 const {
   shouldDumpRotationDataPacketsProcessed,
   shouldDumpRotationDataPacketsRaw,

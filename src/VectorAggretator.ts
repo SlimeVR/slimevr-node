@@ -1,23 +1,16 @@
-module.exports = class VectorAggregator {
-  /**
-   * @param {number} components
-   */
-  constructor(components) {
-    this.components = components;
-    this.samples = new Array(components).fill(0);
-    this.averages = new Array(components).fill(0);
-    this.deviances = new Array(components).fill(0);
-    this.variance = new Array(components).fill(0);
-    this.mins = new Array(components).fill(0);
-    this.maxs = new Array(components).fill(0);
+export class VectorAggregator {
+  private readonly samples: number[] = new Array(this.components).fill(0);
+  private readonly averages: number[] = new Array(this.components).fill(0);
+  private readonly deviances: number[] = new Array(this.components).fill(0);
+  private readonly variance: number[] = new Array(this.components).fill(0);
+  private readonly mins: number[] = new Array(this.components).fill(0);
+  private readonly maxs: number[] = new Array(this.components).fill(0);
 
-    this.latestData = new Array(components).fill(0);
-  }
+  private _latestData = new Array(this.components).fill(0);
 
-  /**
-   * @param {number[]} raw
-   */
-  update(raw) {
+  constructor(private readonly components: number) {}
+
+  update(raw: number[]) {
     if (raw.length !== this.components) {
       throw new Error(`Expected ${this.components} components, got ${raw.length}`);
     }
@@ -43,7 +36,7 @@ module.exports = class VectorAggregator {
       this.maxs[component] = Math.max(this.maxs[component], value);
     }
 
-    this.latestData = raw;
+    this._latestData = raw;
   }
 
   toString() {
@@ -51,14 +44,16 @@ module.exports = class VectorAggregator {
 
     for (let component = 0; component < this.components; component++) {
       output.push(
-        `${component}: ${this.averages[component].toFixed(12).padStart(18, ' ')} ${this.deviances[component].toFixed(12).padStart(18, ' ')} (${this.mins[
-          component
-        ]
+        `${component}: ${this.averages[component].toFixed(12).padStart(18, ' ')} ${this.deviances[component]
           .toFixed(12)
-          .padStart(18, ' ')} - ${this.maxs[component].toFixed(12).padStart(18, ' ')})`
+          .padStart(18, ' ')} (${this.mins[component].toFixed(12).padStart(18, ' ')} - ${this.maxs[component].toFixed(12).padStart(18, ' ')})`
       );
     }
 
     return output.join(' | ');
   }
-};
+
+  get latestData() {
+    return this._latestData;
+  }
+}
