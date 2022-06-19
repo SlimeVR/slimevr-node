@@ -1,5 +1,6 @@
 // @ts-check
 
+import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
 import {
   correctionDataDumpFile,
@@ -18,7 +19,6 @@ import {
 } from './utils';
 import { VectorAggregator } from './VectorAggretator';
 
-const ConnectionTracker = require('./ConnectionTracker');
 const FS = require('node:fs');
 const IncomingBatteryLevelPacket = require('./packets/IncomingBatteryLevelPacket');
 const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');

@@ -1,13 +1,13 @@
 import { createSocket } from 'node:dgram';
+import { ConnectionTracker } from './ConnectionTracker';
 import { getBroadcastAddresses } from './utils';
 
-const ConnectionTracker = require('./ConnectionTracker');
 const Tracker = require('./Tracker');
 
 const [_, addressBlacklist] = getBroadcastAddresses();
 
 const server = createSocket('udp4');
-const connectionTracker = ConnectionTracker.get(server);
+const connectionTracker = ConnectionTracker.get();
 
 server.on('connect', () => {
   console.log('connected');
