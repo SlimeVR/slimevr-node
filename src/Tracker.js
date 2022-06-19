@@ -2,6 +2,7 @@
 
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
+import { Sensor } from './Sensor';
 import {
   correctionDataDumpFile,
   fusedIMUDataDumpFile,
@@ -34,7 +35,6 @@ const IncomingSignalStrengthPacket = require('./packets/IncomingSignalStrengthPa
 const OutgoingHandshakeResponsePacket = require('./packets/OutgoingHandshakePacket');
 const OutgoingPingPacket = require('./packets/OutgoingPingPacket');
 const OutgoingSensorInfoPacket = require('./packets/OutgoingSensorInfoPacket');
-const Sensor = require('./Sensor');
 const Packet = require('./packets/Packet');
 const PacketParser = require('./packets/PacketParser');
 const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
