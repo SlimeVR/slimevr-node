@@ -1,6 +1,5 @@
 import { formatMACAddressDigit } from '../utils';
-
-const Packet = require('./Packet');
+import { Packet } from './Packet';
 
 module.exports = class IncomingHandshakePacket extends Packet {
   /**

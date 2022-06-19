@@ -1,4 +1,4 @@
-const Packet = require('./Packet');
+import { Packet } from './Packet';
 
 module.exports = class OutgoingHandshakePacket extends Packet {
   constructor() {

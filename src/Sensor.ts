@@ -1,4 +1,5 @@
 import { SensorStatus } from './constants';
+import { Packet } from './packets/Packet';
 
 const IncomingCalibrationFinishedPacket = require('./packets/IncomingCalibrationFinishedPacket');
 const IncomingErrorPacket = require('./packets/IncomingErrorPacket');

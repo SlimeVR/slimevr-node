@@ -2,6 +2,7 @@
 
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
+import { Packet } from './packets/Packet';
 import { Sensor } from './Sensor';
 import {
   correctionDataDumpFile,
@@ -35,7 +36,6 @@ const IncomingSignalStrengthPacket = require('./packets/IncomingSignalStrengthPa
 const OutgoingHandshakeResponsePacket = require('./packets/OutgoingHandshakePacket');
 const OutgoingPingPacket = require('./packets/OutgoingPingPacket');
 const OutgoingSensorInfoPacket = require('./packets/OutgoingSensorInfoPacket');
-const Packet = require('./packets/Packet');
 const PacketParser = require('./packets/PacketParser');
 const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
 const IncomingAccelPacket = require('./packets/IncomingAccelPacket');

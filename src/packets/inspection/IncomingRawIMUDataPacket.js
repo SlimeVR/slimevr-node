@@ -1,6 +1,5 @@
+import { Packet } from '../Packet';
 import { DataType } from './constants';
-
-const Packet = require('../Packet');
 
 module.exports = class IncomingRawIMUDataPacket extends Packet {
   /**
