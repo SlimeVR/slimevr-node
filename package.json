@@ -1,5 +1,5 @@
 {
-  "name": "@thedevminertv/slimevr-protocol-debugger",
+  "name": "@slimevr/protocol-debugger",
   "version": "0.1.0",
   "main": "src/index.js",
   "license": "(MIT OR Apache-2.0)",
@@ -15,6 +15,9 @@
   "bugs": {
     "email": "tobigames200@gmail.com",
     "url": "https://github.com/TheDevMinerTV/SlimeVR-Protocol-Debugger/issues"
+  },
+  "bin": {
+    "slimevr-protocol-debugger": "src/bin/slimevr-protocol-debugger"
   },
   "devDependencies": {
     "@types/node": "17.0.42",
