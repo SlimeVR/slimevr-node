@@ -1,5 +1,6 @@
+import { DataType } from './constants';
+
 const Packet = require('../Packet');
-const constants = require('./constants');
 
 module.exports = class IncomingFusedIMUDataPacket extends Packet {
   /**
@@ -10,7 +11,7 @@ module.exports = class IncomingFusedIMUDataPacket extends Packet {
 
     this.sensorId = data.readUInt8(0);
 
-    if (data.readUintBE(1, 1) !== constants.dataType.float) {
+    if (data.readUintBE(1, 1) !== DataType.FLOAT) {
       throw new Error('IncomingFusedIMUDataPacket: data type must be float');
     }
 

@@ -1,5 +1,6 @@
+import { DataType } from './constants';
+
 const Packet = require('../Packet');
-const constants = require('./constants');
 
 module.exports = class IncomingRawIMUDataPacket extends Packet {
   /**
@@ -16,11 +17,11 @@ module.exports = class IncomingRawIMUDataPacket extends Packet {
     this.acceleration = [0, 0, 0];
     this.magnetometer = [0, 0, 0];
 
-    if (dataType === constants.dataType.int) {
+    if (dataType === DataType.INT) {
       this.rotation = [data.readInt32BE(2), data.readInt32BE(6), data.readInt32BE(10)];
       this.acceleration = [data.readInt32BE(15), data.readInt32BE(19), data.readInt32BE(23)];
       this.magnetometer = [data.readInt32BE(28), data.readInt32BE(32), data.readInt32BE(36)];
-    } else if (dataType === constants.dataType.float) {
+    } else if (dataType === DataType.FLOAT) {
       this.rotation = [data.readFloatBE(2), data.readFloatBE(6), data.readFloatBE(10)];
       this.acceleration = [data.readFloatBE(15), data.readFloatBE(19), data.readFloatBE(23)];
       this.magnetometer = [data.readFloatBE(28), data.readFloatBE(32), data.readFloatBE(36)];
