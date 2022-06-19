@@ -3,6 +3,7 @@
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
 import { Packet } from './packets/Packet';
+import { parse } from './packets/PacketParser';
 import { Sensor } from './Sensor';
 import {
   correctionDataDumpFile,
@@ -36,7 +37,6 @@ const IncomingSignalStrengthPacket = require('./packets/IncomingSignalStrengthPa
 const OutgoingHandshakeResponsePacket = require('./packets/OutgoingHandshakePacket');
 const OutgoingPingPacket = require('./packets/OutgoingPingPacket');
 const OutgoingSensorInfoPacket = require('./packets/OutgoingSensorInfoPacket');
-const PacketParser = require('./packets/PacketParser');
 const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
 const IncomingAccelPacket = require('./packets/IncomingAccelPacket');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
@@ -126,7 +126,7 @@ module.exports = class Tracker {
 
   /** @param {Buffer} msg */
   handle(msg) {
-    const packet = PacketParser.parse(msg, this);
+    const packet = parse(msg, this);
     if (packet === null) {
       this._log(`Received unknown packet (${msg.length} bytes): ${msg.toString('hex')}`);
 
