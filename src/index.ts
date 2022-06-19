@@ -1,8 +1,7 @@
 import { createSocket } from 'node:dgram';
 import { ConnectionTracker } from './ConnectionTracker';
+import { Tracker } from './Tracker';
 import { getBroadcastAddresses } from './utils';
-
-const Tracker = require('./Tracker');
 
 const [_, addressBlacklist] = getBroadcastAddresses();
 

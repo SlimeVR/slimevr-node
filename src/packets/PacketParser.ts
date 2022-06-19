@@ -1,3 +1,5 @@
+import { Tracker } from '../Tracker';
+
 const IncomingAccelPacket = require('./IncomingAccelPacket');
 const IncomingBatteryLevelPacket = require('./IncomingBatteryLevelPacket');
 const IncomingErrorPacket = require('./IncomingErrorPacket');

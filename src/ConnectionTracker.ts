@@ -1,3 +1,5 @@
+import { Tracker } from './Tracker';
+
 export class ConnectionTracker {
   private static instance: ConnectionTracker;
 

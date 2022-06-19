@@ -1,5 +1,5 @@
-// @ts-check
-
+import { Socket } from 'dgram';
+import { createWriteStream, WriteStream } from 'fs';
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
 import { Packet } from './packets/Packet';
@@ -22,7 +22,6 @@ import {
 } from './utils';
 import { VectorAggregator } from './VectorAggretator';
 
-const FS = require('node:fs');
 const IncomingBatteryLevelPacket = require('./packets/IncomingBatteryLevelPacket');
 const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');
 const IncomingErrorPacket = require('./packets/IncomingErrorPacket');
@@ -43,70 +42,65 @@ const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrati
 const IncomingCalibrationFinishedPacket = require('./packets/IncomingCalibrationFinishedPacket');
 const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
 
-module.exports = class Tracker {
-  /**
-   * @param {import('dgram').Socket} server
-   * @param {string} ip
-   * @param {number} port
-   */
-  constructor(server, ip, port) {
-    this.server = server;
-    this.ip = ip;
-    this.port = port;
+export class Tracker {
+  private _packetNumber = BigInt(0);
+  private handshook = false;
+  private lastPacket = Date.now();
+  private lastPingId = 0;
 
-    this.packetNumber = BigInt(0);
-    this.handshook = false;
-    this.lastPacket = Date.now();
-    this.lastPingId = 0;
+  private _mac = '';
+  private firmwareBuild = -1;
+  private protocol = Protocol.UNKNOWN;
 
-    this.mac = '';
-    this.firmwareBuild = -1;
-    this.protocol = Protocol.UNKNOWN;
+  private sensors: Sensor[] = [];
+  private signalStrength = 0;
+  private batteryVoltage = 0;
+  private batteryPercentage = 0;
 
-    /** @type {Sensor[]} */
-    this.sensors = [];
-    this.signalStrength = 0;
-    this.batteryVoltage = 0;
-    this.batteryPercentage = 0;
+  private readonly rotation = new VectorAggregator(4);
+  private readonly fusedRotation = new VectorAggregator(4);
+  private readonly correctedRotation = new VectorAggregator(4);
+  private readonly rawRotation = new VectorAggregator(3);
+  private readonly rawAcceleration = new VectorAggregator(3);
+  private readonly rawMagnetometer = new VectorAggregator(3);
 
-    this.rotation = new VectorAggregator(4);
-    this.fusedRotation = new VectorAggregator(4);
-    this.correctedRotation = new VectorAggregator(4);
-    this.rawRotation = new VectorAggregator(3);
-    this.rawAcceleration = new VectorAggregator(3);
-    this.rawMagnetometer = new VectorAggregator(3);
+  private readonly rotationDataPacketStream: WriteStream | null = null;
+  private readonly rawIMUDataRawStream: WriteStream | null = null;
+  private readonly fusedIMUDataRawStream: WriteStream | null = null;
+  private readonly correctionDataRawStream: WriteStream | null = null;
 
+  constructor(private server: Socket, private _ip: string, private _port: number) {
     if (rotationDataPacketDumpFile() !== '') {
-      this._log(`Dumping rotation data to ${rotationDataPacketDumpFile()}`);
+      this.log(`Dumping rotation data to ${rotationDataPacketDumpFile()}`);
 
-      this.rotationDataPacketStream = FS.createWriteStream(rotationDataPacketDumpFile(), 'utf8');
+      this.rotationDataPacketStream = createWriteStream(rotationDataPacketDumpFile(), 'utf8');
       this.rotationDataPacketStream.write('timestamp,x,y,z,w\n');
     } else {
       this.rotationDataPacketStream = null;
     }
 
     if (rawIMUDataDumpFile() !== '') {
-      this._log(`Dumping raw IMU data to ${rawIMUDataDumpFile()}`);
+      this.log(`Dumping raw IMU data to ${rawIMUDataDumpFile()}`);
 
-      this.rawIMUDataRawStream = FS.createWriteStream(rawIMUDataDumpFile(), 'utf8');
+      this.rawIMUDataRawStream = createWriteStream(rawIMUDataDumpFile(), 'utf8');
       this.rawIMUDataRawStream.write('timestamp,rX,rY,rZ,rA,aX,aY,aZ,aAmX,mY,mZ,mA\n');
     } else {
       this.rawIMUDataRawStream = null;
     }
 
     if (fusedIMUDataDumpFile() !== '') {
-      this._log(`Dumping fused IMU data to ${fusedIMUDataDumpFile()}`);
+      this.log(`Dumping fused IMU data to ${fusedIMUDataDumpFile()}`);
 
-      this.fusedIMUDataRawStream = FS.createWriteStream(fusedIMUDataDumpFile(), 'utf8');
+      this.fusedIMUDataRawStream = createWriteStream(fusedIMUDataDumpFile(), 'utf8');
       this.fusedIMUDataRawStream.write('timestamp,x,y,z,w\n');
     } else {
       this.fusedIMUDataRawStream = null;
     }
 
     if (correctionDataDumpFile()) {
-      this._log(`Dumping correction data to ${correctionDataDumpFile()}`);
+      this.log(`Dumping correction data to ${correctionDataDumpFile()}`);
 
-      this.correctionDataRawStream = FS.createWriteStream(correctionDataDumpFile(), 'utf8');
+      this.correctionDataRawStream = createWriteStream(correctionDataDumpFile(), 'utf8');
       this.correctionDataRawStream.write('timestamp,x,y,z,w\n');
     } else {
       this.correctionDataRawStream = null;
@@ -117,18 +111,14 @@ module.exports = class Tracker {
     return this.lastPacket > Date.now() - 1000;
   }
 
-  /**
-   * @param {string} msg
-   */
-  _log(msg) {
+  private log(msg: string) {
     console.log(`[Tracker:${this.ip}] ${msg}`);
   }
 
-  /** @param {Buffer} msg */
-  handle(msg) {
+  handle(msg: Buffer) {
     const packet = parse(msg, this);
     if (packet === null) {
-      this._log(`Received unknown packet (${msg.length} bytes): ${msg.toString('hex')}`);
+      this.log(`Received unknown packet (${msg.length} bytes): ${msg.toString('hex')}`);
 
       return;
     }
@@ -136,27 +126,27 @@ module.exports = class Tracker {
     this.lastPacket = Date.now();
 
     if (shouldDumpAllPacketsRaw()) {
-      this._log(packet.toString());
+      this.log(packet.toString());
     }
 
     switch (packet.type) {
       case IncomingHeartbeatPacket.type: {
-        this._log('Received heartbeat');
+        this.log('Received heartbeat');
 
         break;
       }
 
       case IncomingHandshakePacket.type: {
-        const handshake = /** @type {IncomingHandshakePacket} */ (packet);
+        const handshake = /** @type {IncomingHandshakePacket} */ packet;
 
         this.firmwareBuild = handshake.firmwareBuild;
-        this.mac = handshake.mac;
+        this._mac = handshake.mac;
         this.protocol = handshake.firmware === '' ? Protocol.OWO_LEGACY : Protocol.SLIMEVR_RAW;
 
         const existingConnection = ConnectionTracker.get().getConnectionByMAC(handshake.mac);
 
         if (existingConnection) {
-          this._log(`Removing existing connection for MAC ${handshake.mac}`);
+          this.log(`Removing existing connection for MAC ${handshake.mac}`);
           ConnectionTracker.get().removeConnectionByMAC(handshake.mac);
         }
 
@@ -174,15 +164,15 @@ module.exports = class Tracker {
       }
 
       case IncomingAccelPacket.type: {
-        const accel = /** @type {IncomingAccelPacket} */ (packet);
+        const accel = /** @type {IncomingAccelPacket} */ packet;
 
-        this._log(`Acceleration: ${accel.acceleration.join(', ')}`);
+        this.log(`Acceleration: ${accel.acceleration.join(', ')}`);
 
         break;
       }
 
       case IncomingRawCalibrationDataPacket.type: {
-        const rawCalibrationData = /** @type {IncomingRawCalibrationDataPacket} */ (packet);
+        const rawCalibrationData = /** @type {IncomingRawCalibrationDataPacket} */ packet;
 
         this.handleSensorPacket(rawCalibrationData);
 
@@ -190,7 +180,7 @@ module.exports = class Tracker {
       }
 
       case IncomingCalibrationFinishedPacket.type: {
-        const calibrationFinished = /** @type {IncomingCalibrationFinishedPacket} */ (packet);
+        const calibrationFinished = /** @type {IncomingCalibrationFinishedPacket} */ packet;
 
         this.handleSensorPacket(calibrationFinished);
 
@@ -198,12 +188,12 @@ module.exports = class Tracker {
       }
 
       case IncomingPongPacket.type: {
-        const pong = /** @type {IncomingPongPacket} */ (packet);
+        const pong = /** @type {IncomingPongPacket} */ packet;
 
         if (pong.pingId !== this.lastPingId + 1) {
-          this._log('Ping ID does not match, ignoring');
+          this.log('Ping ID does not match, ignoring');
         } else {
-          this._log('Received pong');
+          this.log('Received pong');
 
           this.lastPingId = pong.pingId;
         }
@@ -212,18 +202,18 @@ module.exports = class Tracker {
       }
 
       case IncomingBatteryLevelPacket.type: {
-        const batteryLevel = /** @type {IncomingBatteryLevelPacket} */ (packet);
+        const batteryLevel = /** @type {IncomingBatteryLevelPacket} */ packet;
 
         this.batteryVoltage = batteryLevel.voltage;
         this.batteryPercentage = batteryLevel.percentage;
 
-        this._log(`Battery level changed to ${this.batteryVoltage}V (${this.batteryPercentage}%)`);
+        this.log(`Battery level changed to ${this.batteryVoltage}V (${this.batteryPercentage}%)`);
 
         break;
       }
 
       case IncomingErrorPacket.type: {
-        const error = /** @type {IncomingErrorPacket} */ (packet);
+        const error = /** @type {IncomingErrorPacket} */ packet;
 
         this.handleSensorPacket(error);
 
@@ -231,9 +221,9 @@ module.exports = class Tracker {
       }
 
       case IncomingSensorInfoPacket.type: {
-        const sensorInfo = /** @type {IncomingSensorInfoPacket} */ (packet);
+        const sensorInfo = /** @type {IncomingSensorInfoPacket} */ packet;
 
-        this._log('Received sensor info');
+        this.log('Received sensor info');
 
         this.handleSensorPacket(sensorInfo);
 
@@ -243,16 +233,16 @@ module.exports = class Tracker {
       }
 
       case IncomingRotationDataPacket.type: {
-        const rotation = /** @type {IncomingRotationDataPacket} */ (packet);
+        const rotation = /** @type {IncomingRotationDataPacket} */ packet;
 
         if (shouldDumpRotationDataPacketsRaw()) {
-          this._log(rotation.toString());
+          this.log(rotation.toString());
         }
 
         this.rotation.update(rotation.rotation);
 
         if (shouldDumpRotationDataPacketsProcessed()) {
-          this._log(`RotPac | ${this.rotation.toString()}`);
+          this.log(`RotPac | ${this.rotation.toString()}`);
         }
 
         if (this.rotationDataPacketStream !== null) {
@@ -264,7 +254,7 @@ module.exports = class Tracker {
       }
 
       case IncomingMagnetometerAccuracyPacket.type: {
-        const magnetometerAccuracy = /** @type {IncomingMagnetometerAccuracyPacket} */ (packet);
+        const magnetometerAccuracy = /** @type {IncomingMagnetometerAccuracyPacket} */ packet;
 
         this.handleSensorPacket(magnetometerAccuracy);
 
@@ -272,17 +262,17 @@ module.exports = class Tracker {
       }
 
       case IncomingSignalStrengthPacket.type: {
-        const signalStrength = /** @type {IncomingSignalStrengthPacket} */ (packet);
+        const signalStrength = /** @type {IncomingSignalStrengthPacket} */ packet;
 
         this.signalStrength = signalStrength.signalStrength;
 
-        this._log(`Signal strength changed to ${this.signalStrength}`);
+        this.log(`Signal strength changed to ${this.signalStrength}`);
 
         break;
       }
 
       case IncomingTemperaturePacket.type: {
-        const temperature = /** @type {IncomingTemperaturePacket} */ (packet);
+        const temperature = /** @type {IncomingTemperaturePacket} */ packet;
 
         this.handleSensorPacket(temperature);
 
@@ -290,10 +280,10 @@ module.exports = class Tracker {
       }
 
       case IncomingRawIMUDataPacket.type: {
-        const raw = /** @type {IncomingRawIMUDataPacket} */ (packet);
+        const raw = /** @type {IncomingRawIMUDataPacket} */ packet;
 
         if (shouldDumpRawIMUDataRaw()) {
-          this._log(raw.toString());
+          this.log(raw.toString());
         }
 
         this.rawRotation.update(raw.rotation);
@@ -301,9 +291,9 @@ module.exports = class Tracker {
         this.rawMagnetometer.update(raw.magnetometer);
 
         if (shouldDumpRawIMUDataProcessed()) {
-          this._log(`Raw | ROT | ${this.rawRotation.toString()}`);
-          this._log(`Raw | ACC | ${this.rawAcceleration.toString()}`);
-          this._log(`Raw | MAG | ${this.rawMagnetometer.toString()}`);
+          this.log(`Raw | ROT | ${this.rawRotation.toString()}`);
+          this.log(`Raw | ACC | ${this.rawAcceleration.toString()}`);
+          this.log(`Raw | MAG | ${this.rawMagnetometer.toString()}`);
         }
 
         if (this.rawIMUDataRawStream !== null) {
@@ -324,16 +314,16 @@ module.exports = class Tracker {
       }
 
       case IncomingFusedIMUDataPacket.type: {
-        const fused = /** @type {IncomingFusedIMUDataPacket} */ (packet);
+        const fused = /** @type {IncomingFusedIMUDataPacket} */ packet;
 
         if (shouldDumpFusedDataRaw()) {
-          this._log(fused.toString());
+          this.log(fused.toString());
         }
 
         this.fusedRotation.update(fused.quaternion);
 
         if (shouldDumpFusedDataProcessed()) {
-          this._log(`Fused | ${this.fusedRotation.toString()}`);
+          this.log(`Fused | ${this.fusedRotation.toString()}`);
         }
 
         if (this.fusedIMUDataRawStream !== null) {
@@ -345,16 +335,16 @@ module.exports = class Tracker {
       }
 
       case IncomingCorrectionDataPacket.type: {
-        const correction = /** @type {IncomingCorrectionDataPacket} */ (packet);
+        const correction = /** @type {IncomingCorrectionDataPacket} */ packet;
 
         if (shouldDumpCorrectionDataRaw()) {
-          this._log(correction.toString());
+          this.log(correction.toString());
         }
 
         this.correctedRotation.update(correction.quaternion);
 
         if (shouldDumpCorrectionDataProcessed()) {
-          this._log(`Correction | ${this.correctedRotation.toString()}`);
+          this.log(`Correction | ${this.correctedRotation.toString()}`);
         }
 
         if (this.correctionDataRawStream !== null) {
@@ -367,19 +357,18 @@ module.exports = class Tracker {
     }
   }
 
-  /** @param {bigint} packetNumber */
-  isNextPacket(packetNumber) {
+  isNextPacket(packetNumber: bigint) {
     if (packetNumber >= BigInt(0)) {
-      this.packetNumber = packetNumber;
+      this._packetNumber = packetNumber;
 
       return true;
     }
 
-    if (this.packetNumber < packetNumber) {
+    if (this._packetNumber < packetNumber) {
       return false;
     }
 
-    this.packetNumber = packetNumber;
+    this._packetNumber = packetNumber;
 
     return true;
   }
@@ -387,26 +376,39 @@ module.exports = class Tracker {
   ping() {
     this.server.send(new OutgoingPingPacket().encode(this.lastPingId + 1), this.port, this.ip);
 
-    this._log('Sent ping');
+    this.log('Sent ping');
   }
 
-  /**
-   * @param {Packet & {sensorId: number}} packet
-   */
-  handleSensorPacket(packet) {
+  handleSensorPacket(packet: Packet & { sensorId: number }) {
     let sensor = this.sensors[packet.sensorId];
 
     if (!sensor) {
-      this._log(`Setting up sensor ${packet.sensorId}`);
+      this.log(`Setting up sensor ${packet.sensorId}`);
 
-      const sensorInfo = /** @type {IncomingSensorInfoPacket} */ (packet);
+      const sensorInfo = /** @type {IncomingSensorInfoPacket} */ packet;
 
       sensor = new Sensor(this, sensorInfo.sensorType, sensorInfo.sensorId);
       this.sensors[sensorInfo.sensorId] = sensor;
 
-      this._log(`Added sensor ${sensorInfo.sensorId}`);
+      this.log(`Added sensor ${sensorInfo.sensorId}`);
     }
 
     sensor.handle(packet);
   }
-};
+
+  get ip() {
+    return this._ip;
+  }
+
+  get port() {
+    return this._port;
+  }
+
+  get mac() {
+    return this._mac;
+  }
+
+  get packetNumber() {
+    return this._packetNumber;
+  }
+}
