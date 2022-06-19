@@ -1,4 +1,5 @@
-const { formatMACAddressDigit } = require('../utils');
+import { formatMACAddressDigit } from '../utils';
+
 const Packet = require('./Packet');
 
 module.exports = class IncomingHandshakePacket extends Packet {

@@ -1,10 +1,10 @@
-const os = require('os');
+import { networkInterfaces } from 'os';
 
-module.exports.getBroadcastAddresses = () => {
-  const broadcasts = [];
-  const blacklist = [];
+export const getBroadcastAddresses = (): [string[], string[]] => {
+  const broadcasts: string[] = [];
+  const blacklist: string[] = [];
 
-  const ifaces = os.networkInterfaces();
+  const ifaces = networkInterfaces();
   for (const i of Object.keys(ifaces)) {
     const iface = ifaces[i];
 
@@ -29,19 +29,19 @@ module.exports.getBroadcastAddresses = () => {
   return [broadcasts, blacklist];
 };
 
-module.exports.shouldDumpAllPacketsRaw = () => {
+export const shouldDumpAllPacketsRaw = () => {
   return process.argv.includes('--dump-all-packets-raw');
 };
 
-module.exports.shouldDumpRotationDataPacketsRaw = () => {
+export const shouldDumpRotationDataPacketsRaw = () => {
   return process.argv.includes('--dump-rotation-data-packets-raw');
 };
 
-module.exports.shouldDumpRotationDataPacketsProcessed = () => {
+export const shouldDumpRotationDataPacketsProcessed = () => {
   return process.argv.includes('--dump-rotation-data-packets-processed');
 };
 
-module.exports.rotationDataPacketDumpFile = () => {
+export const rotationDataPacketDumpFile = () => {
   const index = process.argv.indexOf('--rotation-data-packets-file');
   if (index === -1) {
     return '';
@@ -50,15 +50,15 @@ module.exports.rotationDataPacketDumpFile = () => {
   return process.argv[index + 1];
 };
 
-module.exports.shouldDumpFusedDataRaw = () => {
+export const shouldDumpFusedDataRaw = () => {
   return process.argv.includes('--dump-fused-imu-data-raw');
 };
 
-module.exports.shouldDumpFusedDataProcessed = () => {
+export const shouldDumpFusedDataProcessed = () => {
   return process.argv.includes('--dump-fused-imu-data-processed');
 };
 
-module.exports.fusedIMUDataDumpFile = () => {
+export const fusedIMUDataDumpFile = () => {
   const index = process.argv.indexOf('--fused-imu-data-file');
   if (index === -1) {
     return '';
@@ -67,15 +67,15 @@ module.exports.fusedIMUDataDumpFile = () => {
   return process.argv[index + 1];
 };
 
-module.exports.shouldDumpRawIMUDataRaw = () => {
+export const shouldDumpRawIMUDataRaw = () => {
   return process.argv.includes('--dump-raw-imu-data-raw');
 };
 
-module.exports.shouldDumpRawIMUDataProcessed = () => {
+export const shouldDumpRawIMUDataProcessed = () => {
   return process.argv.includes('--dump-raw-imu-data-processed');
 };
 
-module.exports.rawIMUDataDumpFile = () => {
+export const rawIMUDataDumpFile = () => {
   const index = process.argv.indexOf('--raw-imu-data-file');
   if (index === -1) {
     return '';
@@ -84,15 +84,15 @@ module.exports.rawIMUDataDumpFile = () => {
   return process.argv[index + 1];
 };
 
-module.exports.shouldDumpCorrectionDataRaw = () => {
+export const shouldDumpCorrectionDataRaw = () => {
   return process.argv.includes('--dump-correction-data-raw');
 };
 
-module.exports.shouldDumpCorrectionDataProcessed = () => {
+export const shouldDumpCorrectionDataProcessed = () => {
   return process.argv.includes('--dump-correction-data-processed');
 };
 
-module.exports.correctionDataDumpFile = () => {
+export const correctionDataDumpFile = () => {
   const index = process.argv.indexOf('--correction-data-file');
   if (index === -1) {
     return '';
@@ -101,10 +101,6 @@ module.exports.correctionDataDumpFile = () => {
   return process.argv[index + 1];
 };
 
-/**
- * @param {number} mac
- * @returns {string}
- */
-module.exports.formatMACAddressDigit = (mac) => {
+export const formatMACAddressDigit = (mac: number) => {
   return mac.toString(16).padStart(2, '0').toUpperCase();
 };

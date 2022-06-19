@@ -1,6 +1,21 @@
 // @ts-check
 
 import { Protocol } from './constants';
+import {
+  correctionDataDumpFile,
+  fusedIMUDataDumpFile,
+  rawIMUDataDumpFile,
+  rotationDataPacketDumpFile,
+  shouldDumpAllPacketsRaw,
+  shouldDumpCorrectionDataProcessed,
+  shouldDumpCorrectionDataRaw,
+  shouldDumpFusedDataProcessed,
+  shouldDumpFusedDataRaw,
+  shouldDumpRawIMUDataProcessed,
+  shouldDumpRawIMUDataRaw,
+  shouldDumpRotationDataPacketsProcessed,
+  shouldDumpRotationDataPacketsRaw
+} from './utils';
 import { VectorAggregator } from './VectorAggretator';
 
 const ConnectionTracker = require('./ConnectionTracker');
@@ -22,21 +37,6 @@ const OutgoingSensorInfoPacket = require('./packets/OutgoingSensorInfoPacket');
 const Sensor = require('./Sensor');
 const Packet = require('./packets/Packet');
 const PacketParser = require('./packets/PacketParser');
-const {
-  shouldDumpRotationDataPacketsProcessed,
-  shouldDumpRotationDataPacketsRaw,
-  shouldDumpRawIMUDataProcessed,
-  shouldDumpRawIMUDataRaw,
-  shouldDumpFusedDataRaw,
-  shouldDumpFusedDataProcessed,
-  fusedIMUDataDumpFile,
-  rawIMUDataDumpFile,
-  rotationDataPacketDumpFile,
-  shouldDumpCorrectionDataRaw,
-  shouldDumpCorrectionDataProcessed,
-  correctionDataDumpFile,
-  shouldDumpAllPacketsRaw
-} = require('./utils');
 const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
 const IncomingAccelPacket = require('./packets/IncomingAccelPacket');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
