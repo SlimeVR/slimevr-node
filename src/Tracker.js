@@ -1,5 +1,6 @@
 // @ts-check
 
+import { Protocol } from './constants';
 import { VectorAggregator } from './VectorAggretator';
 
 const ConnectionTracker = require('./ConnectionTracker');
@@ -18,7 +19,6 @@ const IncomingSignalStrengthPacket = require('./packets/IncomingSignalStrengthPa
 const OutgoingHandshakeResponsePacket = require('./packets/OutgoingHandshakePacket');
 const OutgoingPingPacket = require('./packets/OutgoingPingPacket');
 const OutgoingSensorInfoPacket = require('./packets/OutgoingSensorInfoPacket');
-const { protocol } = require('./constants');
 const Sensor = require('./Sensor');
 const Packet = require('./packets/Packet');
 const PacketParser = require('./packets/PacketParser');
@@ -61,7 +61,7 @@ module.exports = class Tracker {
 
     this.mac = '';
     this.firmwareBuild = -1;
-    this.protocol = protocol.UNKNOWN;
+    this.protocol = Protocol.UNKNOWN;
 
     /** @type {Sensor[]} */
     this.sensors = [];
@@ -151,7 +151,7 @@ module.exports = class Tracker {
 
         this.firmwareBuild = handshake.firmwareBuild;
         this.mac = handshake.mac;
-        this.protocol = handshake.firmware === '' ? protocol.OWO_LEGACY : protocol.SLIMEVR_RAW;
+        this.protocol = handshake.firmware === '' ? Protocol.OWO_LEGACY : Protocol.SLIMEVR_RAW;
 
         const existingConnection = ConnectionTracker.get().getConnectionByMAC(handshake.mac);
 
@@ -164,7 +164,7 @@ module.exports = class Tracker {
 
         this.handshook = true;
 
-        if (this.protocol === protocol.OWO_LEGACY || this.firmwareBuild < 9) {
+        if (this.protocol === Protocol.OWO_LEGACY || this.firmwareBuild < 9) {
           this.handleSensorPacket({ type: IncomingSensorInfoPacket.type, sensorId: 0, sensorType: handshake.imuType, sensorStatus: 1 });
         }
 

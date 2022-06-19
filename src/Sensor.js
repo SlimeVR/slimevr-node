@@ -1,4 +1,5 @@
-const { sensorStatus } = require('./constants');
+import { SensorStatus } from './constants';
+
 const IncomingCalibrationFinishedPacket = require('./packets/IncomingCalibrationFinishedPacket');
 const IncomingErrorPacket = require('./packets/IncomingErrorPacket');
 const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
@@ -17,7 +18,7 @@ module.exports = class Sensor {
     this.type = type;
     this.index = index;
 
-    this.status = sensorStatus.UNKNOWN;
+    this.status = SensorStatus.UNKNOWN;
   }
 
   /**
