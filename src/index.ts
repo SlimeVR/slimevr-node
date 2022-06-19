@@ -1,13 +1,12 @@
-// @ts-check
+import { createSocket } from 'node:dgram';
+import { getBroadcastAddresses } from './utils';
 
-const udp = require('node:dgram');
 const ConnectionTracker = require('./ConnectionTracker');
 const Tracker = require('./Tracker');
-const utils = require('./utils');
 
-const [_, addressBlacklist] = utils.getBroadcastAddresses();
+const [_, addressBlacklist] = getBroadcastAddresses();
 
-const server = udp.createSocket('udp4');
+const server = createSocket('udp4');
 const connectionTracker = ConnectionTracker.get(server);
 
 server.on('connect', () => {
