@@ -11,8 +11,8 @@
 ⚠ **Make sure you have stopped the SlimeVR server before running this software!**
 
 ```shell
-git clone https://github.com/TheDevMinerTV/SlimeVR-Tracker-Inspector
-cd SlimeVR-Tracker-Inspector
+git clone https://github.com/SlimeVR/SlimeVR-Protocol-Debugger
+cd SlimeVR-Protocol-Debugger
 node . # add flags from below to enable features
 ```
 

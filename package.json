@@ -3,18 +3,18 @@
   "version": "0.1.0",
   "main": "src/index.js",
   "license": "(MIT OR Apache-2.0)",
-  "homepage": "https://github.com/TheDevMinerTV/SlimeVR-Protocol-Debugger.git#readme",
+  "homepage": "https://github.com/SlimeVR/SlimeVR-Protocol-Debugger.git#readme",
   "author": {
     "name": "TheDevMinerTV",
     "email": "tobigames200@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TheDevMinerTV/SlimeVR-Protocol-Debugger.git"
+    "url": "https://github.com/SlimeVR/SlimeVR-Protocol-Debugger.git"
   },
   "bugs": {
     "email": "tobigames200@gmail.com",
-    "url": "https://github.com/TheDevMinerTV/SlimeVR-Protocol-Debugger/issues"
+    "url": "https://github.com/SlimeVR/SlimeVR-Protocol-Debugger/issues"
   },
   "bin": {
     "slimevr-protocol-debugger": "src/bin/slimevr-protocol-debugger"
