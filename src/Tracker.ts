@@ -5,6 +5,7 @@ import { Protocol } from './constants';
 import { IncomingAccelPacket } from './packets/IncomingAccelPacket';
 import { IncomingBatteryLevelPacket } from './packets/IncomingBatteryLevelPacket';
 import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibrationFinishedPacket';
+import { IncomingErrorPacket } from './packets/IncomingErrorPacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
@@ -32,7 +33,6 @@ import {
 import { VectorAggregator } from './VectorAggretator';
 
 const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');
-const IncomingErrorPacket = require('./packets/IncomingErrorPacket');
 const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIMUDataPacket');
 const IncomingHandshakePacket = require('./packets/IncomingHandshakePacket');
 const IncomingHeartbeatPacket = require('./packets/IncomingHeartbeatPacket');
@@ -222,7 +222,7 @@ export class Tracker {
       }
 
       case IncomingErrorPacket.type: {
-        const error = /** @type {IncomingErrorPacket} */ packet;
+        const error = packet as IncomingErrorPacket;
 
         this.handleSensorPacket(error);
 

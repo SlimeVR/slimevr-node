@@ -1,10 +1,10 @@
 import { SensorStatus } from './constants';
 import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibrationFinishedPacket';
+import { IncomingErrorPacket } from './packets/IncomingErrorPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { Packet } from './packets/Packet';
 import { Tracker } from './Tracker';
 
-const IncomingErrorPacket = require('./packets/IncomingErrorPacket');
 const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
@@ -37,7 +37,7 @@ export class Sensor {
       }
 
       case IncomingErrorPacket.type: {
-        const error = /** @type {IncomingErrorPacket} */ packet;
+        const error = packet as IncomingErrorPacket;
 
         this.log(`Received error: ${error.reason}`);
 

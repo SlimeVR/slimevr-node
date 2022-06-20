@@ -2,11 +2,11 @@ import { Tracker } from '../Tracker';
 import { IncomingAccelPacket } from './IncomingAccelPacket';
 import { IncomingBatteryLevelPacket } from './IncomingBatteryLevelPacket';
 import { IncomingCalibrationFinishedPacket } from './IncomingCalibrationFinishedPacket';
+import { IncomingErrorPacket } from './IncomingErrorPacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 
-const IncomingErrorPacket = require('./IncomingErrorPacket');
 const IncomingHandshakePacket = require('./IncomingHandshakePacket');
 const IncomingHeartbeatPacket = require('./IncomingHeartbeatPacket');
 const IncomingPongPacket = require('./IncomingPongPacket');
