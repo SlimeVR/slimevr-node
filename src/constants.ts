@@ -20,3 +20,16 @@ export enum RawCalibrationDataType {
   EXTERNAL_ACCEL = 6,
   EXTERNAL_MAG = 7
 }
+
+export enum SensorType {
+  UNKNOWN = -1,
+  MPU9250 = 1,
+  MPU6500 = 2,
+  BNO080 = 3,
+  BNO085 = 4,
+  BNO055 = 5,
+  MPU6050 = 6,
+  BNO086 = 7,
+  BMI160 = 8,
+  ICM20948 = 9
+}

@@ -11,11 +11,11 @@ import { IncomingPongPacket } from './IncomingPongPacket';
 import { IncomingRawCalibrationDataPacket } from './IncomingRawCalibrationDataPacket';
 import { IncomingRotationDataPacket } from './IncomingRotationDataPacket';
 import { IncomingRotationPacket } from './IncomingRotationPacket';
+import { IncomingSensorInfoPacket } from './IncomingSensorInfoPacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 
-const IncomingSensorInfoPacket = require('./IncomingSensorInfoPacket');
 const InspectionPacketParser = require('./inspection/InspectionPacketParser');
 
 export const parse = (data: Buffer, tracker: Tracker) => {

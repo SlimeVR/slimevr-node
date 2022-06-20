@@ -3,11 +3,10 @@ import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibration
 import { IncomingErrorPacket } from './packets/IncomingErrorPacket';
 import { IncomingMagnetometerAccuracyPacket } from './packets/IncomingMagnetometerAccuracy';
 import { IncomingRawCalibrationDataPacket } from './packets/IncomingRawCalibrationDataPacket';
+import { IncomingSensorInfoPacket } from './packets/IncomingSensorInfoPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { Packet } from './packets/Packet';
 import { Tracker } from './Tracker';
-
-const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 
 export class Sensor {
   private status = SensorStatus.UNKNOWN;
@@ -47,7 +46,7 @@ export class Sensor {
       }
 
       case IncomingSensorInfoPacket.type: {
-        const sensorInfo = /** @type {IncomingSensorInfoPacket} */ packet;
+        const sensorInfo = packet as IncomingSensorInfoPacket;
 
         this.status = sensorInfo.sensorStatus;
 

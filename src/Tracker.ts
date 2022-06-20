@@ -1,7 +1,7 @@
 import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
 import { ConnectionTracker } from './ConnectionTracker';
-import { Protocol } from './constants';
+import { Protocol, SensorStatus } from './constants';
 import { IncomingAccelPacket } from './packets/IncomingAccelPacket';
 import { IncomingBatteryLevelPacket } from './packets/IncomingBatteryLevelPacket';
 import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibrationFinishedPacket';
@@ -13,13 +13,14 @@ import { IncomingMagnetometerAccuracyPacket } from './packets/IncomingMagnetomet
 import { IncomingPongPacket } from './packets/IncomingPongPacket';
 import { IncomingRawCalibrationDataPacket } from './packets/IncomingRawCalibrationDataPacket';
 import { IncomingRotationDataPacket } from './packets/IncomingRotationDataPacket';
+import { IncomingSensorInfoPacket } from './packets/IncomingSensorInfoPacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { OutgoingHandshakePacket } from './packets/OutgoingHandshakePacket';
 import { OutgoingPingPacket } from './packets/OutgoingPingPacket';
 import { OutgoingSensorInfoPacket } from './packets/OutgoingSensorInfoPacket';
-import { Packet } from './packets/Packet';
+import { PacketWithSensorId } from './packets/Packet';
 import { parse } from './packets/PacketParser';
 import { Sensor } from './Sensor';
 import {
@@ -42,7 +43,6 @@ import { VectorAggregator } from './VectorAggretator';
 const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');
 const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIMUDataPacket');
 const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
-const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 
 export class Tracker {
   private _packetNumber = BigInt(0);
@@ -165,7 +165,9 @@ export class Tracker {
         this.handshook = true;
 
         if (this.protocol === Protocol.OWO_LEGACY || this.firmwareBuild < 9) {
-          this.handleSensorPacket({ type: IncomingSensorInfoPacket.type, sensorId: 0, sensorType: handshake.imuType, sensorStatus: 1 });
+          const buf = IncomingSensorInfoPacket.encode(0, SensorStatus.OK, handshake.mcuType);
+
+          this.handleSensorPacket(new IncomingSensorInfoPacket(buf));
         }
 
         this.server.send(new OutgoingHandshakePacket().encode(), this.port, this.ip);
@@ -239,7 +241,7 @@ export class Tracker {
       }
 
       case IncomingSensorInfoPacket.type: {
-        const sensorInfo = /** @type {IncomingSensorInfoPacket} */ packet;
+        const sensorInfo = packet as IncomingSensorInfoPacket;
 
         this.log('Received sensor info');
 
@@ -397,18 +399,21 @@ export class Tracker {
     this.log('Sent ping');
   }
 
-  handleSensorPacket(packet: Packet & { sensorId: number }) {
-    let sensor = this.sensors[packet.sensorId];
+  handleSensorPacket(packet: PacketWithSensorId) {
+    const sensor = this.sensors[packet.sensorId];
 
     if (!sensor) {
       this.log(`Setting up sensor ${packet.sensorId}`);
 
-      const sensorInfo = /** @type {IncomingSensorInfoPacket} */ packet;
+      if (!(packet instanceof IncomingSensorInfoPacket)) {
+        throw new Error(`Sensor ${packet.sensorId} is not an IncomingSensorInfoPacket`);
+      }
 
-      sensor = new Sensor(this, sensorInfo.sensorType, sensorInfo.sensorId);
-      this.sensors[sensorInfo.sensorId] = sensor;
+      this.sensors[packet.sensorId] = new Sensor(this, packet.sensorType, packet.sensorId);
 
-      this.log(`Added sensor ${sensorInfo.sensorId}`);
+      this.log(`Added sensor ${packet.sensorId}`);
+
+      return;
     }
 
     sensor.handle(packet);
