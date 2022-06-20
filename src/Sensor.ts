@@ -1,9 +1,9 @@
 import { SensorStatus } from './constants';
+import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibrationFinishedPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { Packet } from './packets/Packet';
 import { Tracker } from './Tracker';
 
-const IncomingCalibrationFinishedPacket = require('./packets/IncomingCalibrationFinishedPacket');
 const IncomingErrorPacket = require('./packets/IncomingErrorPacket');
 const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
@@ -29,7 +29,7 @@ export class Sensor {
       }
 
       case IncomingCalibrationFinishedPacket.type: {
-        const calibrationFinished = /** @type {IncomingCalibrationFinishedPacket} */ packet;
+        const calibrationFinished = packet as IncomingCalibrationFinishedPacket;
 
         this.log(`Received calibration finished for type ${calibrationFinished.dataType}`);
 

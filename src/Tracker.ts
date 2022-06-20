@@ -4,6 +4,7 @@ import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
 import { IncomingAccelPacket } from './packets/IncomingAccelPacket';
 import { IncomingBatteryLevelPacket } from './packets/IncomingBatteryLevelPacket';
+import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibrationFinishedPacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
@@ -40,7 +41,6 @@ const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDat
 const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
-const IncomingCalibrationFinishedPacket = require('./packets/IncomingCalibrationFinishedPacket');
 const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
 
 export class Tracker {
@@ -181,7 +181,7 @@ export class Tracker {
       }
 
       case IncomingCalibrationFinishedPacket.type: {
-        const calibrationFinished = /** @type {IncomingCalibrationFinishedPacket} */ packet;
+        const calibrationFinished = packet as IncomingCalibrationFinishedPacket;
 
         this.handleSensorPacket(calibrationFinished);
 
