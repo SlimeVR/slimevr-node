@@ -2,6 +2,7 @@ import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
+import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { OutgoingHandshakePacket } from './packets/OutgoingHandshakePacket';
 import { OutgoingPingPacket } from './packets/OutgoingPingPacket';
 import { OutgoingSensorInfoPacket } from './packets/OutgoingSensorInfoPacket';
@@ -36,7 +37,6 @@ const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDat
 const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 const IncomingSignalStrengthPacket = require('./packets/IncomingSignalStrengthPacket');
-const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
 const IncomingAccelPacket = require('./packets/IncomingAccelPacket');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
 const IncomingCalibrationFinishedPacket = require('./packets/IncomingCalibrationFinishedPacket');
@@ -272,7 +272,7 @@ export class Tracker {
       }
 
       case IncomingTemperaturePacket.type: {
-        const temperature = /** @type {IncomingTemperaturePacket} */ packet;
+        const temperature = packet as IncomingTemperaturePacket;
 
         this.handleSensorPacket(temperature);
 

@@ -1,4 +1,5 @@
 import { SensorStatus } from './constants';
+import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { Packet } from './packets/Packet';
 import { Tracker } from './Tracker';
 
@@ -7,7 +8,6 @@ const IncomingErrorPacket = require('./packets/IncomingErrorPacket');
 const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
-const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
 
 export class Sensor {
   private status = SensorStatus.UNKNOWN;
@@ -63,7 +63,7 @@ export class Sensor {
       }
 
       case IncomingTemperaturePacket.type: {
-        const temperature = /** @type {IncomingTemperaturePacket} */ packet;
+        const temperature = packet as IncomingTemperaturePacket;
 
         this.log(`Received temperature: ${temperature.temperature}`);
 
