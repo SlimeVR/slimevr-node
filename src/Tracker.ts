@@ -6,6 +6,7 @@ import { IncomingAccelPacket } from './packets/IncomingAccelPacket';
 import { IncomingBatteryLevelPacket } from './packets/IncomingBatteryLevelPacket';
 import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibrationFinishedPacket';
 import { IncomingErrorPacket } from './packets/IncomingErrorPacket';
+import { IncomingGyroPacket } from './packets/IncomingGyroPacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
@@ -133,6 +134,14 @@ export class Tracker {
     switch (packet.type) {
       case IncomingHeartbeatPacket.type: {
         this.log('Received heartbeat');
+
+        break;
+      }
+
+      case IncomingGyroPacket.type: {
+        const rot = packet as IncomingGyroPacket;
+
+        this._log(`Gyroscope: ${rot.rotation.join(', ')}`);
 
         break;
       }

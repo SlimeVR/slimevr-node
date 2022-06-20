@@ -1,10 +1,10 @@
+import { Vector } from '../utils';
 import { Packet } from './Packet';
 
-module.exports = class IncomingGyroPacket extends Packet {
-  /**
-   * @param {Buffer} data
-   */
-  constructor(data) {
+export class IncomingGyroPacket extends Packet {
+  readonly rotation: Vector;
+
+  constructor(data: Buffer) {
     super(IncomingGyroPacket.type);
 
     this.rotation = [data.readFloatBE(0), data.readFloatBE(4), data.readFloatBE(8)];
@@ -14,7 +14,7 @@ module.exports = class IncomingGyroPacket extends Packet {
     return 2;
   }
 
-  toString() {
+  override toString() {
     return `IncomingGyroPacket{rotation: ${this.rotation}}`;
   }
-};
+}

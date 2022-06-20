@@ -3,6 +3,7 @@ import { IncomingAccelPacket } from './IncomingAccelPacket';
 import { IncomingBatteryLevelPacket } from './IncomingBatteryLevelPacket';
 import { IncomingCalibrationFinishedPacket } from './IncomingCalibrationFinishedPacket';
 import { IncomingErrorPacket } from './IncomingErrorPacket';
+import { IncomingGyroPacket } from './IncomingGyroPacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
@@ -16,7 +17,6 @@ const IncomingSensorInfoPacket = require('./IncomingSensorInfoPacket');
 const InspectionPacketParser = require('./inspection/InspectionPacketParser');
 const IncomingMagnetometerAccuracyPacket = require('./IncomingMagnetometerAccuracy');
 const IncomingRotationPacket = require('./IncomingRotationPacket');
-const IncomingGyroPacket = require('./IncomingGyroPacket');
 
 export const parse = (data: Buffer, tracker: Tracker) => {
   const type = data.readInt32BE();
