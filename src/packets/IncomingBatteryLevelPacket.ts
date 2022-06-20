@@ -1,10 +1,10 @@
 import { Packet } from './Packet';
 
-module.exports = class IncomingBatteryLevelPacket extends Packet {
-  /**
-   * @param {Buffer} data
-   */
-  constructor(data) {
+export class IncomingBatteryLevelPacket extends Packet {
+  readonly voltage: number;
+  readonly percentage: number;
+
+  constructor(data: Buffer) {
     super(IncomingBatteryLevelPacket.type);
 
     this.voltage = 0;
@@ -24,7 +24,7 @@ module.exports = class IncomingBatteryLevelPacket extends Packet {
     return 12;
   }
 
-  toString() {
+  override toString() {
     return `IncomingBatteryLevelPacket{voltage: ${this.voltage}, percentage: ${this.percentage}}`;
   }
-};
+}

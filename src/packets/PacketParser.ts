@@ -1,10 +1,10 @@
 import { Tracker } from '../Tracker';
 import { IncomingAccelPacket } from './IncomingAccelPacket';
+import { IncomingBatteryLevelPacket } from './IncomingBatteryLevelPacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 
-const IncomingBatteryLevelPacket = require('./IncomingBatteryLevelPacket');
 const IncomingErrorPacket = require('./IncomingErrorPacket');
 const IncomingHandshakePacket = require('./IncomingHandshakePacket');
 const IncomingHeartbeatPacket = require('./IncomingHeartbeatPacket');

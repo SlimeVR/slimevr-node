@@ -30,7 +30,6 @@ import {
 } from './utils';
 import { VectorAggregator } from './VectorAggretator';
 
-const IncomingBatteryLevelPacket = require('./packets/IncomingBatteryLevelPacket');
 const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');
 const IncomingErrorPacket = require('./packets/IncomingErrorPacket');
 const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIMUDataPacket');
@@ -204,7 +203,7 @@ export class Tracker {
       }
 
       case IncomingBatteryLevelPacket.type: {
-        const batteryLevel = /** @type {IncomingBatteryLevelPacket} */ packet;
+        const batteryLevel = packet as IncomingBatteryLevelPacket;
 
         this.batteryVoltage = batteryLevel.voltage;
         this.batteryPercentage = batteryLevel.percentage;
