@@ -1,6 +1,6 @@
 import { Packet } from './Packet';
 
-module.exports = class OutgoingHandshakePacket extends Packet {
+export class OutgoingHandshakePacket extends Packet {
   constructor() {
     super(OutgoingHandshakePacket.type);
   }
@@ -9,7 +9,7 @@ module.exports = class OutgoingHandshakePacket extends Packet {
     return 3;
   }
 
-  toString() {
+  override toString() {
     return 'OutgoingHandshakePacket{}';
   }
 
@@ -17,7 +17,6 @@ module.exports = class OutgoingHandshakePacket extends Packet {
     const buf = Buffer.alloc(14);
     buf.writeUint8(this.type);
     buf.write('Hey OVR =D 5', 1, 'ascii');
-
     return buf;
   }
-};
+}

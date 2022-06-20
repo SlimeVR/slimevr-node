@@ -2,6 +2,7 @@ import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
+import { OutgoingHandshakePacket } from './packets/OutgoingHandshakePacket';
 import { OutgoingPingPacket } from './packets/OutgoingPingPacket';
 import { OutgoingSensorInfoPacket } from './packets/OutgoingSensorInfoPacket';
 import { Packet } from './packets/Packet';
@@ -35,7 +36,6 @@ const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDat
 const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 const IncomingSignalStrengthPacket = require('./packets/IncomingSignalStrengthPacket');
-const OutgoingHandshakeResponsePacket = require('./packets/OutgoingHandshakePacket');
 const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
 const IncomingAccelPacket = require('./packets/IncomingAccelPacket');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
@@ -158,7 +158,7 @@ export class Tracker {
           this.handleSensorPacket({ type: IncomingSensorInfoPacket.type, sensorId: 0, sensorType: handshake.imuType, sensorStatus: 1 });
         }
 
-        this.server.send(new OutgoingHandshakeResponsePacket().encode(), this.port, this.ip);
+        this.server.send(new OutgoingHandshakePacket().encode(), this.port, this.ip);
 
         break;
       }
