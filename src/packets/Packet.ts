@@ -1,5 +1,4 @@
 export abstract class Packet {
-  static readonly ROTATION = 1;
   static readonly SERIAL = 11;
   static readonly ROTATION_2 = 16;
   static readonly PROTOCOL_CHANGE = 200;

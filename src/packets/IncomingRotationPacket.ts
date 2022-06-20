@@ -1,10 +1,10 @@
+import { Quaternion } from '../utils';
 import { Packet } from './Packet';
 
-module.exports = class IncomingRotationPacket extends Packet {
-  /**
-   * @param {Buffer} data
-   */
-  constructor(data) {
+export class IncomingRotationPacket extends Packet {
+  readonly rotation: Quaternion;
+
+  constructor(data: Buffer) {
     super(IncomingRotationPacket.type);
 
     this.rotation = [data.readFloatBE(0), data.readFloatBE(4), data.readFloatBE(8), data.readFloatBE(12)];
@@ -14,7 +14,7 @@ module.exports = class IncomingRotationPacket extends Packet {
     return 1;
   }
 
-  toString() {
+  override toString() {
     return `IncomingRotationPacket{rotation: ${this.rotation}}`;
   }
-};
+}

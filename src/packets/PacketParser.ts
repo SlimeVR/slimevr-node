@@ -10,13 +10,13 @@ import { IncomingMagnetometerAccuracyPacket } from './IncomingMagnetometerAccura
 import { IncomingPongPacket } from './IncomingPongPacket';
 import { IncomingRawCalibrationDataPacket } from './IncomingRawCalibrationDataPacket';
 import { IncomingRotationDataPacket } from './IncomingRotationDataPacket';
+import { IncomingRotationPacket } from './IncomingRotationPacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 
 const IncomingSensorInfoPacket = require('./IncomingSensorInfoPacket');
 const InspectionPacketParser = require('./inspection/InspectionPacketParser');
-const IncomingRotationPacket = require('./IncomingRotationPacket');
 
 export const parse = (data: Buffer, tracker: Tracker) => {
   const type = data.readInt32BE();
