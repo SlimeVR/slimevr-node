@@ -1,11 +1,15 @@
 import { formatMACAddressDigit } from '../utils';
 import { Packet } from './Packet';
 
-module.exports = class IncomingHandshakePacket extends Packet {
-  /**
-   * @param {Buffer} data
-   */
-  constructor(data) {
+export class IncomingHandshakePacket extends Packet {
+  readonly boardType: number;
+  readonly imuType: number;
+  readonly mcuType: number;
+  readonly firmwareBuild: number;
+  readonly firmware: string;
+  readonly mac: string;
+
+  constructor(data: Buffer) {
     super(IncomingHandshakePacket.type);
 
     this.boardType = -1;
@@ -64,7 +68,7 @@ module.exports = class IncomingHandshakePacket extends Packet {
     return 3;
   }
 
-  readAscii(data, length) {
+  private readAscii(data: Buffer, length: number) {
     let buf = '';
 
     while (length-- > 0) {
@@ -82,7 +86,7 @@ module.exports = class IncomingHandshakePacket extends Packet {
     return buf;
   }
 
-  toString() {
+  override toString() {
     return `IncomingHandshakePacket{boardType: ${this.boardType}, imuType: ${this.imuType}, mcuType: ${this.mcuType}, firmwareBuild: ${this.firmwareBuild}, firmware: ${this.firmware}, mac: ${this.mac}}`;
   }
-};
+}

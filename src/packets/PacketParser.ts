@@ -4,11 +4,11 @@ import { IncomingBatteryLevelPacket } from './IncomingBatteryLevelPacket';
 import { IncomingCalibrationFinishedPacket } from './IncomingCalibrationFinishedPacket';
 import { IncomingErrorPacket } from './IncomingErrorPacket';
 import { IncomingGyroPacket } from './IncomingGyroPacket';
+import { IncomingHandshakePacket } from './IncomingHandshakePacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 
-const IncomingHandshakePacket = require('./IncomingHandshakePacket');
 const IncomingHeartbeatPacket = require('./IncomingHeartbeatPacket');
 const IncomingPongPacket = require('./IncomingPongPacket');
 const IncomingRawCalibrationDataPacket = require('./IncomingRawCalibrationDataPacket');

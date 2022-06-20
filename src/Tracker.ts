@@ -7,6 +7,7 @@ import { IncomingBatteryLevelPacket } from './packets/IncomingBatteryLevelPacket
 import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibrationFinishedPacket';
 import { IncomingErrorPacket } from './packets/IncomingErrorPacket';
 import { IncomingGyroPacket } from './packets/IncomingGyroPacket';
+import { IncomingHandshakePacket } from './packets/IncomingHandshakePacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
@@ -35,7 +36,6 @@ import { VectorAggregator } from './VectorAggretator';
 
 const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');
 const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIMUDataPacket');
-const IncomingHandshakePacket = require('./packets/IncomingHandshakePacket');
 const IncomingHeartbeatPacket = require('./packets/IncomingHeartbeatPacket');
 const IncomingPongPacket = require('./packets/IncomingPongPacket');
 const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
@@ -147,7 +147,7 @@ export class Tracker {
       }
 
       case IncomingHandshakePacket.type: {
-        const handshake = /** @type {IncomingHandshakePacket} */ packet;
+        const handshake = packet as IncomingHandshakePacket;
 
         this.firmwareBuild = handshake.firmwareBuild;
         this._mac = handshake.mac;
