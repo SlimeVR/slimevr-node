@@ -1,4 +1,5 @@
 import { Tracker } from '../Tracker';
+import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 
@@ -11,7 +12,6 @@ const IncomingPongPacket = require('./IncomingPongPacket');
 const IncomingRawCalibrationDataPacket = require('./IncomingRawCalibrationDataPacket');
 const IncomingRotationDataPacket = require('./IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./IncomingSensorInfoPacket');
-const IncomingSignalStrengthPacket = require('./IncomingSignalStrengthPacket');
 const InspectionPacketParser = require('./inspection/InspectionPacketParser');
 const IncomingCalibrationFinishedPacket = require('./IncomingCalibrationFinishedPacket');
 const IncomingMagnetometerAccuracyPacket = require('./IncomingMagnetometerAccuracy');

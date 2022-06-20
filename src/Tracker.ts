@@ -2,6 +2,7 @@ import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
+import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { OutgoingHandshakePacket } from './packets/OutgoingHandshakePacket';
@@ -37,7 +38,6 @@ const IncomingPongPacket = require('./packets/IncomingPongPacket');
 const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
 const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
-const IncomingSignalStrengthPacket = require('./packets/IncomingSignalStrengthPacket');
 const IncomingAccelPacket = require('./packets/IncomingAccelPacket');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
 const IncomingCalibrationFinishedPacket = require('./packets/IncomingCalibrationFinishedPacket');
@@ -271,7 +271,7 @@ export class Tracker {
       }
 
       case IncomingSignalStrengthPacket.type: {
-        const signalStrength = /** @type {IncomingSignalStrengthPacket} */ packet;
+        const signalStrength = packet as IncomingSignalStrengthPacket;
 
         this.signalStrength = signalStrength.signalStrength;
 
