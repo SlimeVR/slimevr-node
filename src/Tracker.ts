@@ -2,6 +2,7 @@ import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
+import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { OutgoingHandshakePacket } from './packets/OutgoingHandshakePacket';
 import { OutgoingPingPacket } from './packets/OutgoingPingPacket';
@@ -208,6 +209,14 @@ export class Tracker {
         this.batteryPercentage = batteryLevel.percentage;
 
         this.log(`Battery level changed to ${this.batteryVoltage}V (${this.batteryPercentage}%)`);
+
+        break;
+      }
+
+      case IncomingTapPacket.type: {
+        const tap = packet as IncomingTapPacket;
+
+        this.handleSensorPacket(tap);
 
         break;
       }
