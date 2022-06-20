@@ -2,6 +2,7 @@ import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
+import { OutgoingPingPacket } from './packets/OutgoingPingPacket';
 import { OutgoingSensorInfoPacket } from './packets/OutgoingSensorInfoPacket';
 import { Packet } from './packets/Packet';
 import { parse } from './packets/PacketParser';
@@ -35,7 +36,6 @@ const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 const IncomingSignalStrengthPacket = require('./packets/IncomingSignalStrengthPacket');
 const OutgoingHandshakeResponsePacket = require('./packets/OutgoingHandshakePacket');
-const OutgoingPingPacket = require('./packets/OutgoingPingPacket');
 const IncomingTemperaturePacket = require('./packets/IncomingTemperaturePacket');
 const IncomingAccelPacket = require('./packets/IncomingAccelPacket');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
@@ -374,7 +374,7 @@ export class Tracker {
   }
 
   ping() {
-    this.server.send(new OutgoingPingPacket().encode(this.lastPingId + 1), this.port, this.ip);
+    this.server.send(new OutgoingPingPacket(this.lastPingId + 1).encode(), this.port, this.ip);
 
     this.log('Sent ping');
   }

@@ -1,7 +1,7 @@
 import { Packet } from './Packet';
 
-module.exports = class OutgoingPingPacket extends Packet {
-  constructor() {
+export class OutgoingPingPacket extends Packet {
+  constructor(readonly id: number) {
     super(OutgoingPingPacket.type);
   }
 
@@ -9,18 +9,15 @@ module.exports = class OutgoingPingPacket extends Packet {
     return 10;
   }
 
-  toString() {
-    return 'OutgoingPingPacket{}';
+  override toString() {
+    return `OutgoingPingPacket{id: ${this.id}}`;
   }
 
-  /**
-   * @param {number} data
-   */
-  encode(data) {
+  encode() {
     const buf = Buffer.alloc(16);
     buf.writeInt32BE(this.type, 0);
     buf.writeBigInt64BE(0n, 4);
-    buf.writeInt32BE(data, 12);
+    buf.writeInt32BE(this.id, 12);
     return buf;
   }
-};
+}
