@@ -2,6 +2,8 @@ import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
 import { ConnectionTracker } from './ConnectionTracker';
 import { Protocol } from './constants';
+import { IncomingAccelPacket } from './packets/IncomingAccelPacket';
+import { IncomingBatteryLevelPacket } from './packets/IncomingBatteryLevelPacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
@@ -38,7 +40,6 @@ const IncomingPongPacket = require('./packets/IncomingPongPacket');
 const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
 const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
-const IncomingAccelPacket = require('./packets/IncomingAccelPacket');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
 const IncomingCalibrationFinishedPacket = require('./packets/IncomingCalibrationFinishedPacket');
 const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
@@ -165,7 +166,7 @@ export class Tracker {
       }
 
       case IncomingAccelPacket.type: {
-        const accel = /** @type {IncomingAccelPacket} */ packet;
+        const accel = packet as IncomingAccelPacket;
 
         this.log(`Acceleration: ${accel.acceleration.join(', ')}`);
 

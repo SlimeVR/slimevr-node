@@ -1,5 +1,7 @@
 import { networkInterfaces } from 'os';
 
+export type Vector = [number, number, number];
+
 export const getBroadcastAddresses = (): [string[], string[]] => {
   const broadcasts: string[] = [];
   const blacklist: string[] = [];

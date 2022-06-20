@@ -1,10 +1,10 @@
+import { Vector } from '../utils';
 import { Packet } from './Packet';
 
-module.exports = class IncomingAccelPacket extends Packet {
-  /**
-   * @param {Buffer} data
-   */
-  constructor(data) {
+export class IncomingAccelPacket extends Packet {
+  readonly acceleration: Vector;
+
+  constructor(data: Buffer) {
     super(IncomingAccelPacket.type);
 
     this.acceleration = [data.readFloatBE(0), data.readFloatBE(4), data.readFloatBE(8)];
@@ -14,7 +14,7 @@ module.exports = class IncomingAccelPacket extends Packet {
     return 4;
   }
 
-  toString() {
+  override toString() {
     return `IncomingAccelPacket{acceleration: ${this.acceleration}}`;
   }
-};
+}

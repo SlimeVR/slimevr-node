@@ -1,9 +1,9 @@
 import { Tracker } from '../Tracker';
+import { IncomingAccelPacket } from './IncomingAccelPacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 
-const IncomingAccelPacket = require('./IncomingAccelPacket');
 const IncomingBatteryLevelPacket = require('./IncomingBatteryLevelPacket');
 const IncomingErrorPacket = require('./IncomingErrorPacket');
 const IncomingHandshakePacket = require('./IncomingHandshakePacket');
