@@ -10,6 +10,7 @@ import { IncomingGyroPacket } from './packets/IncomingGyroPacket';
 import { IncomingHandshakePacket } from './packets/IncomingHandshakePacket';
 import { IncomingHeartbeatPacket } from './packets/IncomingHeartbeatPacket';
 import { IncomingMagnetometerAccuracyPacket } from './packets/IncomingMagnetometerAccuracy';
+import { IncomingPongPacket } from './packets/IncomingPongPacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
@@ -38,7 +39,6 @@ import { VectorAggregator } from './VectorAggretator';
 
 const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');
 const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIMUDataPacket');
-const IncomingPongPacket = require('./packets/IncomingPongPacket');
 const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
 const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
@@ -141,7 +141,7 @@ export class Tracker {
       case IncomingGyroPacket.type: {
         const rot = packet as IncomingGyroPacket;
 
-        this._log(`Gyroscope: ${rot.rotation.join(', ')}`);
+        this.log(`Gyroscope: ${rot.rotation.join(', ')}`);
 
         break;
       }
@@ -198,14 +198,14 @@ export class Tracker {
       }
 
       case IncomingPongPacket.type: {
-        const pong = /** @type {IncomingPongPacket} */ packet;
+        const pong = packet as IncomingPongPacket;
 
-        if (pong.pingId !== this.lastPingId + 1) {
+        if (pong.id !== this.lastPingId + 1) {
           this.log('Ping ID does not match, ignoring');
         } else {
           this.log('Received pong');
 
-          this.lastPingId = pong.pingId;
+          this.lastPingId = pong.id;
         }
 
         break;
