@@ -1,11 +1,11 @@
 import { SensorStatus } from './constants';
 import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibrationFinishedPacket';
 import { IncomingErrorPacket } from './packets/IncomingErrorPacket';
+import { IncomingMagnetometerAccuracyPacket } from './packets/IncomingMagnetometerAccuracy';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { Packet } from './packets/Packet';
 import { Tracker } from './Tracker';
 
-const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 
@@ -55,7 +55,7 @@ export class Sensor {
       }
 
       case IncomingMagnetometerAccuracyPacket.type: {
-        const magnetometerAccuracy = /** @type {IncomingMagnetometerAccuracyPacket} */ packet;
+        const magnetometerAccuracy = packet as IncomingMagnetometerAccuracyPacket;
 
         this.log(`Received magnetometer accuracy: ${magnetometerAccuracy.accuracy}`);
 

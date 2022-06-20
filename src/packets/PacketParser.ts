@@ -6,6 +6,7 @@ import { IncomingErrorPacket } from './IncomingErrorPacket';
 import { IncomingGyroPacket } from './IncomingGyroPacket';
 import { IncomingHandshakePacket } from './IncomingHandshakePacket';
 import { IncomingHeartbeatPacket } from './IncomingHeartbeatPacket';
+import { IncomingMagnetometerAccuracyPacket } from './IncomingMagnetometerAccuracy';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
@@ -15,7 +16,6 @@ const IncomingRawCalibrationDataPacket = require('./IncomingRawCalibrationDataPa
 const IncomingRotationDataPacket = require('./IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./IncomingSensorInfoPacket');
 const InspectionPacketParser = require('./inspection/InspectionPacketParser');
-const IncomingMagnetometerAccuracyPacket = require('./IncomingMagnetometerAccuracy');
 const IncomingRotationPacket = require('./IncomingRotationPacket');
 
 export const parse = (data: Buffer, tracker: Tracker) => {

@@ -9,6 +9,7 @@ import { IncomingErrorPacket } from './packets/IncomingErrorPacket';
 import { IncomingGyroPacket } from './packets/IncomingGyroPacket';
 import { IncomingHandshakePacket } from './packets/IncomingHandshakePacket';
 import { IncomingHeartbeatPacket } from './packets/IncomingHeartbeatPacket';
+import { IncomingMagnetometerAccuracyPacket } from './packets/IncomingMagnetometerAccuracy';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
@@ -42,7 +43,6 @@ const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDat
 const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
-const IncomingMagnetometerAccuracyPacket = require('./packets/IncomingMagnetometerAccuracy');
 
 export class Tracker {
   private _packetNumber = BigInt(0);
@@ -272,7 +272,7 @@ export class Tracker {
       }
 
       case IncomingMagnetometerAccuracyPacket.type: {
-        const magnetometerAccuracy = /** @type {IncomingMagnetometerAccuracyPacket} */ packet;
+        const magnetometerAccuracy = packet as IncomingMagnetometerAccuracyPacket;
 
         this.handleSensorPacket(magnetometerAccuracy);
 
