@@ -1,6 +1,6 @@
 import { Packet } from './Packet';
 
-module.exports = class IncomingHeartbeatPacket extends Packet {
+export class IncomingHeartbeatPacket extends Packet {
   constructor() {
     super(IncomingHeartbeatPacket.type);
   }
@@ -9,7 +9,7 @@ module.exports = class IncomingHeartbeatPacket extends Packet {
     return 0;
   }
 
-  toString() {
+  override toString() {
     return 'IncomingHeartbeatPacket{}';
   }
-};
+}
