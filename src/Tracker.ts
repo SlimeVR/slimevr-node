@@ -11,6 +11,7 @@ import { IncomingHandshakePacket } from './packets/IncomingHandshakePacket';
 import { IncomingHeartbeatPacket } from './packets/IncomingHeartbeatPacket';
 import { IncomingMagnetometerAccuracyPacket } from './packets/IncomingMagnetometerAccuracy';
 import { IncomingPongPacket } from './packets/IncomingPongPacket';
+import { IncomingRawCalibrationDataPacket } from './packets/IncomingRawCalibrationDataPacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
@@ -42,7 +43,6 @@ const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIM
 const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
 const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
-const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
 
 export class Tracker {
   private _packetNumber = BigInt(0);
@@ -182,7 +182,7 @@ export class Tracker {
       }
 
       case IncomingRawCalibrationDataPacket.type: {
-        const rawCalibrationData = /** @type {IncomingRawCalibrationDataPacket} */ packet;
+        const rawCalibrationData = packet as IncomingRawCalibrationDataPacket;
 
         this.handleSensorPacket(rawCalibrationData);
 

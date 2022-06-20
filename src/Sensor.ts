@@ -1,12 +1,12 @@
-import { SensorStatus } from './constants';
+import { RawCalibrationDataType, SensorStatus } from './constants';
 import { IncomingCalibrationFinishedPacket } from './packets/IncomingCalibrationFinishedPacket';
 import { IncomingErrorPacket } from './packets/IncomingErrorPacket';
 import { IncomingMagnetometerAccuracyPacket } from './packets/IncomingMagnetometerAccuracy';
+import { IncomingRawCalibrationDataPacket } from './packets/IncomingRawCalibrationDataPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { Packet } from './packets/Packet';
 import { Tracker } from './Tracker';
 
-const IncomingRawCalibrationDataPacket = require('./packets/IncomingRawCalibrationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 
 export class Sensor {
@@ -21,9 +21,11 @@ export class Sensor {
   handle(packet: Packet) {
     switch (packet.type) {
       case IncomingRawCalibrationDataPacket.type: {
-        const rawCalibrationData = /** @type {IncomingRawCalibrationDataPacket} */ packet;
+        const rawCalibrationData = packet as IncomingRawCalibrationDataPacket;
 
-        this.log(`Received raw calibration data for type ${rawCalibrationData.dataType}: ${rawCalibrationData.data.join(', ')}`);
+        this.log(
+          `Received raw calibration data for type ${RawCalibrationDataType[rawCalibrationData.dataType]}: ${rawCalibrationData.data.join(', ')}`
+        );
 
         break;
       }
