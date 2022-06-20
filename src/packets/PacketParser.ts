@@ -9,11 +9,11 @@ import { IncomingHeartbeatPacket } from './IncomingHeartbeatPacket';
 import { IncomingMagnetometerAccuracyPacket } from './IncomingMagnetometerAccuracy';
 import { IncomingPongPacket } from './IncomingPongPacket';
 import { IncomingRawCalibrationDataPacket } from './IncomingRawCalibrationDataPacket';
+import { IncomingRotationDataPacket } from './IncomingRotationDataPacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 
-const IncomingRotationDataPacket = require('./IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./IncomingSensorInfoPacket');
 const InspectionPacketParser = require('./inspection/InspectionPacketParser');
 const IncomingRotationPacket = require('./IncomingRotationPacket');

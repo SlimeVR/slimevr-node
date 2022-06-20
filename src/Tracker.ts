@@ -12,6 +12,7 @@ import { IncomingHeartbeatPacket } from './packets/IncomingHeartbeatPacket';
 import { IncomingMagnetometerAccuracyPacket } from './packets/IncomingMagnetometerAccuracy';
 import { IncomingPongPacket } from './packets/IncomingPongPacket';
 import { IncomingRawCalibrationDataPacket } from './packets/IncomingRawCalibrationDataPacket';
+import { IncomingRotationDataPacket } from './packets/IncomingRotationDataPacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
@@ -41,7 +42,6 @@ import { VectorAggregator } from './VectorAggretator';
 const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');
 const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIMUDataPacket');
 const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
-const IncomingRotationDataPacket = require('./packets/IncomingRotationDataPacket');
 const IncomingSensorInfoPacket = require('./packets/IncomingSensorInfoPacket');
 
 export class Tracker {
@@ -251,7 +251,7 @@ export class Tracker {
       }
 
       case IncomingRotationDataPacket.type: {
-        const rotation = /** @type {IncomingRotationDataPacket} */ packet;
+        const rotation = packet as IncomingRotationDataPacket;
 
         if (shouldDumpRotationDataPacketsRaw()) {
           this.log(rotation.toString());
