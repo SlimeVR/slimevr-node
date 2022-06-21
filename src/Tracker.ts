@@ -18,6 +18,7 @@ import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPa
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
 import { IncomingCorrectionDataPacket } from './packets/inspection/IncomingCorrectionDataPacket';
+import { IncomingFusedIMUDataPacket } from './packets/inspection/IncomingFusedIMUDataPacket';
 import { OutgoingHandshakePacket } from './packets/OutgoingHandshakePacket';
 import { OutgoingPingPacket } from './packets/OutgoingPingPacket';
 import { OutgoingSensorInfoPacket } from './packets/OutgoingSensorInfoPacket';
@@ -41,7 +42,6 @@ import {
 } from './utils';
 import { VectorAggregator } from './VectorAggretator';
 
-const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIMUDataPacket');
 const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
 
 export class Tracker {
@@ -334,7 +334,7 @@ export class Tracker {
       }
 
       case IncomingFusedIMUDataPacket.type: {
-        const fused = /** @type {IncomingFusedIMUDataPacket} */ packet;
+        const fused = packet as IncomingFusedIMUDataPacket;
 
         if (shouldDumpFusedDataRaw()) {
           this.log(fused.toString());

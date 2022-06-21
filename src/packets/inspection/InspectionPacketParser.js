@@ -1,7 +1,7 @@
-import { IncomingCorrectionDataPacket } from './IncomingCorrectionDataPacket';
 import { PacketType } from './constants';
+import { IncomingCorrectionDataPacket } from './IncomingCorrectionDataPacket';
+import { IncomingFusedIMUDataPacket } from './IncomingFusedIMUDataPacket';
 
-const IncomingFusedIMUDataPacket = require('./IncomingFusedIMUDataPacket');
 const IncomingRawIMUDataPacket = require('./IncomingRawIMUDataPacket');
 
 module.exports = class InspectionPacketParser {

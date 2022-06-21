@@ -1,11 +1,12 @@
+import { Quaternion } from '../../utils';
 import { Packet } from '../Packet';
 import { DataType } from './constants';
 
-module.exports = class IncomingFusedIMUDataPacket extends Packet {
-  /**
-   * @param {Buffer} data
-   */
-  constructor(data) {
+export class IncomingFusedIMUDataPacket extends Packet {
+  readonly sensorId: number;
+  readonly quaternion: Quaternion;
+
+  constructor(data: Buffer) {
     super(IncomingFusedIMUDataPacket.type);
 
     this.sensorId = data.readUInt8(0);
@@ -21,7 +22,7 @@ module.exports = class IncomingFusedIMUDataPacket extends Packet {
     return 0x6902;
   }
 
-  toString() {
+  override toString() {
     return `IncomingFusedIMUDataPacket{sensorId: ${this.sensorId}, quaternion: ${this.quaternion}}`;
   }
-};
+}
