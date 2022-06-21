@@ -17,6 +17,7 @@ import { IncomingSensorInfoPacket } from './packets/IncomingSensorInfoPacket';
 import { IncomingSignalStrengthPacket } from './packets/IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './packets/IncomingTapPacket';
 import { IncomingTemperaturePacket } from './packets/IncomingTemperaturePacket';
+import { IncomingCorrectionDataPacket } from './packets/inspection/IncomingCorrectionDataPacket';
 import { OutgoingHandshakePacket } from './packets/OutgoingHandshakePacket';
 import { OutgoingPingPacket } from './packets/OutgoingPingPacket';
 import { OutgoingSensorInfoPacket } from './packets/OutgoingSensorInfoPacket';
@@ -40,7 +41,6 @@ import {
 } from './utils';
 import { VectorAggregator } from './VectorAggretator';
 
-const IncomingCorrectionDataPacket = require('./packets/inspection/IncomingCorrectionDataPacket');
 const IncomingFusedIMUDataPacket = require('./packets/inspection/IncomingFusedIMUDataPacket');
 const IncomingRawIMUDataPacket = require('./packets/inspection/IncomingRawIMUDataPacket');
 
@@ -355,7 +355,7 @@ export class Tracker {
       }
 
       case IncomingCorrectionDataPacket.type: {
-        const correction = /** @type {IncomingCorrectionDataPacket} */ packet;
+        const correction = packet as IncomingCorrectionDataPacket;
 
         if (shouldDumpCorrectionDataRaw()) {
           this.log(correction.toString());

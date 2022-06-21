@@ -1,11 +1,12 @@
+import { Quaternion } from '../../utils';
 import { Packet } from '../Packet';
 import { DataType } from './constants';
 
-module.exports = class IncomingCorrectionDataPacket extends Packet {
-  /**
-   * @param {Buffer} data
-   */
-  constructor(data) {
+export class IncomingCorrectionDataPacket extends Packet {
+  readonly sensorId: number;
+  readonly quaternion: Quaternion;
+
+  constructor(data: Buffer) {
     super(IncomingCorrectionDataPacket.type);
 
     this.sensorId = data.readUInt8(0);
@@ -21,7 +22,7 @@ module.exports = class IncomingCorrectionDataPacket extends Packet {
     return 0x6903;
   }
 
-  toString() {
+  override toString() {
     return `IncomingCorrectionDataPacket{sensorId: ${this.sensorId}, quaternion: ${this.quaternion}}`;
   }
-};
+}
