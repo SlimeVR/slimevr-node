@@ -11,9 +11,7 @@
 ⚠ **Make sure you have stopped the SlimeVR server before running this software!**
 
 ```shell
-git clone https://github.com/SlimeVR/SlimeVR-Protocol-Debugger
-cd SlimeVR-Protocol-Debugger
-node . # add flags from below to enable features
+npx @slimevr/protocol-debugger
 ```
 
 ## Command line flags
