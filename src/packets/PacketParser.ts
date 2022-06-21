@@ -15,8 +15,7 @@ import { IncomingSensorInfoPacket } from './IncomingSensorInfoPacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
-
-const InspectionPacketParser = require('./inspection/InspectionPacketParser');
+import { InspectionPacketParser } from './inspection/PacketParser';
 
 export const parse = (data: Buffer, tracker: Tracker) => {
   const type = data.readInt32BE();

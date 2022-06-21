@@ -3,11 +3,8 @@ import { IncomingCorrectionDataPacket } from './IncomingCorrectionDataPacket';
 import { IncomingFusedIMUDataPacket } from './IncomingFusedIMUDataPacket';
 import { IncomingRawIMUDataPacket } from './IncomingRawIMUDataPacket';
 
-module.exports = class InspectionPacketParser {
-  /**
-   * @param {Buffer} data
-   */
-  static parseRawDataPacket = (data) => {
+export class InspectionPacketParser {
+  static parseRawDataPacket = (data: Buffer) => {
     const packetType = data.readUInt8(0);
 
     data = data.slice(1);
@@ -32,4 +29,4 @@ module.exports = class InspectionPacketParser {
   static get type() {
     return 0x69;
   }
-};
+}
