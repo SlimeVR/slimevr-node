@@ -1,8 +1,7 @@
 import { PacketType } from './constants';
 import { IncomingCorrectionDataPacket } from './IncomingCorrectionDataPacket';
 import { IncomingFusedIMUDataPacket } from './IncomingFusedIMUDataPacket';
-
-const IncomingRawIMUDataPacket = require('./IncomingRawIMUDataPacket');
+import { IncomingRawIMUDataPacket } from './IncomingRawIMUDataPacket';
 
 module.exports = class InspectionPacketParser {
   /**
@@ -24,7 +23,7 @@ module.exports = class InspectionPacketParser {
         return new IncomingCorrectionDataPacket(data);
 
       default:
-      // console.log(`Unknown packet type: ${PacketType}`);
+        console.log(`Unknown packet type: ${PacketType}`);
     }
 
     return null;

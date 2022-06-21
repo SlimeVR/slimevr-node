@@ -1,20 +1,24 @@
+import { Vector } from '../../utils';
 import { Packet } from '../Packet';
 import { DataType } from './constants';
 
-module.exports = class IncomingRawIMUDataPacket extends Packet {
-  /**
-   * @param {Buffer} data
-   */
-  constructor(data) {
+export class IncomingRawIMUDataPacket extends Packet {
+  readonly sensorId: number;
+
+  readonly rotation: Vector;
+  readonly acceleration: Vector;
+  readonly magnetometer: Vector;
+
+  readonly rotationAccuracy: number;
+  readonly accelerationAccuracy: number;
+  readonly magnetometerAccuracy: number;
+
+  constructor(data: Buffer) {
     super(IncomingRawIMUDataPacket.type);
 
     this.sensorId = data.readUInt8(0);
 
     const dataType = data.readUintBE(1, 1);
-
-    this.rotation = [0, 0, 0];
-    this.acceleration = [0, 0, 0];
-    this.magnetometer = [0, 0, 0];
 
     if (dataType === DataType.INT) {
       this.rotation = [data.readInt32BE(2), data.readInt32BE(6), data.readInt32BE(10)];
@@ -25,7 +29,7 @@ module.exports = class IncomingRawIMUDataPacket extends Packet {
       this.acceleration = [data.readFloatBE(15), data.readFloatBE(19), data.readFloatBE(23)];
       this.magnetometer = [data.readFloatBE(28), data.readFloatBE(32), data.readFloatBE(36)];
     } else {
-      // console.log(`Unknown data type: ${dataType}`);
+      throw new Error('IncomingRawIMUDataPacket: data type must be float or int');
     }
 
     this.rotationAccuracy = data.readUintBE(14, 1);
@@ -37,7 +41,7 @@ module.exports = class IncomingRawIMUDataPacket extends Packet {
     return 0x6901;
   }
 
-  toString() {
+  override toString() {
     return `IncomingRawIMUDataPacket{sensorId: ${this.sensorId}, rotation: ${this.rotation}, rotationAccuracy: ${this.rotationAccuracy}, acceleration: ${this.acceleration}, accelerationAccuracy: ${this.accelerationAccuracy}, magnetometer: ${this.magnetometer}, magnetometerAccuracy: ${this.magnetometerAccuracy}}`;
   }
-};
+}
