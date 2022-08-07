@@ -1,6 +1,6 @@
+import { SerializedTracker, ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
 import create from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { SerializedTracker, ServerStatus } from './shared/IPCMessages';
 
 export type Store = {
   serverStatus: ServerStatus;

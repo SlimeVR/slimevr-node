@@ -1,8 +1,7 @@
+import { SerializedTracker, ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
 import { app, BrowserWindow, ipcMain } from 'electron';
-import installExtension, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer';
 import { join } from 'node:path';
 import merge from 'ts-deepmerge';
-import { SerializedTracker, ServerStatus } from '../../shared/IPCMessages';
 import { Server } from '../Server';
 
 let mainWindow: BrowserWindow | null;
@@ -66,7 +65,7 @@ const stopServer = async () => {
   server = null;
 };
 
-const createWindow = () => {
+const createWindow = async () => {
   mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
@@ -75,10 +74,33 @@ const createWindow = () => {
     }
   });
 
-  const startUrl = process.env.ELECTRON_START_URL || `file://${__dirname}/../../build/index.html`;
-  mainWindow.loadURL(startUrl);
+  if (app.isPackaged) {
+    mainWindow.loadURL(`file://${__dirname}/../../index.html`);
 
-  mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
+  } else {
+    const devtoolsInstaller = await import('electron-devtools-installer');
+    const electronReload = await import('electron-reload');
+
+    devtoolsInstaller.default
+      .default(devtoolsInstaller.REACT_DEVELOPER_TOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
+
+    devtoolsInstaller.default
+      .default(devtoolsInstaller.REDUX_DEVTOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
+
+    mainWindow.loadURL(process.env.ELECTRON_START_URL as string);
+    mainWindow.webContents.openDevTools();
+
+    electronReload.default.default(__dirname, {
+      electron: `../../../node_modules/.bin/electron${process.platform === 'win32' ? '.cmd' : ''}`,
+      forceHardReset: true,
+      hardResetMethod: 'exit'
+    });
+  }
 };
 
 app.on('ready', () => {
@@ -93,14 +115,6 @@ app.on('ready', () => {
 
   ipcMain.handle('server:status:get', () => serverStatus);
   ipcMain.handle('trackers:get', () => trackers);
-
-  installExtension(REACT_DEVELOPER_TOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
-
-  installExtension(REDUX_DEVTOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
 });
 
 app.on('window-all-closed', () => {

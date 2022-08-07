@@ -14,7 +14,12 @@ import {
 } from '@slimevr/firmware-protocol';
 import { Events } from './Events';
 import { Tracker } from './Tracker';
-import { serializeTracker, shouldDumpRotationDataPacketsProcessed, shouldDumpRotationDataPacketsRaw } from './utils';
+import {
+  quaternionIsEqualWithEpsilon,
+  serializeTracker,
+  shouldDumpRotationDataPacketsProcessed,
+  shouldDumpRotationDataPacketsRaw
+} from './utils';
 import { VectorAggregator } from './VectorAggretator';
 
 export class Sensor {
@@ -88,13 +93,19 @@ export class Sensor {
           this.log(rotation.toString());
         }
 
+        const lastQuaternion = this.rotation.latestData;
+
         this.rotation.update(rotation.rotation);
 
         if (shouldDumpRotationDataPacketsProcessed()) {
           this.log(`RotPac | ${this.rotation.toString()}`);
         }
 
-        this.events.emit('tracker:changed', serializeTracker(this.tracker));
+        if (!quaternionIsEqualWithEpsilon(lastQuaternion, rotation.rotation)) {
+          this.log(`changed rotation: ${rotation.rotation}`);
+
+          this.events.emit('tracker:changed', serializeTracker(this.tracker));
+        }
 
         break;
       }

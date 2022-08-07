@@ -1,6 +1,6 @@
+import { SerializedTracker, ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
 import EventEmitter from 'node:events';
 import { StrictEventEmitter } from 'strict-event-emitter-types';
-import { SerializedTracker, ServerStatus } from '../shared/IPCMessages';
 
 export interface EmittableEvents {
   'server:status': (status: ServerStatus) => void;

@@ -1,8 +1,9 @@
 {
   "name": "@slimevr/firmware-protocol-debugger",
   "version": "0.2.0",
-  "main": "dist/backend/electron/main.js",
+  "main": "build/backend/electron/main.js",
   "license": "(MIT OR Apache-2.0)",
+  "homepage": ".",
   "author": {
     "name": "TheDevMinerTV",
     "email": "tobigames200@gmail.com"
@@ -15,24 +16,31 @@
     "url": "https://github.com/SlimeVR/slimevr.ts/issues"
   },
   "dependencies": {
+    "@react-three/fiber": "8.3.0",
     "@slimevr/common": "*",
     "@slimevr/firmware-protocol": "*",
+    "@slimevr/firmware-protocol-debugger-shared": "*",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "strict-event-emitter-types": "2.0.0",
+    "three": "0.143.0",
     "ts-deepmerge": "2.0.4",
     "zustand": "4.0.0"
   },
   "devDependencies": {
     "@types/node": "17.0.45",
     "@types/react": "18.0.15",
-    "@types/react-dom": "^18.0.6",
+    "@types/react-dom": "18.0.6",
+    "@types/three": "0.143.0",
     "@typescript-eslint/eslint-plugin": "5.32.0",
     "@typescript-eslint/parser": "5.32.0",
     "autoprefixer": "10.4.8",
+    "concurrently": "7.3.0",
     "cross-env": "7.0.3",
     "electron": "20.0.1",
-    "electron-devtools-installer": "^3.2.0",
+    "electron-builder": "23.3.3",
+    "electron-devtools-installer": "3.2.0",
+    "electron-reload": "2.0.0-alpha.1",
     "eslint": "8.21.0",
     "postcss": "8.4.16",
     "react-scripts": "5.0.1",
@@ -40,15 +48,16 @@
     "typescript": "4.7.4"
   },
   "scripts": {
-    "dev": "tsc -w",
-    "dev:electron": "cross-env ELECTRON_START_URL=http://localhost:3000 electron .",
-    "build": "tsc",
-    "lint": "eslint --resolve-plugins-relative-to ../../packages/eslint-config src",
-    "start": "electron .",
+    "postinstall": "electron-builder install-app-deps",
+    "dev": "concurrently \"tsc -w -p backend/tsconfig.json\" \"react-scripts start\" \"cross-env ELECTRON_START_URL=http://localhost:3000 electron .\"",
+    "build": "react-scripts build && tsc -p backend/tsconfig.json && electron-builder",
+    "lint": "eslint --resolve-plugins-relative-to ../../packages/eslint-config src backend",
     "react:start": "react-scripts start",
     "react:build": "react-scripts build",
     "react:test": "react-scripts test",
-    "react:eject": "react-scripts eject"
+    "react:eject": "react-scripts eject",
+    "dist": "electron-builder",
+    "pack": "electron-builder --dir"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -64,5 +73,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "build": {
+    "appId": "dev.slimevr.firmware-protocol-debugger",
+    "extends": null,
+    "files": [
+      "build/**/*",
+      "dist/backend/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    }
   }
 }

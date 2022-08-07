@@ -1,5 +1,5 @@
+import { ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
 import { createSocket } from 'node:dgram';
-import { ServerStatus } from '../shared/IPCMessages';
 import { ConnectionTracker } from './ConnectionTracker';
 import { newEvents } from './Events';
 import { Tracker } from './Tracker';

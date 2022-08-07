@@ -1,5 +1,5 @@
+import { SerializedTracker, ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
 import { contextBridge, ipcRenderer } from 'electron';
-import { SerializedTracker, ServerStatus } from '../../shared/IPCMessages';
 
 contextBridge.exposeInMainWorld('api', {
   getServerStatus: () => ipcRenderer.invoke('server:status:get'),

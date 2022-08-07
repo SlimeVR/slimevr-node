@@ -1,9 +1,9 @@
 {
   "extends": "@slimevr/tsconfig/electron.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "target": "ES2017",
-    "outDir": "build"
+    "target": "ES2022",
+    "outDir": "../build/backend"
   }
 }

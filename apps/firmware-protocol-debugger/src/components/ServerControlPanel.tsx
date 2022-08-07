@@ -1,5 +1,5 @@
+import { ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
 import { FC, useEffect } from 'react';
-import { ServerStatus } from '../shared/IPCMessages';
 import { useDebuggerStore } from '../store';
 
 export const ServerControlPanel: FC<unknown> = () => {

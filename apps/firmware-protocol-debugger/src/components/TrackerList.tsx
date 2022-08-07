@@ -1,5 +1,5 @@
+import { SerializedTracker } from '@slimevr/firmware-protocol-debugger-shared';
 import { FC, useEffect } from 'react';
-import { SerializedTracker } from '../shared/IPCMessages';
 import { useDebuggerStore } from '../store';
 import { TrackerComponent } from './Tracker';
 
