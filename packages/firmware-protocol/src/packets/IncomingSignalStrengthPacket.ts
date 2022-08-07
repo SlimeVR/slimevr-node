@@ -6,7 +6,7 @@ export class IncomingSignalStrengthPacket extends PacketWithSensorId {
   constructor(data: Buffer) {
     super(IncomingSignalStrengthPacket.type, data.readUintBE(0, 1) & 0xff);
 
-    this.signalStrength = data.readUintBE(1, 1);
+    this.signalStrength = data.readIntBE(1, 1);
   }
 
   static get type() {
