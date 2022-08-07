@@ -1,4 +1,4 @@
-export class VectorAggregator {
+export class VectorAggregator<T extends number[]> {
   private readonly samples: number[] = new Array(this.components).fill(0);
   private readonly averages: number[] = new Array(this.components).fill(0);
   private readonly deviances: number[] = new Array(this.components).fill(0);
@@ -6,11 +6,11 @@ export class VectorAggregator {
   private readonly mins: number[] = new Array(this.components).fill(0);
   private readonly maxs: number[] = new Array(this.components).fill(0);
 
-  private _latestData = new Array(this.components).fill(0);
+  private _latestData = new Array<number>(this.components).fill(0) as T;
 
   constructor(private readonly components: number) {}
 
-  update(raw: number[]) {
+  update(raw: T) {
     if (raw.length !== this.components) {
       throw new Error(`Expected ${this.components} components, got ${raw.length}`);
     }

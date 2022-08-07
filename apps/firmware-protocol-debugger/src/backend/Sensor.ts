@@ -1,20 +1,33 @@
+import { Quaternion } from '@slimevr/common';
 import {
   IncomingCalibrationFinishedPacket,
   IncomingErrorPacket,
   IncomingMagnetometerAccuracyPacket,
   IncomingRawCalibrationDataPacket,
+  IncomingRotationDataPacket,
   IncomingSensorInfoPacket,
   IncomingTemperaturePacket,
   Packet,
   RawCalibrationDataType,
-  SensorStatus
+  SensorStatus,
+  SensorType
 } from '@slimevr/firmware-protocol';
+import { Events } from './Events';
 import { Tracker } from './Tracker';
+import { serializeTracker, shouldDumpRotationDataPacketsProcessed, shouldDumpRotationDataPacketsRaw } from './utils';
+import { VectorAggregator } from './VectorAggretator';
 
 export class Sensor {
+  private readonly rotation = new VectorAggregator<Quaternion>(4);
+
   private status = SensorStatus.UNKNOWN;
 
-  constructor(private readonly tracker: Tracker, private readonly type: number, private readonly index: number) {}
+  constructor(
+    private readonly tracker: Tracker,
+    private readonly events: Events,
+    private readonly type: SensorType,
+    private readonly index: number
+  ) {}
 
   private log(msg: string) {
     console.log(`[Tracker:${this.tracker.getIP()}] [Sensor:${this.index}] ${msg}`);
@@ -68,6 +81,24 @@ export class Sensor {
         break;
       }
 
+      case IncomingRotationDataPacket.type: {
+        const rotation = packet as IncomingRotationDataPacket;
+
+        if (shouldDumpRotationDataPacketsRaw()) {
+          this.log(rotation.toString());
+        }
+
+        this.rotation.update(rotation.rotation);
+
+        if (shouldDumpRotationDataPacketsProcessed()) {
+          this.log(`RotPac | ${this.rotation.toString()}`);
+        }
+
+        this.events.emit('tracker:changed', serializeTracker(this.tracker));
+
+        break;
+      }
+
       case IncomingTemperaturePacket.type: {
         const temperature = packet as IncomingTemperaturePacket;
 
@@ -76,5 +107,9 @@ export class Sensor {
         break;
       }
     }
+  }
+
+  getRotation() {
+    return this.rotation.latestData;
   }
 }

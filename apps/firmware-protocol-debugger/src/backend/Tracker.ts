@@ -29,21 +29,20 @@ import {
 import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
 import { ConnectionTracker } from './ConnectionTracker';
+import { Events } from './Events';
 import { Sensor } from './Sensor';
 import {
   correctionDataDumpFile,
   fusedIMUDataDumpFile,
   rawIMUDataDumpFile,
-  rotationDataPacketDumpFile,
+  serializeTracker,
   shouldDumpAllPacketsRaw,
   shouldDumpCorrectionDataProcessed,
   shouldDumpCorrectionDataRaw,
   shouldDumpFusedDataProcessed,
   shouldDumpFusedDataRaw,
   shouldDumpRawIMUDataProcessed,
-  shouldDumpRawIMUDataRaw,
-  shouldDumpRotationDataPacketsProcessed,
-  shouldDumpRotationDataPacketsRaw
+  shouldDumpRawIMUDataRaw
 } from './utils';
 import { VectorAggregator } from './VectorAggretator';
 
@@ -62,28 +61,23 @@ export class Tracker implements TrackerLike {
   private batteryVoltage = 0;
   private batteryPercentage = 0;
 
-  private readonly rotation = new VectorAggregator(4);
   private readonly fusedRotation = new VectorAggregator(4);
   private readonly correctedRotation = new VectorAggregator(4);
   private readonly rawRotation = new VectorAggregator(3);
   private readonly rawAcceleration = new VectorAggregator(3);
   private readonly rawMagnetometer = new VectorAggregator(3);
 
-  private readonly rotationDataPacketStream: WriteStream | null = null;
   private readonly rawIMUDataRawStream: WriteStream | null = null;
   private readonly fusedIMUDataRawStream: WriteStream | null = null;
   private readonly correctionDataRawStream: WriteStream | null = null;
 
-  constructor(private server: Socket, private _ip: string, private _port: number) {
-    if (rotationDataPacketDumpFile() !== '') {
-      this.log(`Dumping rotation data to ${rotationDataPacketDumpFile()}`);
-
-      this.rotationDataPacketStream = createWriteStream(rotationDataPacketDumpFile(), 'utf8');
-      this.rotationDataPacketStream.write('timestamp,x,y,z,w\n');
-    } else {
-      this.rotationDataPacketStream = null;
-    }
-
+  constructor(
+    private readonly events: Events,
+    private readonly socket: Socket,
+    private readonly connectionTracker: ConnectionTracker,
+    private readonly _ip: string,
+    private readonly _port: number
+  ) {
     if (rawIMUDataDumpFile() !== '') {
       this.log(`Dumping raw IMU data to ${rawIMUDataDumpFile()}`);
 
@@ -156,14 +150,14 @@ export class Tracker implements TrackerLike {
         this._mac = handshake.mac;
         this.protocol = handshake.firmware === '' ? Protocol.OWO_LEGACY : Protocol.SLIMEVR_RAW;
 
-        const existingConnection = ConnectionTracker.get().getConnectionByMAC(handshake.mac);
+        const existingConnection = this.connectionTracker.getConnectionByMAC(handshake.mac);
 
         if (existingConnection) {
           this.log(`Removing existing connection for MAC ${handshake.mac}`);
-          ConnectionTracker.get().removeConnectionByMAC(handshake.mac);
+          this.connectionTracker.removeConnectionByMAC(handshake.mac);
         }
 
-        ConnectionTracker.get().addConnection(this);
+        this.connectionTracker.addConnection(this);
 
         this.handshook = true;
 
@@ -173,7 +167,7 @@ export class Tracker implements TrackerLike {
           this.handleSensorPacket(new IncomingSensorInfoPacket(buf));
         }
 
-        this.server.send(new OutgoingHandshakePacket().encode(), this._port, this._ip);
+        this.socket.send(new OutgoingHandshakePacket().encode(), this._port, this._ip);
 
         break;
       }
@@ -224,6 +218,8 @@ export class Tracker implements TrackerLike {
 
         this.log(`Battery level changed to ${this.batteryVoltage}V (${this.batteryPercentage}%)`);
 
+        this.events.emit('tracker:changed', serializeTracker(this));
+
         break;
       }
 
@@ -250,7 +246,7 @@ export class Tracker implements TrackerLike {
 
         this.handleSensorPacket(sensorInfo);
 
-        this.server.send(
+        this.socket.send(
           new OutgoingSensorInfoPacket(sensorInfo.sensorId, sensorInfo.sensorStatus).encode(),
           this._port,
           this._ip
@@ -262,23 +258,7 @@ export class Tracker implements TrackerLike {
       case IncomingRotationDataPacket.type: {
         const rotation = packet as IncomingRotationDataPacket;
 
-        if (shouldDumpRotationDataPacketsRaw()) {
-          this.log(rotation.toString());
-        }
-
-        this.rotation.update(rotation.rotation);
-
-        if (shouldDumpRotationDataPacketsProcessed()) {
-          this.log(`RotPac | ${this.rotation.toString()}`);
-        }
-
-        if (this.rotationDataPacketStream !== null) {
-          const csv =
-            [Date.now(), rotation.rotation[0], rotation.rotation[1], rotation.rotation[2], rotation.rotation[3]].join(
-              ','
-            ) + '\n';
-          this.rotationDataPacketStream.write(csv);
-        }
+        this.handleSensorPacket(rotation);
 
         break;
       }
@@ -297,6 +277,8 @@ export class Tracker implements TrackerLike {
         this.signalStrength = signalStrength.signalStrength;
 
         this.log(`Signal strength changed to ${this.signalStrength}`);
+
+        this.events.emit('tracker:changed', serializeTracker(this));
 
         break;
       }
@@ -404,7 +386,7 @@ export class Tracker implements TrackerLike {
   }
 
   ping() {
-    this.server.send(new OutgoingPingPacket(this.lastPingId + 1).encode(), this._port, this._ip);
+    this.socket.send(new OutgoingPingPacket(this.lastPingId + 1).encode(), this._port, this._ip);
 
     this.log('Sent ping');
   }
@@ -416,10 +398,12 @@ export class Tracker implements TrackerLike {
       this.log(`Setting up sensor ${packet.sensorId}`);
 
       if (!(packet instanceof IncomingSensorInfoPacket)) {
-        throw new Error(`Sensor ${packet.sensorId} is not an IncomingSensorInfoPacket`);
+        this.log(`Packet ${packet} is not an IncomingSensorInfoPacket`);
+
+        return;
       }
 
-      this.sensors[packet.sensorId] = new Sensor(this, packet.sensorType, packet.sensorId);
+      this.sensors[packet.sensorId] = new Sensor(this, this.events, packet.sensorType, packet.sensorId);
 
       this.log(`Added sensor ${packet.sensorId}`);
 
@@ -443,5 +427,21 @@ export class Tracker implements TrackerLike {
 
   getCurrentPacketNumber(): bigint {
     return this._packetNumber;
+  }
+
+  getSignalStrength(): number {
+    return this.signalStrength;
+  }
+
+  getBatteryPercentage(): number {
+    return this.batteryPercentage;
+  }
+
+  getBatteryVoltage(): number {
+    return this.batteryVoltage;
+  }
+
+  getSensors(): Record<number, Sensor> {
+    return this.sensors;
   }
 }

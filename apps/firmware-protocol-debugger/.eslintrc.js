@@ -1,3 +1,3 @@
 module.exports = {
-  extends: ['@slimevr/eslint-config']
+  extends: ['@slimevr/eslint-config', 'react-app']
 };

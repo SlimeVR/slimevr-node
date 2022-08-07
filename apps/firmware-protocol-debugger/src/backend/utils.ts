@@ -1,4 +1,7 @@
 import { networkInterfaces } from 'os';
+import { SerializedSensor, SerializedTracker } from '../shared/IPCMessages';
+import { Sensor } from './Sensor';
+import { Tracker } from './Tracker';
 
 export const getBroadcastAddresses = (): [string[], string[]] => {
   const broadcasts: string[] = [];
@@ -99,4 +102,33 @@ export const correctionDataDumpFile = () => {
   }
 
   return process.argv[index + 1];
+};
+
+export const serializeTracker = (tracker: Tracker): SerializedTracker => {
+  const sensors: Record<string, SerializedSensor> = {};
+
+  for (const [index, sensor] of Object.entries(tracker.getSensors())) {
+    sensors[index] = serializeSensor(sensor);
+  }
+
+  return {
+    mac: tracker.getMAC(),
+    ip: tracker.getIP(),
+    port: tracker.getPort(),
+
+    signalStrength: tracker.getSignalStrength(),
+
+    batteryLevel: {
+      percentage: tracker.getBatteryPercentage(),
+      voltage: tracker.getBatteryVoltage()
+    },
+
+    sensors
+  };
+};
+
+export const serializeSensor = (sensor: Sensor): SerializedSensor => {
+  return {
+    rotation: sensor.getRotation()
+  };
 };
