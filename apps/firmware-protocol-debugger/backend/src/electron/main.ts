@@ -84,7 +84,6 @@ const createWindow = async () => {
     mainWindow.webContents.openDevTools();
   } else {
     const devtoolsInstaller = await import('electron-devtools-installer');
-    const electronReload = await import('electron-reload');
 
     devtoolsInstaller.default
       .default(devtoolsInstaller.REACT_DEVELOPER_TOOLS)
@@ -98,12 +97,6 @@ const createWindow = async () => {
 
     mainWindow.loadURL(process.env.ELECTRON_START_URL as string);
     mainWindow.webContents.openDevTools();
-
-    electronReload.default.default(__dirname, {
-      electron: `../../../node_modules/.bin/electron${process.platform === 'win32' ? '.cmd' : ''}`,
-      forceHardReset: true,
-      hardResetMethod: 'exit'
-    });
   }
 };
 
