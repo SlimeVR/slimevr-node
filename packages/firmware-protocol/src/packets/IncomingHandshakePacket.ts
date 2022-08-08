@@ -1,9 +1,10 @@
 import { formatMACAddressDigit } from '@slimevr/common';
+import { SensorType } from '../constants';
 import { Packet } from './Packet';
 
 export class IncomingHandshakePacket extends Packet {
   readonly boardType: number;
-  readonly imuType: number;
+  readonly imuType: SensorType;
   readonly mcuType: number;
   readonly firmwareBuild: number;
   readonly firmware: string;
@@ -13,7 +14,7 @@ export class IncomingHandshakePacket extends Packet {
     super(IncomingHandshakePacket.type);
 
     this.boardType = -1;
-    this.imuType = -1;
+    this.imuType = SensorType.UNKNOWN;
     this.mcuType = -1;
     this.firmwareBuild = -1;
     this.firmware = '';
@@ -29,7 +30,12 @@ export class IncomingHandshakePacket extends Packet {
     }
 
     if (data.length >= 4) {
-      this.imuType = data.readInt32BE();
+      const rawIMUType = data.readInt32BE();
+
+      if (rawIMUType > 0 && rawIMUType < 10) {
+        this.imuType = rawIMUType;
+      }
+
       data = data.slice(4);
     }
 
