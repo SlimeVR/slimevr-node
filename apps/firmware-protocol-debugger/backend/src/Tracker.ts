@@ -162,7 +162,7 @@ export class Tracker implements TrackerLike {
         this.handshook = true;
 
         if (this.protocol === Protocol.OWO_LEGACY || this.firmwareBuild < 9) {
-          const buf = IncomingSensorInfoPacket.encode(0, SensorStatus.OK, handshake.mcuType);
+          const buf = IncomingSensorInfoPacket.encode(0, SensorStatus.OK, handshake.imuType);
 
           this.handleSensorPacket(new IncomingSensorInfoPacket(buf));
         }
