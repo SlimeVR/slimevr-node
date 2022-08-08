@@ -33,3 +33,9 @@ export enum SensorType {
   BMI160 = 8,
   ICM20948 = 9
 }
+
+export enum MCUType {
+  UNKNOWN = 0,
+  ESP8266 = 1,
+  ESP32 = 2
+}
