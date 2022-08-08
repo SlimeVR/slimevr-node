@@ -37,6 +37,10 @@ const startServer = async () => {
   });
 
   server.events.on('tracker:changed', (t) => {
+    if (!trackers[t.mac]) {
+      return;
+    }
+
     trackers[t.mac] = merge(trackers[t.mac], t);
 
     if (mainWindow && !shuttingDown) {
