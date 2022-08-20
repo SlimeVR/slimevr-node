@@ -1,4 +1,4 @@
-import { BoardType, MCUType } from '@slimevr/firmware-protocol';
+import { BoardType, MCUType, SensorType } from '@slimevr/firmware-protocol';
 
 export type SerializedTracker = {
   mac: string;
@@ -29,6 +29,8 @@ export enum ServerStatus {
 }
 
 export type SerializedSensor = {
+  type: SensorType;
+
   rotation: SerializedQuaternion;
 };
 

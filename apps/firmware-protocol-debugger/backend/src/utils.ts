@@ -138,6 +138,7 @@ export const serializeTracker = (tracker: Tracker): SerializedTracker => {
 
 export const serializeSensor = (sensor: Sensor): SerializedSensor => {
   return {
+    type: sensor.getType(),
     rotation: sensor.getRotation()
   };
 };

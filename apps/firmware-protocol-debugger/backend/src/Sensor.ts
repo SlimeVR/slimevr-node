@@ -120,6 +120,10 @@ export class Sensor {
     }
   }
 
+  getType(): SensorType {
+    return this.type;
+  }
+
   getRotation() {
     return this.rotation.latestData;
   }

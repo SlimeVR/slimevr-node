@@ -32,7 +32,7 @@ export const TrackerComponent: FC<{ tracker: SerializedTracker }> = ({ tracker }
 
       <hr className="border-dark-purple-100" />
 
-      <div className="flex mx-2 flex-wrap space-x-2">
+      <div className="flex mx-2 flex-wrap space-x-2 my-2">
         {Object.values(tracker.sensors).map((sensor, i) => (
           <SensorComponent sensor={sensor} sensorId={i} key={i} />
         ))}
