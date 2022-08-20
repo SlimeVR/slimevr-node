@@ -75,6 +75,8 @@ export class Sensor {
 
         this.log('Set up sensor');
 
+        this.events.emit('tracker:changed', serializeTracker(this.tracker));
+
         break;
       }
 
@@ -122,6 +124,10 @@ export class Sensor {
 
   getType(): SensorType {
     return this.type;
+  }
+
+  getStatus(): SensorStatus {
+    return this.status;
   }
 
   getRotation() {

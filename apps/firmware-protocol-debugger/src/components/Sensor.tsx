@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { SensorType } from '@slimevr/firmware-protocol';
+import { SensorStatus, SensorType } from '@slimevr/firmware-protocol';
 import { SerializedQuaternion, SerializedSensor } from '@slimevr/firmware-protocol-debugger-shared';
 import { FC, useEffect, useRef } from 'react';
 import * as ThreeJS from 'three';
@@ -33,6 +33,7 @@ export const SensorComponent: FC<{ sensor: SerializedSensor; sensorId: number | 
       <hr className="border-dark-purple-100" />
 
       <p className="mx-2 font-xs">Type: {SensorType[sensor.type]}</p>
+      <p className="mx-2 font-xs">Status: {SensorStatus[sensor.status]}</p>
 
       <hr className="border-dark-purple-100" />
 
