@@ -49,7 +49,8 @@
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "dev": "concurrently \"tsc -w -p backend/tsconfig.json\" \"react-scripts start\" \"cross-env ELECTRON_START_URL=http://localhost:3000 electron .\"",
+    "dev": "concurrently \"tsc -w -p backend/tsconfig.json\" \"react-scripts start\" \"npm run dev:electron\"",
+    "dev:electron": "cross-env ELECTRON_START_URL=http://localhost:3000 electron .",
     "build": "react-scripts build && tsc -p backend/tsconfig.json && electron-builder",
     "lint": "eslint --resolve-plugins-relative-to ../../packages/eslint-config src backend",
     "react:start": "react-scripts start",
