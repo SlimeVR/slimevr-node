@@ -14,6 +14,7 @@ import {
   IncomingRawCalibrationDataPacket,
   IncomingRawIMUDataPacket,
   IncomingRotationDataPacket,
+  IncomingRotationPacket,
   IncomingSensorInfoPacket,
   IncomingSignalStrengthPacket,
   IncomingTapPacket,
@@ -136,6 +137,14 @@ export class Tracker implements TrackerLike {
     switch (packet.type) {
       case IncomingHeartbeatPacket.type: {
         this.log('Received heartbeat');
+
+        break;
+      }
+
+      case IncomingRotationPacket.type: {
+        const rotation = packet as IncomingRotationPacket;
+
+        this.handleSensorPacket(IncomingRotationDataPacket.fromRotationPacket(rotation));
 
         break;
       }

@@ -5,6 +5,7 @@ import {
   IncomingMagnetometerAccuracyPacket,
   IncomingRawCalibrationDataPacket,
   IncomingRotationDataPacket,
+  IncomingRotationPacket,
   IncomingSensorInfoPacket,
   IncomingTemperaturePacket,
   Packet,
@@ -114,6 +115,24 @@ export class Sensor {
 
           this.events.emit('tracker:changed', serializeTracker(this.tracker));
         }
+
+        break;
+      }
+
+      case IncomingRotationPacket.type: {
+        const rotation = packet as IncomingRotationPacket;
+
+        if (shouldDumpRotationDataPacketsRaw()) {
+          this.log(rotation.toString());
+        }
+
+        this.rotation.update(rotation.rotation);
+
+        if (shouldDumpRotationDataPacketsProcessed()) {
+          this.log(`RotPac | ${this.rotation.toString()}`);
+        }
+
+        this.events.emit('tracker:changed', serializeTracker(this.tracker));
 
         break;
       }
