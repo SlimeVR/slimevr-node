@@ -39,3 +39,17 @@ export enum MCUType {
   ESP8266 = 1,
   ESP32 = 2
 }
+
+export enum BoardType {
+  UNKNOWN = 0,
+  SLIMEVR_LEGACY = 1,
+  SLIMEVR_DEV = 2,
+  NODEMCU = 3,
+  CUSTOM = 4,
+  WROOM32 = 5,
+  WEMOSD1MINI = 6,
+  TTGO_TBASE = 7,
+  ESP01 = 8,
+  SLIMEVR = 9,
+  LOLIN_C3_MINI = 10
+}

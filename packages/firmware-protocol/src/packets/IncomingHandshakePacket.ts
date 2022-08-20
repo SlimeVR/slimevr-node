@@ -1,9 +1,9 @@
 import { formatMACAddressDigit } from '@slimevr/common';
-import { MCUType, SensorType } from '../constants';
+import { BoardType, MCUType, SensorType } from '../constants';
 import { Packet } from './Packet';
 
 export class IncomingHandshakePacket extends Packet {
-  readonly boardType: number;
+  readonly boardType: BoardType;
   readonly imuType: SensorType;
   readonly mcuType: MCUType;
   readonly firmwareBuild: number;
@@ -13,7 +13,7 @@ export class IncomingHandshakePacket extends Packet {
   constructor(data: Buffer) {
     super(IncomingHandshakePacket.type);
 
-    this.boardType = -1;
+    this.boardType = BoardType.UNKNOWN;
     this.imuType = SensorType.UNKNOWN;
     this.mcuType = MCUType.UNKNOWN;
     this.firmwareBuild = -1;
@@ -25,7 +25,15 @@ export class IncomingHandshakePacket extends Packet {
     }
 
     if (data.length >= 4) {
-      this.boardType = data.readInt32BE();
+      const rawBoardType = data.readInt32BE();
+
+      console.log(`rawBoardType: ${rawBoardType}`);
+
+      if (rawBoardType > 0 && rawBoardType < 11) {
+        this.boardType = rawBoardType;
+        console.log(`boardType: ${BoardType[this.boardType]}`);
+      }
+
       data = data.slice(4);
     }
 
@@ -105,6 +113,10 @@ export class IncomingHandshakePacket extends Packet {
   }
 
   override toString() {
-    return `IncomingHandshakePacket{boardType: ${this.boardType}, imuType: ${this.imuType}, mcuType: ${this.mcuType}, firmwareBuild: ${this.firmwareBuild}, firmware: ${this.firmware}, mac: ${this.mac}}`;
+    return `IncomingHandshakePacket{boardType: ${BoardType[this.boardType]}, imuType: ${
+      SensorType[this.imuType]
+    }, mcuType: ${MCUType[this.mcuType]}, firmwareBuild: ${this.firmwareBuild}, firmware: ${this.firmware}, mac: ${
+      this.mac
+    }}`;
   }
 }
