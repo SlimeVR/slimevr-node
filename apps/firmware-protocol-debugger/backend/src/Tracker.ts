@@ -53,7 +53,11 @@ export class Tracker implements TrackerLike {
   private _packetNumber = BigInt(0);
   private handshook = false;
   private lastPacket = Date.now();
-  private lastPingId = 0;
+  private lastPing = {
+    id: 0,
+    startTimestamp: 0,
+    duration: 0
+  };
 
   private _mac = '';
   private protocol = Protocol.UNKNOWN;
@@ -216,12 +220,15 @@ export class Tracker implements TrackerLike {
       case IncomingPongPacket.type: {
         const pong = packet as IncomingPongPacket;
 
-        if (pong.id !== this.lastPingId + 1) {
+        if (pong.id !== this.lastPing.id + 1) {
           this.log('Ping ID does not match, ignoring');
         } else {
-          this.log('Received pong');
+          this.lastPing.duration = Date.now() - this.lastPing.startTimestamp;
+          this.lastPing.id = pong.id;
 
-          this.lastPingId = pong.id;
+          this.log(`Received pong in ${this.lastPing.duration}ms`);
+
+          this.events.emit('tracker:changed', serializeTracker(this));
         }
 
         break;
@@ -403,7 +410,8 @@ export class Tracker implements TrackerLike {
   }
 
   ping() {
-    this.socket.send(new OutgoingPingPacket(this.lastPingId + 1).encode(), this._port, this._ip);
+    this.lastPing.startTimestamp = Date.now();
+    this.socket.send(new OutgoingPingPacket(this.lastPing.id + 1).encode(), this._port, this._ip);
 
     this.log('Sent ping');
   }
@@ -459,6 +467,10 @@ export class Tracker implements TrackerLike {
 
   getSignalStrength(): number {
     return this.signalStrength;
+  }
+
+  getPing(): number {
+    return this.lastPing.duration;
   }
 
   getBatteryPercentage(): number {

@@ -118,6 +118,7 @@ export const serializeTracker = (tracker: Tracker): SerializedTracker => {
     port: tracker.getPort(),
 
     signalStrength: tracker.getSignalStrength(),
+    ping: tracker.getPing(),
 
     protocol: tracker.getProtocol(),
     mcuType: tracker.getMCUType(),

@@ -6,6 +6,7 @@ export type SerializedTracker = {
   port: number;
 
   signalStrength: number;
+  ping: number;
 
   protocol: Protocol;
   mcuType: MCUType;

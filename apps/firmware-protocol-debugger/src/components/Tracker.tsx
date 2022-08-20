@@ -47,6 +47,8 @@ export const TrackerComponent: FC<{ tracker: SerializedTracker }> = ({ tracker }
         {Math.max(Math.min(((tracker.signalStrength - -95) * (100 - 0)) / (-40 - -95) + 0, 100), 0).toFixed(1)}%)
       </p>
 
+      <p className="mx-2 font-xs">Ping: {tracker.ping}ms</p>
+
       <p className="mx-2 font-xs">Microcontroller: {MCUType[tracker.mcuType]}</p>
       <p className="mx-2 font-xs">Board: {BoardType[tracker.boardType]}</p>
 
