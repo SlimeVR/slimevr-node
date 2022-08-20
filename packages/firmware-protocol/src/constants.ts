@@ -22,7 +22,7 @@ export enum RawCalibrationDataType {
 }
 
 export enum SensorType {
-  UNKNOWN = -1,
+  UNKNOWN = 0,
   MPU9250 = 1,
   MPU6500 = 2,
   BNO080 = 3,
