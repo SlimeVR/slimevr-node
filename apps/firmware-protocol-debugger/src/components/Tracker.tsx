@@ -26,6 +26,9 @@ export const TrackerComponent: FC<{ tracker: SerializedTracker }> = ({ tracker }
 
       <p className="mx-2 font-xs">Microcontroller: {MCUType[tracker.mcuType]}</p>
 
+      <p className="mx-2 font-xs">Firmware: {tracker.firmware.version}</p>
+      <p className="mx-2 font-xs">Protocol: {tracker.firmware.protocol}</p>
+
       <hr className="border-dark-purple-100" />
 
       <div className="flex mx-2 flex-wrap space-x-2">

@@ -121,6 +121,11 @@ export const serializeTracker = (tracker: Tracker): SerializedTracker => {
 
     mcuType: tracker.getMCUType(),
 
+    firmware: {
+      version: tracker.getFirmware(),
+      protocol: tracker.getFirmwareBuild()
+    },
+
     batteryLevel: {
       percentage: tracker.getBatteryPercentage(),
       voltage: tracker.getBatteryVoltage()

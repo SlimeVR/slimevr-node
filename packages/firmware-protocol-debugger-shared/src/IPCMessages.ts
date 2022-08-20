@@ -9,6 +9,11 @@ export type SerializedTracker = {
 
   mcuType: MCUType;
 
+  firmware: {
+    version: string;
+    protocol: number;
+  };
+
   batteryLevel: {
     percentage: number;
     voltage: number;
