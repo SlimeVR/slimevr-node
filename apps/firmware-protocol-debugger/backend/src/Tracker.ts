@@ -17,6 +17,7 @@ import {
   IncomingSignalStrengthPacket,
   IncomingTapPacket,
   IncomingTemperaturePacket,
+  MCUType,
   OutgoingHandshakePacket,
   OutgoingPingPacket,
   OutgoingSensorInfoPacket,
@@ -55,6 +56,7 @@ export class Tracker implements TrackerLike {
   private _mac = '';
   private firmwareBuild = -1;
   private protocol = Protocol.UNKNOWN;
+  private mcuType = MCUType.UNKNOWN;
 
   private sensors: Sensor[] = [];
   private signalStrength = 0;
@@ -149,6 +151,7 @@ export class Tracker implements TrackerLike {
         this.firmwareBuild = handshake.firmwareBuild;
         this._mac = handshake.mac;
         this.protocol = handshake.firmware === '' ? Protocol.OWO_LEGACY : Protocol.SLIMEVR_RAW;
+        this.mcuType = handshake.mcuType;
 
         const existingConnection = this.connectionTracker.getConnectionByMAC(handshake.mac);
 
@@ -443,5 +446,9 @@ export class Tracker implements TrackerLike {
 
   getSensors(): Record<number, Sensor> {
     return this.sensors;
+  }
+
+  getMCUType(): MCUType {
+    return this.mcuType;
   }
 }

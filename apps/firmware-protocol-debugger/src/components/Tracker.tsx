@@ -1,3 +1,4 @@
+import { MCUType } from '@slimevr/firmware-protocol';
 import { SerializedTracker } from '@slimevr/firmware-protocol-debugger-shared';
 import { FC } from 'react';
 import { SensorComponent } from './Sensor';
@@ -22,6 +23,8 @@ export const TrackerComponent: FC<{ tracker: SerializedTracker }> = ({ tracker }
         WiFi Signal Strength: {tracker.signalStrength}dBm (
         {Math.max(Math.min(((tracker.signalStrength - -95) * (100 - 0)) / (-40 - -95) + 0, 100), 0).toFixed(1)}%)
       </p>
+
+      <p className="mx-2 font-xs">Microcontroller: {MCUType[tracker.mcuType]}</p>
 
       <hr className="border-dark-purple-100" />
 

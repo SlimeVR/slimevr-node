@@ -9,6 +9,9 @@
     "build": "tsc",
     "dev": "tsc -w"
   },
+  "dependencies": {
+    "@slimevr/firmware-protocol": "*"
+  },
   "devDependencies": {
     "@slimevr/eslint-config": "*",
     "@slimevr/tsconfig": "*",

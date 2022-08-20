@@ -119,6 +119,8 @@ export const serializeTracker = (tracker: Tracker): SerializedTracker => {
 
     signalStrength: tracker.getSignalStrength(),
 
+    mcuType: tracker.getMCUType(),
+
     batteryLevel: {
       percentage: tracker.getBatteryPercentage(),
       voltage: tracker.getBatteryVoltage()

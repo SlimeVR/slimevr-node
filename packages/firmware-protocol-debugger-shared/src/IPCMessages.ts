@@ -1,9 +1,13 @@
+import { MCUType } from '@slimevr/firmware-protocol';
+
 export type SerializedTracker = {
   mac: string;
   ip: string;
   port: number;
 
   signalStrength: number;
+
+  mcuType: MCUType;
 
   batteryLevel: {
     percentage: number;
