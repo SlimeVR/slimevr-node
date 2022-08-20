@@ -1,4 +1,4 @@
-import { MCUType } from '@slimevr/firmware-protocol';
+import { BoardType, MCUType } from '@slimevr/firmware-protocol';
 import { SerializedTracker } from '@slimevr/firmware-protocol-debugger-shared';
 import { FC } from 'react';
 import { SensorComponent } from './Sensor';
@@ -25,6 +25,7 @@ export const TrackerComponent: FC<{ tracker: SerializedTracker }> = ({ tracker }
       </p>
 
       <p className="mx-2 font-xs">Microcontroller: {MCUType[tracker.mcuType]}</p>
+      <p className="mx-2 font-xs">Board: {BoardType[tracker.boardType]}</p>
 
       <p className="mx-2 font-xs">Firmware: {tracker.firmware.version}</p>
       <p className="mx-2 font-xs">Protocol: {tracker.firmware.protocol}</p>

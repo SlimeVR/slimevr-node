@@ -120,6 +120,7 @@ export const serializeTracker = (tracker: Tracker): SerializedTracker => {
     signalStrength: tracker.getSignalStrength(),
 
     mcuType: tracker.getMCUType(),
+    boardType: tracker.getBoardType(),
 
     firmware: {
       version: tracker.getFirmware(),

@@ -1,4 +1,5 @@
 import {
+  BoardType,
   IncomingAccelPacket,
   IncomingBatteryLevelPacket,
   IncomingCalibrationFinishedPacket,
@@ -58,6 +59,7 @@ export class Tracker implements TrackerLike {
   private firmware = '';
   private firmwareBuild = -1;
   private mcuType = MCUType.UNKNOWN;
+  private boardType = BoardType.UNKNOWN;
 
   private sensors: Sensor[] = [];
   private signalStrength = 0;
@@ -154,6 +156,7 @@ export class Tracker implements TrackerLike {
         this.firmware = handshake.firmware;
         this.firmwareBuild = handshake.firmwareBuild;
         this.mcuType = handshake.mcuType;
+        this.boardType = handshake.boardType;
 
         const existingConnection = this.connectionTracker.getConnectionByMAC(handshake.mac);
 
@@ -460,5 +463,9 @@ export class Tracker implements TrackerLike {
 
   getFirmwareBuild(): number {
     return this.firmwareBuild;
+  }
+
+  getBoardType(): BoardType {
+    return this.boardType;
   }
 }

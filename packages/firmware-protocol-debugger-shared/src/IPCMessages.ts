@@ -1,4 +1,4 @@
-import { MCUType } from '@slimevr/firmware-protocol';
+import { BoardType, MCUType } from '@slimevr/firmware-protocol';
 
 export type SerializedTracker = {
   mac: string;
@@ -8,6 +8,7 @@ export type SerializedTracker = {
   signalStrength: number;
 
   mcuType: MCUType;
+  boardType: BoardType;
 
   firmware: {
     version: string;
