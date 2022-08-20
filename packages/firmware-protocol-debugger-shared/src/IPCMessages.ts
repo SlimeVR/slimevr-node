@@ -32,6 +32,7 @@ export type SerializedSensor = {
   type: SensorType;
   status: SensorStatus;
   magnetometerAccuracy: number;
+  temperature: number;
 
   rotation: SerializedQuaternion;
 };

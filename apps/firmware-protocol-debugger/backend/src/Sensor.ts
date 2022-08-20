@@ -27,6 +27,7 @@ export class Sensor {
 
   private status = SensorStatus.UNKNOWN;
   private magnetometerAccuracy = 0;
+  private temperature = 0;
 
   constructor(
     private readonly tracker: Tracker,
@@ -122,6 +123,10 @@ export class Sensor {
 
         this.log(`Received temperature: ${temperature.temperature}`);
 
+        this.temperature = temperature.temperature;
+
+        this.events.emit('tracker:changed', serializeTracker(this.tracker));
+
         break;
       }
     }
@@ -137,6 +142,10 @@ export class Sensor {
 
   getMagnetometerAccuracy(): number {
     return this.magnetometerAccuracy;
+  }
+
+  getTemperature(): number {
+    return this.temperature;
   }
 
   getRotation() {

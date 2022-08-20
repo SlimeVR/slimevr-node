@@ -35,6 +35,7 @@ export const SensorComponent: FC<{ sensor: SerializedSensor; sensorId: number | 
       <p className="mx-2 font-xs">Type: {SensorType[sensor.type]}</p>
       <p className="mx-2 font-xs">Status: {SensorStatus[sensor.status]}</p>
       <p className="mx-2 font-xs">Magnetometer Accuracy: {sensor.magnetometerAccuracy}</p>
+      <p className="mx-2 font-xs">Temperature: {sensor.temperature}</p>
 
       <hr className="border-dark-purple-100" />
 
