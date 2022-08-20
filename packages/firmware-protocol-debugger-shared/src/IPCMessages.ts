@@ -31,6 +31,7 @@ export enum ServerStatus {
 export type SerializedSensor = {
   type: SensorType;
   status: SensorStatus;
+  magnetometerAccuracy: number;
 
   rotation: SerializedQuaternion;
 };

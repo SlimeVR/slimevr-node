@@ -140,6 +140,7 @@ export const serializeSensor = (sensor: Sensor): SerializedSensor => {
   return {
     type: sensor.getType(),
     status: sensor.getStatus(),
+    magnetometerAccuracy: sensor.getMagnetometerAccuracy(),
     rotation: sensor.getRotation()
   };
 };
