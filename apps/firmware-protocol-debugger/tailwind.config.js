@@ -17,7 +17,9 @@ module.exports = {
           900: '#141019'
         },
         'yellow-crayola': '#f4e87c',
-        ruby: '#d81159'
+        ruby: '#d81159',
+        slimevr: '#8f47d3',
+        owotrack: '#93ff74'
       }
     }
   },

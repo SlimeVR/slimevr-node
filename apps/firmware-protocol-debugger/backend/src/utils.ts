@@ -119,6 +119,7 @@ export const serializeTracker = (tracker: Tracker): SerializedTracker => {
 
     signalStrength: tracker.getSignalStrength(),
 
+    protocol: tracker.getProtocol(),
     mcuType: tracker.getMCUType(),
     boardType: tracker.getBoardType(),
 

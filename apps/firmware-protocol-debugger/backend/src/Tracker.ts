@@ -449,6 +449,10 @@ export class Tracker implements TrackerLike {
     return this._mac;
   }
 
+  getProtocol(): Protocol {
+    return this.protocol;
+  }
+
   getCurrentPacketNumber(): bigint {
     return this._packetNumber;
   }
