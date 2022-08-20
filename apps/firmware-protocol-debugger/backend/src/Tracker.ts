@@ -411,9 +411,16 @@ export class Tracker implements TrackerLike {
         return;
       }
 
-      this.sensors[packet.sensorId] = new Sensor(this, this.events, packet.sensorType, packet.sensorId);
+      const sensor = (this.sensors[packet.sensorId] = new Sensor(
+        this,
+        this.events,
+        packet.sensorType,
+        packet.sensorId
+      ));
 
       this.log(`Added sensor ${packet.sensorId}`);
+
+      sensor.handle(packet);
 
       return;
     }
