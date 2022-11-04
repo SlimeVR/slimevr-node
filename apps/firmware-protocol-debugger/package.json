@@ -1,5 +1,5 @@
 {
-  "name": "@slimevr/firmware-protocol-debugger",
+  "name": "slimevr-firmware-protocol-debugger",
   "version": "0.2.0",
   "main": "build/backend/electron/main.js",
   "license": "(MIT OR Apache-2.0)",
