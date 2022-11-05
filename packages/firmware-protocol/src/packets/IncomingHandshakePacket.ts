@@ -27,11 +27,8 @@ export class IncomingHandshakePacket extends Packet {
     if (data.length >= 4) {
       const rawBoardType = data.readInt32BE();
 
-      console.log(`rawBoardType: ${rawBoardType}`);
-
       if (rawBoardType > 0 && rawBoardType < 11) {
         this.boardType = rawBoardType;
-        console.log(`boardType: ${BoardType[this.boardType]}`);
       }
 
       data = data.slice(4);
