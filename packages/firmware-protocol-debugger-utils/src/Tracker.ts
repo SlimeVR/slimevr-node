@@ -31,14 +31,12 @@ import {
 } from '@slimevr/firmware-protocol';
 import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
-import { ConnectionTracker } from './ConnectionTracker';
+import type { ConnectionTracker } from './ConnectionTracker';
 import { Events } from './Events';
-import { Sensor } from './Sensor';
 import {
   correctionDataDumpFile,
   fusedIMUDataDumpFile,
   rawIMUDataDumpFile,
-  serializeTracker,
   shouldDumpAllPacketsRaw,
   shouldDumpCorrectionDataProcessed,
   shouldDumpCorrectionDataRaw,
@@ -46,7 +44,9 @@ import {
   shouldDumpFusedDataRaw,
   shouldDumpRawIMUDataProcessed,
   shouldDumpRawIMUDataRaw
-} from './utils';
+} from './flags';
+import { Sensor } from './Sensor';
+import { serializeTracker } from './serialization';
 import { VectorAggregator } from './VectorAggretator';
 
 export class Tracker implements TrackerLike {

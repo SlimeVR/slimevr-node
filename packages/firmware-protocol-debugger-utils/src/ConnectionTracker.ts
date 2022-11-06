@@ -1,6 +1,6 @@
-import { Events } from './Events';
-import { Tracker } from './Tracker';
-import { serializeTracker } from './utils';
+import type { Events } from './Events';
+import { serializeTracker } from './serialization';
+import type { Tracker } from './Tracker';
 
 export class ConnectionTracker {
   private readonly connectionsByMAC = new Map<string, Tracker>();

@@ -1,11 +1,8 @@
 import { ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
+import { ConnectionTracker, newEvents, Tracker, utils } from '@slimevr/firmware-protocol-debugger-utils';
 import { createSocket } from 'node:dgram';
-import { ConnectionTracker } from './ConnectionTracker';
-import { newEvents } from './Events';
-import { Tracker } from './Tracker';
-import { getBroadcastAddresses } from './utils';
 
-const addressBlacklist = getBroadcastAddresses()[1];
+const addressBlacklist = utils.getBroadcastAddresses()[1];
 
 export class Server {
   readonly events = newEvents();

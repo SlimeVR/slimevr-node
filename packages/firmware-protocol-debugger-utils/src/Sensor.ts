@@ -14,13 +14,10 @@ import {
   SensorType
 } from '@slimevr/firmware-protocol';
 import { Events } from './Events';
+import { shouldDumpRotationDataPacketsProcessed, shouldDumpRotationDataPacketsRaw } from './flags';
+import { serializeTracker } from './serialization';
 import { Tracker } from './Tracker';
-import {
-  quaternionIsEqualWithEpsilon,
-  serializeTracker,
-  shouldDumpRotationDataPacketsProcessed,
-  shouldDumpRotationDataPacketsRaw
-} from './utils';
+import { quaternionIsEqualWithEpsilon } from './utils';
 import { VectorAggregator } from './VectorAggretator';
 
 export class Sensor {

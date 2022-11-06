@@ -8,7 +8,8 @@
 
 ## Applications
 
-- [`@slimevr/firmware-protocol-debugger`](): A simple firmware protocol debugger for SlimeVR.
+- [`slimevr-firmware-protocol-debugger`](): A simple firmware protocol debugger for SlimeVR.
+- [`slimevr-firmware-protocol-debugger-gui`](): A wrapper for `slimevr-firmware-protocol-debugger` with a GUI.
 
 ## License
 
