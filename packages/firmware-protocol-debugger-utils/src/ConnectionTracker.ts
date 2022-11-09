@@ -1,18 +1,12 @@
-import { Tracker } from './Tracker';
+import type { Events } from './Events';
+import { serializeTracker } from './serialization';
+import type { Tracker } from './Tracker';
 
 export class ConnectionTracker {
-  private static instance: ConnectionTracker;
-
-  static get() {
-    if (!this.instance) {
-      this.instance = new this();
-    }
-
-    return this.instance;
-  }
-
   private readonly connectionsByMAC = new Map<string, Tracker>();
   private readonly connectionsByIP = new Map<string, Tracker>();
+
+  constructor(private readonly events: Events) {}
 
   private log(msg: string) {
     console.log(`[ConnectionTracker] ${msg}`);
@@ -34,6 +28,8 @@ export class ConnectionTracker {
     if (tracker.getMAC()) {
       this.connectionsByMAC.set(tracker.getMAC(), tracker);
       this.log(`Added tracker ${tracker.getMAC()}`);
+
+      this.events.emit('tracker:new', serializeTracker(tracker));
     }
   }
 
@@ -44,6 +40,8 @@ export class ConnectionTracker {
       this.connectionsByMAC.delete(connection.getMAC());
 
       this.log(`Removed tracker ${connection.getMAC()}`);
+
+      this.events.emit('tracker:removed', serializeTracker(connection));
     }
 
     this.connectionsByIP.delete(ip);
@@ -58,6 +56,8 @@ export class ConnectionTracker {
       this.connectionsByIP.delete(connection.getIP());
 
       this.log(`Removed tracker ${connection.getIP()}`);
+
+      this.events.emit('tracker:removed', serializeTracker(connection));
     }
 
     this.connectionsByMAC.delete(mac);
@@ -81,6 +81,15 @@ export class ConnectionTracker {
         this.log(`Tracker ${tracker.getMAC()} timed out`);
       }
     }
+  }
+
+  removeAllConnections() {
+    for (const tracker of this.connectionsByMAC.values()) {
+      this.removeConnectionByMAC(tracker.getMAC());
+    }
+
+    this.connectionsByIP.clear();
+    this.connectionsByMAC.clear();
   }
 
   pingConnections() {

@@ -1,10 +1,11 @@
 import { formatMACAddressDigit } from '@slimevr/common';
+import { BoardType, MCUType, SensorType } from '../constants';
 import { Packet } from './Packet';
 
 export class IncomingHandshakePacket extends Packet {
-  readonly boardType: number;
-  readonly imuType: number;
-  readonly mcuType: number;
+  readonly boardType: BoardType;
+  readonly imuType: SensorType;
+  readonly mcuType: MCUType;
   readonly firmwareBuild: number;
   readonly firmware: string;
   readonly mac: string;
@@ -12,9 +13,9 @@ export class IncomingHandshakePacket extends Packet {
   constructor(data: Buffer) {
     super(IncomingHandshakePacket.type);
 
-    this.boardType = -1;
-    this.imuType = -1;
-    this.mcuType = -1;
+    this.boardType = BoardType.UNKNOWN;
+    this.imuType = SensorType.UNKNOWN;
+    this.mcuType = MCUType.UNKNOWN;
     this.firmwareBuild = -1;
     this.firmware = '';
     this.mac = '';
@@ -24,17 +25,32 @@ export class IncomingHandshakePacket extends Packet {
     }
 
     if (data.length >= 4) {
-      this.boardType = data.readInt32BE();
+      const rawBoardType = data.readInt32BE();
+
+      if (rawBoardType > 0 && rawBoardType < 11) {
+        this.boardType = rawBoardType;
+      }
+
       data = data.slice(4);
     }
 
     if (data.length >= 4) {
-      this.imuType = data.readInt32BE();
+      const rawIMUType = data.readInt32BE();
+
+      if (rawIMUType > 0 && rawIMUType < 10) {
+        this.imuType = rawIMUType;
+      }
+
       data = data.slice(4);
     }
 
     if (data.length >= 4) {
-      this.mcuType = data.readInt32BE();
+      const rawMCUType = data.readInt32BE();
+
+      if (rawMCUType > 0 && rawMCUType < 3) {
+        this.mcuType = rawMCUType;
+      }
+
       data = data.slice(4);
     }
 
@@ -94,6 +110,10 @@ export class IncomingHandshakePacket extends Packet {
   }
 
   override toString() {
-    return `IncomingHandshakePacket{boardType: ${this.boardType}, imuType: ${this.imuType}, mcuType: ${this.mcuType}, firmwareBuild: ${this.firmwareBuild}, firmware: ${this.firmware}, mac: ${this.mac}}`;
+    return `IncomingHandshakePacket{boardType: ${BoardType[this.boardType]}, imuType: ${
+      SensorType[this.imuType]
+    }, mcuType: ${MCUType[this.mcuType]}, firmwareBuild: ${this.firmwareBuild}, firmware: ${this.firmware}, mac: ${
+      this.mac
+    }}`;
   }
 }

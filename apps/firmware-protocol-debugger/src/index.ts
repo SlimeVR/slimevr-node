@@ -1,45 +1,11 @@
-import { createSocket } from 'node:dgram';
-import { ConnectionTracker } from './ConnectionTracker';
-import { Tracker } from './Tracker';
-import { getBroadcastAddresses } from './utils';
+import { Server } from './Server';
 
-const [_, addressBlacklist] = getBroadcastAddresses();
+const server = new Server();
 
-const server = createSocket('udp4');
-const connectionTracker = ConnectionTracker.get();
-
-server.on('connect', () => {
-  console.log('connected');
+server.start().then(() => {
+  console.log('Server started!');
 });
 
-server.on('close', () => {
-  console.log('closed');
+process.on('SIGINT', async () => {
+  await server.stop();
 });
-
-server.on('error', (err) => {
-  console.log('error', err);
-});
-
-server.on('listening', () => {
-  console.log('listening');
-});
-
-server.on('message', (msg, rinfo) => {
-  if (addressBlacklist.includes(rinfo.address)) {
-    return;
-  }
-
-  let tracker = connectionTracker.getConnectionByIP(rinfo.address);
-
-  if (!tracker) {
-    tracker = new Tracker(server, rinfo.address, rinfo.port);
-    connectionTracker.addConnection(tracker);
-  }
-
-  tracker.handle(msg);
-});
-
-setInterval(() => connectionTracker.removeOldConnections(), 500).unref();
-setInterval(() => connectionTracker.pingConnections(), 1000).unref();
-
-server.bind(6969, '0.0.0.0');

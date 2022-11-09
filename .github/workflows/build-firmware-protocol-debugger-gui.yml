@@ -1,0 +1,29 @@
+name: Build Firmware Protocol Debugger GUI
+on: push
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: firmware-protocol-debugger-gui
+          path: apps/firmware-protocol-debugger-gui/dist/slimevr-firmware-protocol-debugger-gui*

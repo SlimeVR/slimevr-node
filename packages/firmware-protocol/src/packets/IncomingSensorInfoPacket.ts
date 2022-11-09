@@ -13,7 +13,11 @@ export class IncomingSensorInfoPacket extends PacketWithSensorId {
     this.sensorType = SensorType.UNKNOWN;
 
     if (data.length >= 3) {
-      this.sensorType = data.readUintBE(2, 1) & 0xff;
+      const rawSensorType = data.readUintBE(2, 1);
+
+      if (rawSensorType > 0 && rawSensorType < 10) {
+        this.sensorType = rawSensorType;
+      }
     }
   }
 

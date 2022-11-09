@@ -22,7 +22,7 @@ export enum RawCalibrationDataType {
 }
 
 export enum SensorType {
-  UNKNOWN = -1,
+  UNKNOWN = 0,
   MPU9250 = 1,
   MPU6500 = 2,
   BNO080 = 3,
@@ -32,4 +32,24 @@ export enum SensorType {
   BNO086 = 7,
   BMI160 = 8,
   ICM20948 = 9
+}
+
+export enum MCUType {
+  UNKNOWN = 0,
+  ESP8266 = 1,
+  ESP32 = 2
+}
+
+export enum BoardType {
+  UNKNOWN = 0,
+  SLIMEVR_LEGACY = 1,
+  SLIMEVR_DEV = 2,
+  NODEMCU = 3,
+  CUSTOM = 4,
+  WROOM32 = 5,
+  WEMOSD1MINI = 6,
+  TTGO_TBASE = 7,
+  ESP01 = 8,
+  SLIMEVR = 9,
+  LOLIN_C3_MINI = 10
 }
