@@ -17,7 +17,7 @@
     "@slimevr/eslint-config": "*",
     "@slimevr/tsconfig": "*",
     "@types/node": "17.0.45",
-    "eslint": "8.20.0",
-    "typescript": "4.7.4"
+    "eslint": "8.27.0",
+    "typescript": "4.8.4"
   }
 }
