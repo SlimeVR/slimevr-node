@@ -1,5 +1,5 @@
 {
-  "name": "slimevr-firmware-protocol-debugger",
+  "name": "@slimevr/firmware-protocol-debugger",
   "version": "0.2.0",
   "main": "dist/index.js",
   "license": "(MIT OR Apache-2.0)",
@@ -17,6 +17,9 @@
   },
   "bin": {
     "slimevr-firmware-protocol-debugger": "dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "@slimevr/common": "*",
