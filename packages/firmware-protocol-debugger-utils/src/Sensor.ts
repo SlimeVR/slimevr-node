@@ -4,14 +4,14 @@ import {
   IncomingErrorPacket,
   IncomingMagnetometerAccuracyPacket,
   IncomingRawCalibrationDataPacket,
-  IncomingRotationDataPacket,
   IncomingRotationPacket,
-  IncomingSensorInfoPacket,
   IncomingTemperaturePacket,
   Packet,
   RawCalibrationDataType,
   SensorStatus,
-  SensorType
+  SensorType,
+  ServerBoundRotationDataPacket,
+  ServerBoundSensorInfoPacket
 } from '@slimevr/firmware-protocol';
 import { Events } from './Events';
 import { shouldDumpRotationDataPacketsProcessed, shouldDumpRotationDataPacketsRaw } from './flags';
@@ -68,8 +68,8 @@ export class Sensor {
         break;
       }
 
-      case IncomingSensorInfoPacket.type: {
-        const sensorInfo = packet as IncomingSensorInfoPacket;
+      case ServerBoundSensorInfoPacket.type: {
+        const sensorInfo = packet as ServerBoundSensorInfoPacket;
 
         this.status = sensorInfo.sensorStatus;
 
@@ -92,8 +92,8 @@ export class Sensor {
         break;
       }
 
-      case IncomingRotationDataPacket.type: {
-        const rotation = packet as IncomingRotationDataPacket;
+      case ServerBoundRotationDataPacket.type: {
+        const rotation = packet as ServerBoundRotationDataPacket;
 
         if (shouldDumpRotationDataPacketsRaw()) {
           this.log(rotation.toString());

@@ -1,8 +1,8 @@
 import { Packet } from './Packet';
 
-export class OutgoingHandshakePacket extends Packet {
+export class DeviceBoundHandshakePacket extends Packet {
   constructor(number: bigint) {
-    super(number, OutgoingHandshakePacket.type);
+    super(number, DeviceBoundHandshakePacket.type);
   }
 
   static get type() {
@@ -10,7 +10,7 @@ export class OutgoingHandshakePacket extends Packet {
   }
 
   override toString() {
-    return 'OutgoingHandshakePacket{}';
+    return 'DeviceBoundHandshakePacket{}';
   }
 
   encode() {

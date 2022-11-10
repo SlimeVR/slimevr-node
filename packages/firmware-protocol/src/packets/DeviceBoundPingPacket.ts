@@ -1,8 +1,8 @@
 import { Packet } from './Packet';
 
-export class OutgoingPingPacket extends Packet {
+export class DeviceBoundPingPacket extends Packet {
   constructor(number: bigint, readonly id: number) {
-    super(number, OutgoingPingPacket.type);
+    super(number, DeviceBoundPingPacket.type);
   }
 
   static get type() {
@@ -10,7 +10,7 @@ export class OutgoingPingPacket extends Packet {
   }
 
   override toString() {
-    return `OutgoingPingPacket{id: ${this.id}}`;
+    return `DeviceBoundPingPacket{id: ${this.id}}`;
   }
 
   encode() {

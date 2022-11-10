@@ -1,12 +1,12 @@
 import { SensorStatus, SensorType } from '../constants';
 import { PacketWithSensorId } from './Packet';
 
-export class IncomingSensorInfoPacket extends PacketWithSensorId {
+export class ServerBoundSensorInfoPacket extends PacketWithSensorId {
   readonly sensorStatus: SensorStatus;
   readonly sensorType: SensorType;
 
   constructor(number: bigint, data: Buffer) {
-    super(number, IncomingSensorInfoPacket.type, data.readUintBE(0, 1) & 0xff);
+    super(number, ServerBoundSensorInfoPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.sensorStatus = data.readUintBE(1, 1) & 0xff;
 
@@ -25,16 +25,21 @@ export class IncomingSensorInfoPacket extends PacketWithSensorId {
     return 15;
   }
 
-  static encode(sensorId: number, sensorStatus: SensorStatus, sensorType: SensorType): Buffer {
-    const buf = Buffer.alloc(3);
-    buf.writeUintBE(sensorId, 0, 1);
-    buf.writeUintBE(sensorStatus, 1, 1);
-    buf.writeUintBE(sensorType, 2, 1);
+  static encode(number: bigint, sensorId: number, sensorStatus: SensorStatus, sensorType: SensorType): Buffer {
+    const buf = Buffer.alloc(4 + 8 + 1 + 1 + 1);
+
+    buf.writeInt32BE(ServerBoundSensorInfoPacket.type, 0);
+    buf.writeBigInt64BE(number, 4);
+
+    buf.writeUInt8(sensorId, 12);
+    buf.writeUInt8(sensorStatus, 13);
+    buf.writeUInt8(sensorType, 14);
+
     return buf;
   }
 
   override toString() {
-    return `IncomingSensorInfoPacket{sensorId: ${this.sensorId}, sensorStatus: ${
+    return `ServerBoundSensorInfoPacket{sensorId: ${this.sensorId}, sensorStatus: ${
       SensorStatus[this.sensorStatus]
     }, sensorType: ${SensorType[this.sensorType]}}`;
   }

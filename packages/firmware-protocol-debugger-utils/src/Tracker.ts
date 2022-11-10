@@ -1,32 +1,32 @@
 import {
   BoardType,
-  IncomingAccelPacket,
-  IncomingBatteryLevelPacket,
+  DeviceBoundHandshakePacket,
+  DeviceBoundPingPacket,
   IncomingCalibrationFinishedPacket,
   IncomingCorrectionDataPacket,
   IncomingErrorPacket,
   IncomingFusedIMUDataPacket,
   IncomingGyroPacket,
-  IncomingHandshakePacket,
   IncomingHeartbeatPacket,
   IncomingMagnetometerAccuracyPacket,
-  IncomingPongPacket,
   IncomingRawCalibrationDataPacket,
   IncomingRawIMUDataPacket,
-  IncomingRotationDataPacket,
   IncomingRotationPacket,
-  IncomingSensorInfoPacket,
   IncomingSignalStrengthPacket,
   IncomingTapPacket,
   IncomingTemperaturePacket,
   MCUType,
-  OutgoingHandshakePacket,
-  OutgoingPingPacket,
   OutgoingSensorInfoPacket,
   PacketWithSensorId,
   parse,
   Protocol,
-  SensorStatus
+  SensorStatus,
+  ServerBoundAccelPacket,
+  ServerBoundBatteryLevelPacket,
+  ServerBoundHandshakePacket,
+  ServerBoundPongPacket,
+  ServerBoundRotationDataPacket,
+  ServerBoundSensorInfoPacket
 } from '@slimevr/firmware-protocol';
 import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
@@ -151,7 +151,7 @@ export class Tracker {
       case IncomingRotationPacket.type: {
         const rotation = packet as IncomingRotationPacket;
 
-        this.handleSensorPacket(IncomingRotationDataPacket.fromRotationPacket(rotation));
+        this.handleSensorPacket(ServerBoundRotationDataPacket.fromRotationPacket(rotation));
 
         break;
       }
@@ -164,8 +164,8 @@ export class Tracker {
         break;
       }
 
-      case IncomingHandshakePacket.type: {
-        const handshake = packet as IncomingHandshakePacket;
+      case ServerBoundHandshakePacket.type: {
+        const handshake = packet as ServerBoundHandshakePacket;
 
         this._mac = handshake.mac;
         this.protocol = handshake.firmware === '' ? Protocol.OWO_LEGACY : Protocol.SLIMEVR_RAW;
@@ -186,18 +186,18 @@ export class Tracker {
         this.handshook = true;
 
         if (this.protocol === Protocol.OWO_LEGACY || this.firmwareBuild < 9) {
-          const buf = IncomingSensorInfoPacket.encode(0, SensorStatus.OK, handshake.imuType);
+          const buf = ServerBoundSensorInfoPacket.encode(0n, 0, SensorStatus.OK, handshake.imuType);
 
-          this.handleSensorPacket(new IncomingSensorInfoPacket(packet.number, buf));
+          this.handleSensorPacket(new ServerBoundSensorInfoPacket(packet.number, buf));
         }
 
-        this.socket.send(new OutgoingHandshakePacket(packet.number).encode(), this._port, this._ip);
+        this.socket.send(new DeviceBoundHandshakePacket(packet.number).encode(), this._port, this._ip);
 
         break;
       }
 
-      case IncomingAccelPacket.type: {
-        const accel = packet as IncomingAccelPacket;
+      case ServerBoundAccelPacket.type: {
+        const accel = packet as ServerBoundAccelPacket;
 
         this.log(`Acceleration: ${accel.acceleration.join(', ')}`);
 
@@ -220,8 +220,8 @@ export class Tracker {
         break;
       }
 
-      case IncomingPongPacket.type: {
-        const pong = packet as IncomingPongPacket;
+      case ServerBoundPongPacket.type: {
+        const pong = packet as ServerBoundPongPacket;
 
         if (pong.id !== this.lastPing.id + 1) {
           this.log('Ping ID does not match, ignoring');
@@ -237,8 +237,8 @@ export class Tracker {
         break;
       }
 
-      case IncomingBatteryLevelPacket.type: {
-        const batteryLevel = packet as IncomingBatteryLevelPacket;
+      case ServerBoundBatteryLevelPacket.type: {
+        const batteryLevel = packet as ServerBoundBatteryLevelPacket;
 
         this.batteryVoltage = batteryLevel.voltage;
         this.batteryPercentage = batteryLevel.percentage;
@@ -266,8 +266,8 @@ export class Tracker {
         break;
       }
 
-      case IncomingSensorInfoPacket.type: {
-        const sensorInfo = packet as IncomingSensorInfoPacket;
+      case ServerBoundSensorInfoPacket.type: {
+        const sensorInfo = packet as ServerBoundSensorInfoPacket;
 
         this.log('Received sensor info');
 
@@ -282,8 +282,8 @@ export class Tracker {
         break;
       }
 
-      case IncomingRotationDataPacket.type: {
-        const rotation = packet as IncomingRotationDataPacket;
+      case ServerBoundRotationDataPacket.type: {
+        const rotation = packet as ServerBoundRotationDataPacket;
 
         this.handleSensorPacket(rotation);
 
@@ -417,7 +417,11 @@ export class Tracker {
 
     this._packetNumber = this._packetNumber + BigInt(1);
 
-    this.socket.send(new OutgoingPingPacket(this._packetNumber, this.lastPing.id + 1).encode(), this._port, this._ip);
+    this.socket.send(
+      new DeviceBoundPingPacket(this._packetNumber, this.lastPing.id + 1).encode(),
+      this._port,
+      this._ip
+    );
 
     this.log('Sent ping');
   }
@@ -428,8 +432,8 @@ export class Tracker {
     if (!sensor) {
       this.log(`Setting up sensor ${packet.sensorId}`);
 
-      if (!(packet instanceof IncomingSensorInfoPacket)) {
-        this.log(`Packet ${packet} is not an IncomingSensorInfoPacket`);
+      if (!(packet instanceof ServerBoundSensorInfoPacket)) {
+        this.log(`Packet ${packet} is not an ServerBoundSensorInfoPacket`);
 
         return;
       }

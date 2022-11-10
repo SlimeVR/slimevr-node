@@ -7,13 +7,13 @@ export enum RotationDataType {
   CORRECTION = 2
 }
 
-export class IncomingRotationDataPacket extends PacketWithSensorId {
+export class ServerBoundRotationDataPacket extends PacketWithSensorId {
   readonly dataType: RotationDataType;
 
   readonly rotation: Quaternion;
 
   constructor(number: bigint, data: Buffer) {
-    super(number, IncomingRotationDataPacket.type, data.readUintBE(0, 1) & 0xff);
+    super(number, ServerBoundRotationDataPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.dataType = data.readUintBE(1, 1) & 0xff;
 
@@ -24,7 +24,7 @@ export class IncomingRotationDataPacket extends PacketWithSensorId {
     return 17;
   }
 
-  static fromRotationPacket(packet: IncomingRotationPacket): IncomingRotationDataPacket {
+  static fromRotationPacket(packet: IncomingRotationPacket): ServerBoundRotationDataPacket {
     const buf = Buffer.alloc(18);
 
     // owoTrack only has one IMU so it will always be sensor ID 0
@@ -36,12 +36,28 @@ export class IncomingRotationDataPacket extends PacketWithSensorId {
     buf.writeFloatBE(packet.rotation[3], 14);
 
     // I'd rather not want to jump through the deserializer
-    return new IncomingRotationDataPacket(packet.number, buf);
+    return new ServerBoundRotationDataPacket(packet.number, buf);
   }
 
   override toString() {
-    return `IncomingRotationDataPacket{sensorId: ${this.sensorId}, dataType: ${
+    return `ServerBoundRotationDataPacket{sensorId: ${this.sensorId}, dataType: ${
       RotationDataType[this.dataType]
     }, rotation: ${this.rotation}}`;
+  }
+
+  static encode(number: bigint, sensorId: number, dataType: RotationDataType, rotation: Quaternion): Buffer {
+    const buf = Buffer.alloc(4 + 8 + 1 + 1 + 4 + 4 + 4 + 4);
+
+    buf.writeInt32BE(ServerBoundRotationDataPacket.type, 0);
+    buf.writeBigInt64BE(number, 4);
+
+    buf.writeUintBE(sensorId, 12, 1);
+    buf.writeUintBE(dataType, 13, 1);
+    buf.writeFloatBE(rotation[0], 14);
+    buf.writeFloatBE(rotation[1], 18);
+    buf.writeFloatBE(rotation[2], 22);
+    buf.writeFloatBE(rotation[3], 26);
+
+    return buf;
   }
 }

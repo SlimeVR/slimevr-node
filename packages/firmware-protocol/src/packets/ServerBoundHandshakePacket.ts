@@ -2,7 +2,7 @@ import { formatMACAddressDigit } from '@slimevr/common';
 import { BoardType, MCUType, SensorType } from '../constants';
 import { Packet } from './Packet';
 
-export class IncomingHandshakePacket extends Packet {
+export class ServerBoundHandshakePacket extends Packet {
   readonly boardType: BoardType;
   readonly imuType: SensorType;
   readonly mcuType: MCUType;
@@ -11,7 +11,7 @@ export class IncomingHandshakePacket extends Packet {
   readonly mac: string;
 
   constructor(number: bigint, data: Buffer) {
-    super(number, IncomingHandshakePacket.type);
+    super(number, ServerBoundHandshakePacket.type);
 
     this.boardType = BoardType.UNKNOWN;
     this.imuType = SensorType.UNKNOWN;
@@ -110,10 +110,46 @@ export class IncomingHandshakePacket extends Packet {
   }
 
   override toString() {
-    return `IncomingHandshakePacket{boardType: ${BoardType[this.boardType]}, imuType: ${
+    return `ServerBoundHandshakePacket{boardType: ${BoardType[this.boardType]}, imuType: ${
       SensorType[this.imuType]
     }, mcuType: ${MCUType[this.mcuType]}, firmwareBuild: ${this.firmwareBuild}, firmware: ${this.firmware}, mac: ${
       this.mac
     }}`;
+  }
+
+  static encode(
+    number: bigint,
+    boardType: BoardType,
+    imuType: SensorType,
+    mcuType: MCUType,
+    firmwareBuild: number,
+    firmware: string,
+    mac: [number, number, number, number, number, number]
+  ): Buffer {
+    const buf = Buffer.alloc(4 + 8 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 1 + firmware.length + 6);
+
+    buf.writeInt32BE(ServerBoundHandshakePacket.type, 0);
+    buf.writeBigInt64BE(number, 4);
+
+    buf.writeInt32BE(boardType, 12);
+    buf.writeInt32BE(imuType, 16);
+    buf.writeInt32BE(mcuType, 20);
+
+    buf.writeInt32BE(0, 24);
+    buf.writeInt32BE(0, 28);
+    buf.writeInt32BE(0, 32);
+
+    buf.writeInt32BE(firmwareBuild, 36);
+    buf.writeUInt8(firmware.length, 40);
+    buf.write(firmware, 41);
+
+    buf.writeUInt8(mac[0], 41 + firmware.length);
+    buf.writeUInt8(mac[1], 41 + firmware.length + 1);
+    buf.writeUInt8(mac[2], 41 + firmware.length + 2);
+    buf.writeUInt8(mac[3], 41 + firmware.length + 3);
+    buf.writeUInt8(mac[4], 41 + firmware.length + 4);
+    buf.writeUInt8(mac[5], 41 + firmware.length + 5);
+
+    return buf;
   }
 }

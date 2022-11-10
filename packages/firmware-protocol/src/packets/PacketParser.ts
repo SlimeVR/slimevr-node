@@ -1,20 +1,20 @@
-import { IncomingAccelPacket } from './IncomingAccelPacket';
-import { IncomingBatteryLevelPacket } from './IncomingBatteryLevelPacket';
 import { IncomingCalibrationFinishedPacket } from './IncomingCalibrationFinishedPacket';
 import { IncomingErrorPacket } from './IncomingErrorPacket';
 import { IncomingGyroPacket } from './IncomingGyroPacket';
-import { IncomingHandshakePacket } from './IncomingHandshakePacket';
 import { IncomingHeartbeatPacket } from './IncomingHeartbeatPacket';
 import { IncomingMagnetometerAccuracyPacket } from './IncomingMagnetometerAccuracy';
-import { IncomingPongPacket } from './IncomingPongPacket';
 import { IncomingRawCalibrationDataPacket } from './IncomingRawCalibrationDataPacket';
-import { IncomingRotationDataPacket } from './IncomingRotationDataPacket';
 import { IncomingRotationPacket } from './IncomingRotationPacket';
-import { IncomingSensorInfoPacket } from './IncomingSensorInfoPacket';
 import { IncomingSignalStrengthPacket } from './IncomingSignalStrengthPacket';
 import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 import { InspectionPacketParser } from './inspection/PacketParser';
+import { ServerBoundAccelPacket } from './ServerBoundAccelPacket';
+import { ServerBoundBatteryLevelPacket } from './ServerBoundBatteryLevelPacket';
+import { ServerBoundHandshakePacket } from './ServerBoundHandshakePacket';
+import { ServerBoundPongPacket } from './ServerBoundPongPacket';
+import { ServerBoundRotationDataPacket } from './ServerBoundRotationDataPacket';
+import { ServerBoundSensorInfoPacket } from './ServerBoundSensorInfoPacket';
 
 export const parse = (data: Buffer) => {
   const type = data.readInt32BE();
@@ -32,11 +32,11 @@ export const parse = (data: Buffer) => {
     case IncomingGyroPacket.type:
       return new IncomingGyroPacket(number, data);
 
-    case IncomingHandshakePacket.type:
-      return new IncomingHandshakePacket(number, data);
+    case ServerBoundHandshakePacket.type:
+      return new ServerBoundHandshakePacket(number, data);
 
-    case IncomingAccelPacket.type:
-      return new IncomingAccelPacket(number, data);
+    case ServerBoundAccelPacket.type:
+      return new ServerBoundAccelPacket(number, data);
 
     case IncomingRawCalibrationDataPacket.type:
       return new IncomingRawCalibrationDataPacket(number, data);
@@ -44,11 +44,11 @@ export const parse = (data: Buffer) => {
     case IncomingCalibrationFinishedPacket.type:
       return new IncomingCalibrationFinishedPacket(number, data);
 
-    case IncomingPongPacket.type:
-      return new IncomingPongPacket(number, data);
+    case ServerBoundPongPacket.type:
+      return new ServerBoundPongPacket(number, data);
 
-    case IncomingBatteryLevelPacket.type:
-      return new IncomingBatteryLevelPacket(number, data);
+    case ServerBoundBatteryLevelPacket.type:
+      return new ServerBoundBatteryLevelPacket(number, data);
 
     case IncomingTapPacket.type:
       return new IncomingTapPacket(number, data);
@@ -56,11 +56,11 @@ export const parse = (data: Buffer) => {
     case IncomingErrorPacket.type:
       return new IncomingErrorPacket(number, data);
 
-    case IncomingSensorInfoPacket.type:
-      return new IncomingSensorInfoPacket(number, data);
+    case ServerBoundSensorInfoPacket.type:
+      return new ServerBoundSensorInfoPacket(number, data);
 
-    case IncomingRotationDataPacket.type:
-      return new IncomingRotationDataPacket(number, data);
+    case ServerBoundRotationDataPacket.type:
+      return new ServerBoundRotationDataPacket(number, data);
 
     case IncomingMagnetometerAccuracyPacket.type:
       return new IncomingMagnetometerAccuracyPacket(number, data);
