@@ -1,2 +1,7 @@
 .eslintrc.js
 packages/eslint-config/index.js
+node_modules
+packages/*/dist
+apps/*/dist
+packages/*/build
+apps/*/build
