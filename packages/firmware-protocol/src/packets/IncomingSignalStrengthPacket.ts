@@ -3,8 +3,8 @@ import { PacketWithSensorId } from './Packet';
 export class IncomingSignalStrengthPacket extends PacketWithSensorId {
   readonly signalStrength: number;
 
-  constructor(data: Buffer) {
-    super(IncomingSignalStrengthPacket.type, data.readUintBE(0, 1) & 0xff);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingSignalStrengthPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.signalStrength = data.readIntBE(1, 1);
   }

@@ -6,8 +6,8 @@ export class IncomingFusedIMUDataPacket extends Packet {
   readonly sensorId: number;
   readonly quaternion: Quaternion;
 
-  constructor(data: Buffer) {
-    super(IncomingFusedIMUDataPacket.type);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingFusedIMUDataPacket.type);
 
     this.sensorId = data.readUInt8(0);
 

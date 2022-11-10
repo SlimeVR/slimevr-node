@@ -4,8 +4,8 @@ import { Packet } from './Packet';
 export class IncomingAccelPacket extends Packet {
   readonly acceleration: Vector;
 
-  constructor(data: Buffer) {
-    super(IncomingAccelPacket.type);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingAccelPacket.type);
 
     this.acceleration = [data.readFloatBE(0), data.readFloatBE(4), data.readFloatBE(8)];
   }

@@ -1,8 +1,8 @@
 import { Packet } from './Packet';
 
 export class OutgoingPingPacket extends Packet {
-  constructor(readonly id: number) {
-    super(OutgoingPingPacket.type);
+  constructor(number: bigint, readonly id: number) {
+    super(number, OutgoingPingPacket.type);
   }
 
   static get type() {

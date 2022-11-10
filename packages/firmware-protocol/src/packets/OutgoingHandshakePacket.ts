@@ -1,8 +1,8 @@
 import { Packet } from './Packet';
 
 export class OutgoingHandshakePacket extends Packet {
-  constructor() {
-    super(OutgoingHandshakePacket.type);
+  constructor(number: bigint) {
+    super(number, OutgoingHandshakePacket.type);
   }
 
   static get type() {

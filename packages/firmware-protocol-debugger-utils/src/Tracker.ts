@@ -26,8 +26,7 @@ import {
   PacketWithSensorId,
   parse,
   Protocol,
-  SensorStatus,
-  TrackerLike
+  SensorStatus
 } from '@slimevr/firmware-protocol';
 import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
@@ -49,7 +48,7 @@ import { Sensor } from './Sensor';
 import { serializeTracker } from './serialization';
 import { VectorAggregator } from './VectorAggretator';
 
-export class Tracker implements TrackerLike {
+export class Tracker {
   private _packetNumber = BigInt(0);
   private handshook = false;
   private lastPacket = Date.now();
@@ -125,11 +124,15 @@ export class Tracker implements TrackerLike {
   }
 
   handle(msg: Buffer) {
-    const packet = parse(msg, this);
+    const packet = parse(msg);
     if (packet === null) {
       this.log(`Received unknown packet (${msg.length} bytes): ${msg.toString('hex')}`);
 
       return;
+    }
+
+    if (!this.isNextPacket(packet.number)) {
+      this.log(`Received packet with wrong packet number: ${packet.number}`);
     }
 
     this.lastPacket = Date.now();
@@ -185,10 +188,10 @@ export class Tracker implements TrackerLike {
         if (this.protocol === Protocol.OWO_LEGACY || this.firmwareBuild < 9) {
           const buf = IncomingSensorInfoPacket.encode(0, SensorStatus.OK, handshake.imuType);
 
-          this.handleSensorPacket(new IncomingSensorInfoPacket(buf));
+          this.handleSensorPacket(new IncomingSensorInfoPacket(packet.number, buf));
         }
 
-        this.socket.send(new OutgoingHandshakePacket().encode(), this._port, this._ip);
+        this.socket.send(new OutgoingHandshakePacket(packet.number).encode(), this._port, this._ip);
 
         break;
       }
@@ -271,7 +274,7 @@ export class Tracker implements TrackerLike {
         this.handleSensorPacket(sensorInfo);
 
         this.socket.send(
-          new OutgoingSensorInfoPacket(sensorInfo.sensorId, sensorInfo.sensorStatus).encode(),
+          new OutgoingSensorInfoPacket(packet.number, sensorInfo.sensorId, sensorInfo.sensorStatus).encode(),
           this._port,
           this._ip
         );
@@ -411,7 +414,10 @@ export class Tracker implements TrackerLike {
 
   ping() {
     this.lastPing.startTimestamp = Date.now();
-    this.socket.send(new OutgoingPingPacket(this.lastPing.id + 1).encode(), this._port, this._ip);
+
+    this._packetNumber = this._packetNumber + BigInt(1);
+
+    this.socket.send(new OutgoingPingPacket(this._packetNumber, this.lastPing.id + 1).encode(), this._port, this._ip);
 
     this.log('Sent ping');
   }

@@ -1,8 +1,8 @@
 import { Packet } from './Packet';
 
 export class IncomingHeartbeatPacket extends Packet {
-  constructor() {
-    super(IncomingHeartbeatPacket.type);
+  constructor(number: bigint) {
+    super(number, IncomingHeartbeatPacket.type);
   }
 
   static get type() {

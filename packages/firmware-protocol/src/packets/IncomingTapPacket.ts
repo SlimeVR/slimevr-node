@@ -3,8 +3,8 @@ import { PacketWithSensorId } from './Packet';
 export class IncomingTapPacket extends PacketWithSensorId {
   readonly value: number;
 
-  constructor(data: Buffer) {
-    super(IncomingTapPacket.type, data.readUintBE(0, 1) & 0xff);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingTapPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.value = data.readUintBE(1, 1);
   }

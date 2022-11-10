@@ -6,8 +6,8 @@ export class IncomingRawCalibrationDataPacket extends PacketWithSensorId {
   readonly dataType: RawCalibrationDataType;
   readonly data: Vector;
 
-  constructor(data: Buffer) {
-    super(IncomingRawCalibrationDataPacket.type, data.readUintBE(0, 1) & 0xff);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingRawCalibrationDataPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.dataType = data.readInt32BE(1);
 

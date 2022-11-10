@@ -5,8 +5,8 @@ export class IncomingSensorInfoPacket extends PacketWithSensorId {
   readonly sensorStatus: SensorStatus;
   readonly sensorType: SensorType;
 
-  constructor(data: Buffer) {
-    super(IncomingSensorInfoPacket.type, data.readUintBE(0, 1) & 0xff);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingSensorInfoPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.sensorStatus = data.readUintBE(1, 1) & 0xff;
 

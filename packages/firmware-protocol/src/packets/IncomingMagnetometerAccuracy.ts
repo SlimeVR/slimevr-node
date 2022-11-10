@@ -3,8 +3,8 @@ import { PacketWithSensorId } from './Packet';
 export class IncomingMagnetometerAccuracyPacket extends PacketWithSensorId {
   readonly accuracy: number;
 
-  constructor(data: Buffer) {
-    super(IncomingMagnetometerAccuracyPacket.type, data.readUintBE(0, 1) & 0xff);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingMagnetometerAccuracyPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.accuracy = data.readFloatBE(1);
   }

@@ -3,8 +3,8 @@ import { Packet } from './Packet';
 export class IncomingPongPacket extends Packet {
   readonly id: number;
 
-  constructor(data: Buffer) {
-    super(IncomingPongPacket.type);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingPongPacket.type);
 
     this.id = data.readInt32BE(0);
   }

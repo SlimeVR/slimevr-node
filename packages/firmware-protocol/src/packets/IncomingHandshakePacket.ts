@@ -10,8 +10,8 @@ export class IncomingHandshakePacket extends Packet {
   readonly firmware: string;
   readonly mac: string;
 
-  constructor(data: Buffer) {
-    super(IncomingHandshakePacket.type);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingHandshakePacket.type);
 
     this.boardType = BoardType.UNKNOWN;
     this.imuType = SensorType.UNKNOWN;

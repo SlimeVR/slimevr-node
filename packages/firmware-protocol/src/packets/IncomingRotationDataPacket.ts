@@ -12,8 +12,8 @@ export class IncomingRotationDataPacket extends PacketWithSensorId {
 
   readonly rotation: Quaternion;
 
-  constructor(data: Buffer) {
-    super(IncomingRotationDataPacket.type, data.readUintBE(0, 1) & 0xff);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingRotationDataPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.dataType = data.readUintBE(1, 1) & 0xff;
 
@@ -36,7 +36,7 @@ export class IncomingRotationDataPacket extends PacketWithSensorId {
     buf.writeFloatBE(packet.rotation[3], 14);
 
     // I'd rather not want to jump through the deserializer
-    return new IncomingRotationDataPacket(buf);
+    return new IncomingRotationDataPacket(packet.number, buf);
   }
 
   override toString() {

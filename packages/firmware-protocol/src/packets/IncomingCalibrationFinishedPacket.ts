@@ -3,8 +3,8 @@ import { PacketWithSensorId } from './Packet';
 export class IncomingCalibrationFinishedPacket extends PacketWithSensorId {
   readonly dataType: number;
 
-  constructor(data: Buffer) {
-    super(IncomingCalibrationFinishedPacket.type, data.readUintBE(0, 1) & 0xff);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingCalibrationFinishedPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.dataType = data.readInt32BE(1);
   }

@@ -16,83 +16,66 @@ import { IncomingTapPacket } from './IncomingTapPacket';
 import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 import { InspectionPacketParser } from './inspection/PacketParser';
 
-export type TrackerLike = {
-  getIP(): string;
-  getPort(): number;
-
-  getCurrentPacketNumber(): bigint;
-  isNextPacket(v: bigint): boolean;
-};
-
-export const parse = (data: Buffer, tracker: TrackerLike) => {
+export const parse = (data: Buffer) => {
   const type = data.readInt32BE();
   const number = data.readBigInt64BE(4);
-
-  if (!tracker.isNextPacket(number)) {
-    console.log(
-      `Invalid sequence: ${tracker.getIP()}:${tracker.getPort()} - ${tracker.getCurrentPacketNumber()} ${number}`
-    );
-
-    return null;
-  }
 
   data = data.slice(12);
 
   switch (type) {
     case IncomingHeartbeatPacket.type:
-      return new IncomingHeartbeatPacket();
+      return new IncomingHeartbeatPacket(number);
 
     case IncomingRotationPacket.type:
-      return new IncomingRotationPacket(data);
+      return new IncomingRotationPacket(number, data);
 
     case IncomingGyroPacket.type:
-      return new IncomingGyroPacket(data);
+      return new IncomingGyroPacket(number, data);
 
     case IncomingHandshakePacket.type:
-      return new IncomingHandshakePacket(data);
+      return new IncomingHandshakePacket(number, data);
 
     case IncomingAccelPacket.type:
-      return new IncomingAccelPacket(data);
+      return new IncomingAccelPacket(number, data);
 
     case IncomingRawCalibrationDataPacket.type:
-      return new IncomingRawCalibrationDataPacket(data);
+      return new IncomingRawCalibrationDataPacket(number, data);
 
     case IncomingCalibrationFinishedPacket.type:
-      return new IncomingCalibrationFinishedPacket(data);
+      return new IncomingCalibrationFinishedPacket(number, data);
 
     case IncomingPongPacket.type:
-      return new IncomingPongPacket(data);
+      return new IncomingPongPacket(number, data);
 
     case IncomingBatteryLevelPacket.type:
-      return new IncomingBatteryLevelPacket(data);
+      return new IncomingBatteryLevelPacket(number, data);
 
     case IncomingTapPacket.type:
-      return new IncomingTapPacket(data);
+      return new IncomingTapPacket(number, data);
 
     case IncomingErrorPacket.type:
-      return new IncomingErrorPacket(data);
+      return new IncomingErrorPacket(number, data);
 
     case IncomingSensorInfoPacket.type:
-      return new IncomingSensorInfoPacket(data);
+      return new IncomingSensorInfoPacket(number, data);
 
     case IncomingRotationDataPacket.type:
-      return new IncomingRotationDataPacket(data);
+      return new IncomingRotationDataPacket(number, data);
 
     case IncomingMagnetometerAccuracyPacket.type:
-      return new IncomingMagnetometerAccuracyPacket(data);
+      return new IncomingMagnetometerAccuracyPacket(number, data);
 
     case IncomingSignalStrengthPacket.type:
-      return new IncomingSignalStrengthPacket(data);
+      return new IncomingSignalStrengthPacket(number, data);
 
     case IncomingTemperaturePacket.type:
-      return new IncomingTemperaturePacket(data);
+      return new IncomingTemperaturePacket(number, data);
 
     case InspectionPacketParser.type:
-      return InspectionPacketParser.parseRawDataPacket(data);
+      return InspectionPacketParser.parseRawDataPacket(number, data);
 
     default:
       console.log(`Unknown packet type: ${type}`);
+      return null;
   }
-
-  return null;
 };

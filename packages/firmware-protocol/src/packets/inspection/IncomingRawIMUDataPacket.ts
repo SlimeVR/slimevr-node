@@ -13,8 +13,8 @@ export class IncomingRawIMUDataPacket extends Packet {
   readonly accelerationAccuracy: number;
   readonly magnetometerAccuracy: number;
 
-  constructor(data: Buffer) {
-    super(IncomingRawIMUDataPacket.type);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingRawIMUDataPacket.type);
 
     this.sensorId = data.readUInt8(0);
 

@@ -2,8 +2,8 @@ import { SensorStatus } from '../constants';
 import { PacketWithSensorId } from './Packet';
 
 export class OutgoingSensorInfoPacket extends PacketWithSensorId {
-  constructor(sensorId: number, readonly sensorStatus: SensorStatus) {
-    super(OutgoingSensorInfoPacket.type, sensorId);
+  constructor(number: bigint, sensorId: number, readonly sensorStatus: SensorStatus) {
+    super(number, OutgoingSensorInfoPacket.type, sensorId);
   }
 
   static get type() {

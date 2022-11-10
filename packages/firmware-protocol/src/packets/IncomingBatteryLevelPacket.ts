@@ -4,8 +4,8 @@ export class IncomingBatteryLevelPacket extends Packet {
   readonly voltage: number;
   readonly percentage: number;
 
-  constructor(data: Buffer) {
-    super(IncomingBatteryLevelPacket.type);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingBatteryLevelPacket.type);
 
     this.voltage = 0;
 

@@ -6,8 +6,8 @@ export class IncomingCorrectionDataPacket extends Packet {
   readonly sensorId: number;
   readonly quaternion: Quaternion;
 
-  constructor(data: Buffer) {
-    super(IncomingCorrectionDataPacket.type);
+  constructor(number: bigint, data: Buffer) {
+    super(number, IncomingCorrectionDataPacket.type);
 
     this.sensorId = data.readUInt8(0);
 
