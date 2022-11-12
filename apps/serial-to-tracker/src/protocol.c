@@ -7,18 +7,18 @@ void sendFloat(void (*write)(char), float value)
   write(ivalue);
 }
 
-void ready(void (*write)(char))
+void ready(void (*write)(char), char num_imus)
 {
   write(2);
   write(0x00);
-  write(0x02);
+  write(num_imus);
 }
 
-void rotationData(void (*write)(char), char sensorId, float x, float y, float z, float w)
+void rotationData(void (*write)(char), char sensor_id, float x, float y, float z, float w)
 {
   write(18);
   write(0x01);
-  write(sensorId);
+  write(sensor_id);
 
   sendFloat(write, x);
   sendFloat(write, y);
@@ -26,22 +26,22 @@ void rotationData(void (*write)(char), char sensorId, float x, float y, float z,
   sendFloat(write, w);
 }
 
-void accelerationData(void (*write)(char), char sensorId, float x, float y, float z)
+void accelerationData(void (*write)(char), char sensor_id, float x, float y, float z)
 {
   write(14);
   write(0x02);
-  write(sensorId);
+  write(sensor_id);
 
   sendFloat(write, x);
   sendFloat(write, y);
   sendFloat(write, z);
 }
 
-void batteryLevel(void (*write)(char), float percentage)
+void batteryLevel(void (*write)(char), char sensor_id, float percentage)
 {
   write(6);
   write(0x03);
-  write(0x00);
+  write(sensor_id);
 
   sendFloat(write, percentage);
 }
