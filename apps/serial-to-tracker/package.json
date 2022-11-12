@@ -32,7 +32,7 @@
     "typescript": "4.8.4"
   },
   "scripts": {
-    "dev": "concurrently \"tsc -w\" \"nodemon . /dev/ttyUSB0\"",
+    "dev": "concurrently \"tsc -w\" \"nodemon .\"",
     "build": "tsc"
   },
   "engines": {
