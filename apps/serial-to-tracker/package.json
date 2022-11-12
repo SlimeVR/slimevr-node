@@ -1,0 +1,41 @@
+{
+  "name": "@slimevr/serial-to-tracker",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "license": "(MIT OR Apache-2.0)",
+  "author": {
+    "name": "TheDevMinerTV",
+    "email": "tobigames200@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SlimeVR/slimevr-node.git/tree/master/apps/serial-to-tracker"
+  },
+  "bugs": {
+    "url": "https://github.com/SlimeVR/slimevr-node/issues"
+  },
+  "bin": {
+    "slimevr-serial-to-tracker": "dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@slimevr/common": "*",
+    "@slimevr/firmware-protocol": "*",
+    "serialport": "10.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.45",
+    "concurrently": "7.5.0",
+    "nodemon": "2.0.20",
+    "typescript": "4.8.4"
+  },
+  "scripts": {
+    "dev": "concurrently \"tsc -w\" \"nodemon . /dev/ttyUSB0\"",
+    "build": "tsc"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
