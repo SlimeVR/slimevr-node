@@ -1,5 +1,16 @@
 # @slimevr/firmware-protocol
 
+## 0.2.0
+
+### Minor Changes
+
+- 1b0eb29: decoupled parsing packets from TrackerLike
+- e51b53c: better distinguishing between server bound and device bound packets
+
+### Patch Changes
+
+- e51b53c: implemented support for parsing and encoding the sensor ID of accel packets
+
 ## 0.1.1
 
 ### Patch Changes
