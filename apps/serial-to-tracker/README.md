@@ -1,6 +1,6 @@
 # Serial to SlimeVR-Tracker converter
 
-> This is a simple program that converts serial data to the SlimeVR-Tracker protocol.
+> This is a simple program that takes in serial data and emulates a SlimeVR tracker.
 
 ## Requirements
 

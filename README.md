@@ -4,12 +4,13 @@
 
 ## Libraries
 
-- [`@slimevr/firmware-protocol`](): A library for encoding and decoding packets.
+- [`@slimevr/firmware-protocol`](packages/firmware-protocol): A library for encoding and decoding packets.
 
 ## Applications
 
-- [`slimevr-firmware-protocol-debugger`](): A simple firmware protocol debugger for SlimeVR.
-- [`slimevr-firmware-protocol-debugger-gui`](): A wrapper for `slimevr-firmware-protocol-debugger` with a GUI.
+- [`@slimevr/firmware-protocol-debugger`](apps/firmware-protocol-debugger): A simple firmware protocol debugger for SlimeVR.
+- [`slimevr-firmware-protocol-debugger-gui`](apps/firmware-protocol-debugger-gui): A wrapper for `slimevr-firmware-protocol-debugger` with a GUI.
+- [`@slimevr/serial-to-tracker`](apps/serial-to-tracker): A simple tool that takes in serial data and emulates a SlimeVR tracker.
 
 ## License
 
