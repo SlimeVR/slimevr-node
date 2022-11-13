@@ -1,4 +1,5 @@
 export * from './DeviceBoundHandshakePacket';
+export * from './DeviceBoundHeartbeatPacket';
 export * from './DeviceBoundPingPacket';
 export * from './DeviceBoundSensorInfoPacket';
 export * from './IncomingCalibrationFinishedPacket';
@@ -17,6 +18,7 @@ export * from './PacketParser';
 export * from './ServerBoundAccelPacket';
 export * from './ServerBoundBatteryLevelPacket';
 export * from './ServerBoundHandshakePacket';
+export * from './ServerBoundHeartbeatPacket';
 export * from './ServerBoundPongPacket';
 export * from './ServerBoundRotationDataPacket';
 export * from './ServerBoundSensorInfoPacket';
