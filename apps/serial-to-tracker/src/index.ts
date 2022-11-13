@@ -1,9 +1,10 @@
 import {
   BoardType,
   DeviceBoundHandshakePacket,
+  DeviceBoundHeartbeatPacket,
   DeviceBoundPingPacket,
+  DeviceBoundSensorInfoPacket,
   MCUType,
-  OutgoingSensorInfoPacket,
   parse,
   RotationDataType,
   SensorStatus,
@@ -11,6 +12,7 @@ import {
   ServerBoundAccelPacket,
   ServerBoundBatteryLevelPacket,
   ServerBoundHandshakePacket,
+  ServerBoundHeartbeatPacket,
   ServerBoundPongPacket,
   ServerBoundRotationDataPacket,
   ServerBoundSensorInfoPacket
@@ -69,6 +71,7 @@ const send = (socket: Socket, addr: string, port: number, data: Buffer) => {
 };
 
 const parsePacket = (data: Buffer) => {
+  // console.log('serial', data.toString('hex'));
   const type = data.readUInt8(0);
 
   switch (type) {
@@ -145,7 +148,8 @@ const connectToServer = () => {
 
       send(
         state.socket,
-        '255.255.255.255',
+        '172.31.179.23',
+        6969,
         ServerBoundHandshakePacket.encode(
           0n,
           BoardType.CUSTOM,
@@ -160,8 +164,12 @@ const connectToServer = () => {
 
     const onSocketMessage = (msg: Buffer, rinfo: RemoteInfo) => {
       if (state.state !== 'searching-for-server') {
+        console.log('huh');
+
         return;
       }
+
+      console.log('got message from server', msg.toString('hex'));
 
       if (msg.readUint8(0) !== DeviceBoundHandshakePacket.type) {
         return;
@@ -285,12 +293,13 @@ const main = async () => {
                 state.packetNumber,
                 parsed.sensorId,
                 RotationDataType.NORMAL,
-                parsed.rotation
+                parsed.rotation,
+                0
               )
             );
             state.packetNumber += 1n;
           } else {
-            console.log('unexpected rotation data, not connected to server');
+            // console.log('unexpected rotation data, not connected to server');
           }
 
           break;
@@ -306,7 +315,7 @@ const main = async () => {
             );
             state.packetNumber += 1n;
           } else {
-            console.log('unexpected acceleration data, not connected to server');
+            // console.log('unexpected acceleration data, not connected to server');
           }
 
           break;
@@ -328,7 +337,7 @@ const main = async () => {
             );
             state.packetNumber += 1n;
           } else {
-            console.log('unexpected battery level, not connected to server');
+            // console.log('unexpected battery level, not connected to server');
           }
 
           break;
@@ -340,16 +349,14 @@ const main = async () => {
   });
 
   socket.on('message', (msg, rinfo) => {
-    if (state.state !== 'connected-to-server') {
+    if (
+      state.state !== 'connected-to-server' ||
+      (rinfo.address !== state.serverAddress && rinfo.port !== state.serverPort)
+    ) {
       return;
     }
 
-    if (msg.readUint8(0) === DeviceBoundHandshakePacket.type || msg.readInt32BE(0) === OutgoingSensorInfoPacket.type) {
-      // Handled in connectToServer
-      return;
-    }
-
-    const packet = parse(msg);
+    const packet = parse(msg, true);
     if (packet === null) {
       return;
     }
@@ -366,7 +373,25 @@ const main = async () => {
 
         break;
 
+      case DeviceBoundHeartbeatPacket.type: {
+        send(
+          state.socket,
+          state.serverAddress,
+          state.serverPort,
+          ServerBoundHeartbeatPacket.encode(state.packetNumber)
+        );
+        state.packetNumber += 1n;
+
+        break;
+      }
+
+      case DeviceBoundSensorInfoPacket.type: {
+        // Ignore
+        break;
+      }
+
       default:
+        console.log('unknown packet type', packet.type);
         break;
     }
   });
@@ -375,7 +400,7 @@ const main = async () => {
     console.error(err);
   });
 
-  socket.bind(6969, '0.0.0.0');
+  socket.bind(0, '0.0.0.0');
   await new Promise<void>((resolve) => socket.once('listening', () => resolve()));
   state = {
     state: 'waiting-for-dongle-ready',
@@ -384,7 +409,7 @@ const main = async () => {
     serial
   };
 
-  socket.setBroadcast(true);
+  // socket.setBroadcast(true);
 
   console.log('listening!');
 
