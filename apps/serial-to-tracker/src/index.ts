@@ -52,6 +52,7 @@ type State =
       socket: Socket;
       serial: SerialPort;
       serverAddress: string;
+      serverPort: number;
       packetNumber: bigint;
       numImus: number;
       lowestBatteryLevel: number;
@@ -62,9 +63,9 @@ let state = {
   mac: getRandomMacAddress()
 } as State;
 
-const send = (socket: Socket, addr: string, data: Buffer) => {
+const send = (socket: Socket, addr: string, port: number, data: Buffer) => {
   // console.log(data.toString('hex'));
-  socket.send(data, 6969, addr);
+  socket.send(data, port, addr);
 };
 
 const parsePacket = (data: Buffer) => {
@@ -182,6 +183,7 @@ const connectToServer = () => {
         socket: state.socket,
         serial: state.serial,
         serverAddress: rinfo.address,
+        serverPort: rinfo.port,
         packetNumber: 0n,
         numImus: state.numImus,
         lowestBatteryLevel: 100
@@ -204,6 +206,7 @@ const sendSensorInfo = () => {
     send(
       state.socket,
       state.serverAddress,
+      state.serverPort,
       ServerBoundSensorInfoPacket.encode(state.packetNumber, i, SensorStatus.OK, SensorType.BMI160)
     );
     state.packetNumber += 1n;
@@ -277,6 +280,7 @@ const main = async () => {
             send(
               state.socket,
               state.serverAddress,
+              state.serverPort,
               ServerBoundRotationDataPacket.encode(
                 state.packetNumber,
                 parsed.sensorId,
@@ -297,6 +301,7 @@ const main = async () => {
             send(
               state.socket,
               state.serverAddress,
+              state.serverPort,
               ServerBoundAccelPacket.encode(state.packetNumber, parsed.sensorId, parsed.acceleration)
             );
             state.packetNumber += 1n;
@@ -314,6 +319,7 @@ const main = async () => {
             send(
               state.socket,
               state.serverAddress,
+              state.serverPort,
               ServerBoundBatteryLevelPacket.encode(
                 state.packetNumber,
                 ((4.2 - 3.7) * state.lowestBatteryLevel) / 100 + 3.7,
@@ -353,6 +359,7 @@ const main = async () => {
         send(
           state.socket,
           state.serverAddress,
+          state.serverPort,
           ServerBoundPongPacket.encode(state.packetNumber, (packet as DeviceBoundPingPacket).id)
         );
         state.packetNumber += 1n;
