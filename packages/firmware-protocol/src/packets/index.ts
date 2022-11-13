@@ -1,5 +1,6 @@
 export * from './DeviceBoundHandshakePacket';
 export * from './DeviceBoundPingPacket';
+export * from './DeviceBoundSensorInfoPacket';
 export * from './IncomingCalibrationFinishedPacket';
 export * from './IncomingErrorPacket';
 export * from './IncomingGyroPacket';
@@ -11,7 +12,6 @@ export * from './IncomingSignalStrengthPacket';
 export * from './IncomingTapPacket';
 export * from './IncomingTemperaturePacket';
 export * from './inspection';
-export * from './OutgoingSensorInfoPacket';
 export * from './Packet';
 export * from './PacketParser';
 export * from './ServerBoundAccelPacket';

@@ -2,6 +2,7 @@ import {
   BoardType,
   DeviceBoundHandshakePacket,
   DeviceBoundPingPacket,
+  DeviceBoundSensorInfoPacket,
   IncomingCalibrationFinishedPacket,
   IncomingCorrectionDataPacket,
   IncomingErrorPacket,
@@ -16,7 +17,6 @@ import {
   IncomingTapPacket,
   IncomingTemperaturePacket,
   MCUType,
-  OutgoingSensorInfoPacket,
   PacketWithSensorId,
   parse,
   Protocol,
@@ -124,7 +124,7 @@ export class Tracker {
   }
 
   handle(msg: Buffer) {
-    const packet = parse(msg);
+    const packet = parse(msg, false);
     if (packet === null) {
       this.log(`Received unknown packet (${msg.length} bytes): ${msg.toString('hex')}`);
 
@@ -191,7 +191,7 @@ export class Tracker {
           this.handleSensorPacket(new ServerBoundSensorInfoPacket(packet.number, buf));
         }
 
-        this.socket.send(new DeviceBoundHandshakePacket(packet.number).encode(), this._port, this._ip);
+        this.socket.send(DeviceBoundHandshakePacket.encode(), this._port, this._ip);
 
         break;
       }
@@ -274,7 +274,7 @@ export class Tracker {
         this.handleSensorPacket(sensorInfo);
 
         this.socket.send(
-          new OutgoingSensorInfoPacket(packet.number, sensorInfo.sensorId, sensorInfo.sensorStatus).encode(),
+          DeviceBoundSensorInfoPacket.encode(sensorInfo.sensorId, sensorInfo.sensorStatus),
           this._port,
           this._ip
         );
@@ -417,11 +417,7 @@ export class Tracker {
 
     this._packetNumber = this._packetNumber + BigInt(1);
 
-    this.socket.send(
-      new DeviceBoundPingPacket(this._packetNumber, this.lastPing.id + 1).encode(),
-      this._port,
-      this._ip
-    );
+    this.socket.send(DeviceBoundPingPacket.encode(this._packetNumber, this.lastPing.id + 1), this._port, this._ip);
 
     this.log('Sent ping');
   }
