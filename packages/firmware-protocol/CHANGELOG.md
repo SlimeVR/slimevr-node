@@ -1,5 +1,15 @@
 # @slimevr/firmware-protocol
 
+## 0.3.0
+
+### Minor Changes
+
+- c523b3a: refactored parsing to support both sides
+
+### Patch Changes
+
+- cc577a0: implement server bound heartbeat packet
+
 ## 0.2.0
 
 ### Minor Changes
