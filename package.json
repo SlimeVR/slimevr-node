@@ -10,7 +10,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "eslint --ext .ts,.tsx .",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "release": "npm run build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "2.25.2",
