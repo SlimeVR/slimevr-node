@@ -19,12 +19,14 @@ import {
   IncomingTapPacket,
   IncomingTemperaturePacket,
   MCUType,
+  Packet,
   PacketWithSensorId,
   parse,
   Protocol,
   SensorStatus,
   ServerBoundAccelPacket,
   ServerBoundBatteryLevelPacket,
+  ServerBoundBundlePacket,
   ServerBoundFeatureFlagsPacket,
   ServerBoundHandshakePacket,
   ServerBoundPongPacket,
@@ -55,7 +57,7 @@ import { VectorAggregator } from './VectorAggretator';
 
 const serverFeatures = (() => {
   const flags = new Map<ServerFeatureFlag, boolean>();
-  // flags.set('PROTOCOL_BUNDLE_SUPPORT', true);
+  flags.set('PROTOCOL_BUNDLE_SUPPORT', true);
   return new ServerFeatureFlags(flags);
 })();
 
@@ -153,6 +155,10 @@ export class Tracker {
       this.log(packet.toString());
     }
 
+    this.handlePacket(packet);
+  }
+
+  private handlePacket(packet: Packet) {
     switch (packet.type) {
       case IncomingHeartbeatPacket.type: {
         this.log('Received heartbeat');
@@ -420,6 +426,20 @@ export class Tracker {
           this._ip
         );
         this.log(`Sent server feature flags: ${serverFeatures.getAllEnabled().join(',')}`);
+
+        break;
+      }
+
+      case ServerBoundBundlePacket.type: {
+        const bundle = packet as ServerBoundBundlePacket;
+
+        if (shouldDumpAllPacketsRaw()) {
+          this.log(`Got packet bundle: ${bundle}`);
+        }
+
+        for (const packet of bundle.packets) {
+          this.handlePacket(packet);
+        }
 
         break;
       }

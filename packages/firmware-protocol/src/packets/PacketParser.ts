@@ -16,13 +16,14 @@ import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 import { InspectionPacketParser } from './inspection/PacketParser';
 import { ServerBoundAccelPacket } from './ServerBoundAccelPacket';
 import { ServerBoundBatteryLevelPacket } from './ServerBoundBatteryLevelPacket';
+import { ServerBoundBundlePacket } from './ServerBoundBundlePacket';
 import { ServerBoundFeatureFlagsPacket } from './ServerBoundFeatureFlagsPacket';
 import { ServerBoundHandshakePacket } from './ServerBoundHandshakePacket';
 import { ServerBoundPongPacket } from './ServerBoundPongPacket';
 import { ServerBoundRotationDataPacket } from './ServerBoundRotationDataPacket';
 import { ServerBoundSensorInfoPacket } from './ServerBoundSensorInfoPacket';
 
-export const parse = (data: Buffer, isDeviceBound: boolean) => {
+export const parse = (data: Buffer, isDeviceBound: boolean, isInBundle = false) => {
   if (isDeviceBound) {
     if (data.readUint8(0) === DeviceBoundHandshakePacket.type) {
       return new DeviceBoundHandshakePacket(0n);
@@ -55,9 +56,9 @@ export const parse = (data: Buffer, isDeviceBound: boolean) => {
     }
   } else {
     const type = data.readUInt32BE();
-    const number = data.readBigInt64BE(4);
+    const number = isInBundle ? BigInt(0) : data.readBigInt64BE(4);
 
-    data = data.slice(12);
+    data = data.slice(isInBundle ? 4 : 12);
 
     switch (type) {
       case IncomingHeartbeatPacket.type:
@@ -101,6 +102,9 @@ export const parse = (data: Buffer, isDeviceBound: boolean) => {
 
       case ServerBoundFeatureFlagsPacket.type:
         return new ServerBoundFeatureFlagsPacket(number, data);
+
+      case ServerBoundBundlePacket.type:
+        return new ServerBoundBundlePacket(number, data);
 
       case IncomingMagnetometerAccuracyPacket.type:
         return new IncomingMagnetometerAccuracyPacket(number, data);

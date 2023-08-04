@@ -18,6 +18,7 @@ export * from './Packet';
 export * from './PacketParser';
 export * from './ServerBoundAccelPacket';
 export * from './ServerBoundBatteryLevelPacket';
+export * from './ServerBoundBundlePacket';
 export * from './ServerBoundFeatureFlagsPacket';
 export * from './ServerBoundHandshakePacket';
 export * from './ServerBoundHeartbeatPacket';
