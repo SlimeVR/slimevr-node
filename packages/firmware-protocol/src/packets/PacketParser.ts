@@ -1,3 +1,4 @@
+import { DeviceBoundFeatureFlagsPacket } from './DeviceBoundFeatureFlagsPacket';
 import { DeviceBoundHandshakePacket } from './DeviceBoundHandshakePacket';
 import { DeviceBoundHeartbeatPacket } from './DeviceBoundHeartbeatPacket';
 import { DeviceBoundPingPacket } from './DeviceBoundPingPacket';
@@ -15,6 +16,7 @@ import { IncomingTemperaturePacket } from './IncomingTemperaturePacket';
 import { InspectionPacketParser } from './inspection/PacketParser';
 import { ServerBoundAccelPacket } from './ServerBoundAccelPacket';
 import { ServerBoundBatteryLevelPacket } from './ServerBoundBatteryLevelPacket';
+import { ServerBoundFeatureFlagsPacket } from './ServerBoundFeatureFlagsPacket';
 import { ServerBoundHandshakePacket } from './ServerBoundHandshakePacket';
 import { ServerBoundPongPacket } from './ServerBoundPongPacket';
 import { ServerBoundRotationDataPacket } from './ServerBoundRotationDataPacket';
@@ -26,7 +28,7 @@ export const parse = (data: Buffer, isDeviceBound: boolean) => {
       return new DeviceBoundHandshakePacket(0n);
     }
 
-    const type = data.readInt32BE();
+    const type = data.readUInt32BE();
 
     if (type === DeviceBoundSensorInfoPacket.type) {
       return new DeviceBoundSensorInfoPacket(0n, data);
@@ -43,13 +45,16 @@ export const parse = (data: Buffer, isDeviceBound: boolean) => {
       case DeviceBoundPingPacket.type:
         return new DeviceBoundPingPacket(number, data);
 
+      case DeviceBoundFeatureFlagsPacket.type:
+        return new DeviceBoundFeatureFlagsPacket(number, data);
+
       default:
         console.log(data.toString('hex'));
         console.log(`Unknown packet type: ${type}`);
         return null;
     }
   } else {
-    const type = data.readInt32BE();
+    const type = data.readUInt32BE();
     const number = data.readBigInt64BE(4);
 
     data = data.slice(12);
@@ -93,6 +98,9 @@ export const parse = (data: Buffer, isDeviceBound: boolean) => {
 
       case ServerBoundRotationDataPacket.type:
         return new ServerBoundRotationDataPacket(number, data);
+
+      case ServerBoundFeatureFlagsPacket.type:
+        return new ServerBoundFeatureFlagsPacket(number, data);
 
       case IncomingMagnetometerAccuracyPacket.type:
         return new IncomingMagnetometerAccuracyPacket(number, data);

@@ -1,8 +1,10 @@
 import {
   BoardType,
+  DeviceBoundFeatureFlagsPacket,
   DeviceBoundHandshakePacket,
   DeviceBoundPingPacket,
   DeviceBoundSensorInfoPacket,
+  FirmwareFeatureFlags,
   IncomingCalibrationFinishedPacket,
   IncomingCorrectionDataPacket,
   IncomingErrorPacket,
@@ -23,10 +25,13 @@ import {
   SensorStatus,
   ServerBoundAccelPacket,
   ServerBoundBatteryLevelPacket,
+  ServerBoundFeatureFlagsPacket,
   ServerBoundHandshakePacket,
   ServerBoundPongPacket,
   ServerBoundRotationDataPacket,
-  ServerBoundSensorInfoPacket
+  ServerBoundSensorInfoPacket,
+  ServerFeatureFlag,
+  ServerFeatureFlags
 } from '@slimevr/firmware-protocol';
 import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
@@ -48,6 +53,12 @@ import { Sensor } from './Sensor';
 import { serializeTracker } from './serialization';
 import { VectorAggregator } from './VectorAggretator';
 
+const serverFeatures = (() => {
+  const flags = new Map<ServerFeatureFlag, boolean>();
+  // flags.set('PROTOCOL_BUNDLE_SUPPORT', true);
+  return new ServerFeatureFlags(flags);
+})();
+
 export class Tracker {
   private _packetNumber = BigInt(0);
   private handshook = false;
@@ -64,6 +75,7 @@ export class Tracker {
   private firmwareBuild = -1;
   private mcuType = MCUType.UNKNOWN;
   private boardType = BoardType.UNKNOWN;
+  private featureFlags = new FirmwareFeatureFlags();
 
   private sensors: Sensor[] = [];
   private signalStrength = 0;
@@ -393,6 +405,27 @@ export class Tracker {
 
         break;
       }
+
+      case ServerBoundFeatureFlagsPacket.type: {
+        const featureFlags = packet as ServerBoundFeatureFlagsPacket;
+
+        this.log(`Got firmware flags: ${featureFlags}`);
+
+        this.featureFlags = featureFlags.flags;
+
+        this._packetNumber = this._packetNumber + BigInt(1);
+        this.socket.send(
+          DeviceBoundFeatureFlagsPacket.encode(this._packetNumber, serverFeatures),
+          this._port,
+          this._ip
+        );
+        this.log(`Sent server feature flags: ${serverFeatures.getAllEnabled().join(',')}`);
+
+        break;
+      }
+
+      default:
+        this.log(`Error | Unknown packet: ${packet}`);
     }
   }
 
