@@ -3,7 +3,7 @@
   "include": ["src/**/*.ts"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2016",
     "outDir": "dist"
   }
 }

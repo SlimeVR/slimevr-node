@@ -22,13 +22,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@slimevr/common": "*",
-    "@slimevr/firmware-protocol": "*",
-    "@slimevr/firmware-protocol-debugger-utils": "*",
-    "@slimevr/firmware-protocol-debugger-shared": "*",
+    "@slimevr/common": "workspace:*",
+    "@slimevr/firmware-protocol": "workspace:*",
+    "@slimevr/firmware-protocol-debugger-utils": "workspace:*",
+    "@slimevr/firmware-protocol-debugger-shared": "workspace:*",
     "strict-event-emitter-types": "2.0.0"
   },
   "devDependencies": {
+    "@slimevr/tsconfig": "workspace:*",
     "@types/node": "17.0.45",
     "concurrently": "7.5.0",
     "cross-env": "7.0.3",

@@ -1,14 +1,22 @@
 export class VectorAggregator<T extends number[]> {
-  private readonly samples: number[] = new Array(this.components).fill(0);
-  private readonly averages: number[] = new Array(this.components).fill(0);
-  private readonly deviances: number[] = new Array(this.components).fill(0);
-  private readonly variance: number[] = new Array(this.components).fill(0);
-  private readonly mins: number[] = new Array(this.components).fill(0);
-  private readonly maxs: number[] = new Array(this.components).fill(0);
+  private readonly samples: number[];
+  private readonly averages: number[];
+  private readonly deviances: number[];
+  private readonly variance: number[];
+  private readonly mins: number[];
+  private readonly maxs: number[];
 
-  private _latestData = new Array<number>(this.components).fill(0) as T;
+  private _latestData: T;
 
-  constructor(private readonly components: number) {}
+  constructor(private readonly components: number) {
+    this.samples = new Array(components).fill(0);
+    this.averages = new Array(components).fill(0);
+    this.deviances = new Array(components).fill(0);
+    this.variance = new Array(components).fill(0);
+    this.mins = new Array(components).fill(Infinity);
+    this.maxs = new Array(components).fill(-Infinity);
+    this._latestData = new Array<number>(this.components).fill(0) as T;
+  }
 
   update(raw: T) {
     if (raw.length !== this.components) {

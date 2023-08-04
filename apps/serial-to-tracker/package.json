@@ -21,15 +21,16 @@
     "access": "public"
   },
   "dependencies": {
-    "@slimevr/common": "*",
-    "@slimevr/firmware-protocol": "*",
-    "serialport": "10.4.0"
+    "@slimevr/common": "workspace:*",
+    "@slimevr/firmware-protocol": "workspace:*",
+    "serialport": "^11.0.1"
   },
   "devDependencies": {
-    "@types/node": "17.0.45",
-    "concurrently": "7.5.0",
-    "nodemon": "2.0.20",
-    "typescript": "4.8.4"
+    "@slimevr/tsconfig": "workspace:*",
+    "@types/node": "^18.17.2",
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.0.1",
+    "typescript": "^5.1.6"
   },
   "scripts": {
     "dev": "concurrently \"tsc -w\" \"nodemon .\"",

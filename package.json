@@ -14,14 +14,13 @@
     "release": "npm run build && changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "2.25.2",
-    "@slimevr/eslint-config": "*",
-    "prettier": "2.7.1",
+    "@changesets/cli": "^2.26.2",
+    "@slimevr/eslint-config": "workspace:*",
+    "prettier": "^2.8.8",
     "turbo": "latest"
   },
   "engines": {
-    "npm": ">=7.0.0",
     "node": ">=16.0.0"
   },
-  "packageManager": "npm@8.5.0"
+  "packageManager": "pnpm@8.6.11"
 }

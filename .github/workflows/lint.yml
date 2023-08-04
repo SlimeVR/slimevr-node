@@ -9,16 +9,16 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
+
+      - name: Enable corepack
+        run: corepack enable
 
       - name: Install dependencies
-        run: npm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Check formatting
-        uses: creyD/prettier_action@v4.2
-        with:
-          prettier_options: --write **/*.{ts,md,js,json,yml,yaml}
-          dry: true
+        run: pnpm prettier -c .

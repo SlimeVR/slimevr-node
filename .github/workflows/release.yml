@@ -16,9 +16,12 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
-      - run: npm install --frozen-lockfile
+      - name: Enable corepack
+        run: corepack enable
+
+      - run: pnpm install --frozen-lockfile
 
       - id: changesets
         uses: changesets/action@v1
