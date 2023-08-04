@@ -11,8 +11,7 @@ export const Trackers: FC<unknown> = () => {
 
   useEffect(() => {
     const newTracker = (_: unknown, tracker: SerializedTracker) => addTracker(tracker);
-    const trackerChanged = (_: unknown, tracker: SerializedTracker) =>
-      updateTracker(tracker);
+    const trackerChanged = (_: unknown, tracker: SerializedTracker) => updateTracker(tracker);
     const trackerRemoved = (e: unknown, tracker: SerializedTracker) => removeTracker(tracker);
 
     api.getTrackers().then((trackers) => {

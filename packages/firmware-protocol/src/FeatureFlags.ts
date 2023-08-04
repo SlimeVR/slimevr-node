@@ -60,7 +60,7 @@ export const AVAILABLE_SERVER_FEATURE_FLAGS = {
 } as const;
 export type ServerFeatureFlag = keyof typeof AVAILABLE_SERVER_FEATURE_FLAGS;
 export const ServerFeatureFlags = makeFeatureFlagContainer(AVAILABLE_SERVER_FEATURE_FLAGS);
-export type ServerFeatureFlags = ReturnType<typeof ServerFeatureFlags['unpack']>;
+export type ServerFeatureFlags = ReturnType<(typeof ServerFeatureFlags)['unpack']>;
 
 export const AVAILABLE_FIRMWARE_FEATURE_FLAGS = {
   // The tracker sends all information that firmware 0.3.3 and below sends
@@ -72,4 +72,4 @@ export const AVAILABLE_FIRMWARE_FEATURE_FLAGS = {
 } as const;
 export type FirmwareFeatureFlag = keyof typeof AVAILABLE_FIRMWARE_FEATURE_FLAGS;
 export const FirmwareFeatureFlags = makeFeatureFlagContainer(AVAILABLE_FIRMWARE_FEATURE_FLAGS);
-export type FirmwareFeatureFlags = ReturnType<typeof FirmwareFeatureFlags['unpack']>;
+export type FirmwareFeatureFlags = ReturnType<(typeof FirmwareFeatureFlags)['unpack']>;
