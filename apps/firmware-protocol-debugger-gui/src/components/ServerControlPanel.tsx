@@ -1,12 +1,12 @@
 import { ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
-import { FC, useEffect } from 'react';
+import React from 'react';
 import { useDebuggerStore } from '../store';
 
-export const ServerControlPanel: FC<unknown> = () => {
+export const ServerControlPanel: React.FC<unknown> = () => {
   const serverStatus = useDebuggerStore((s) => s.serverStatus);
   const setServerStatus = useDebuggerStore((s) => s.setServerStatus);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const serverStatusChanged = (_: unknown, status: ServerStatus) => setServerStatus(status);
 
     api.getServerStatus().then((status) => {
@@ -18,9 +18,6 @@ export const ServerControlPanel: FC<unknown> = () => {
     return () => {
       api.removeServerStatusChangedListener(serverStatusChanged);
     };
-
-    // React, please don't re-run this when the server status changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -1,13 +1,13 @@
 import { Canvas } from '@react-three/fiber';
 import { SensorStatus, SensorType } from '@slimevr/firmware-protocol';
 import { SerializedQuaternion, SerializedSensor } from '@slimevr/firmware-protocol-debugger-shared';
-import { FC, useEffect, useRef } from 'react';
+import React from 'react';
 import * as ThreeJS from 'three';
 
-const SensorRenderable: FC<{ rotation: SerializedQuaternion }> = ({ rotation }) => {
-  const ref = useRef<ThreeJS.Mesh | null>(null);
+const SensorRenderable: React.FC<{ rotation: SerializedQuaternion }> = ({ rotation }) => {
+  const ref = React.useRef<ThreeJS.Mesh | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!ref.current) {
       return;
     }
@@ -23,7 +23,10 @@ const SensorRenderable: FC<{ rotation: SerializedQuaternion }> = ({ rotation }) 
   );
 };
 
-export const SensorComponent: FC<{ sensor: SerializedSensor; sensorId: number | string }> = ({ sensor, sensorId }) => {
+export const SensorComponent: React.FC<{ sensor: SerializedSensor; sensorId: number | string }> = ({
+  sensor,
+  sensorId
+}) => {
   return (
     <div className="rounded-md bg-dark-purple-400">
       <div className="flex mx-2 p-1">

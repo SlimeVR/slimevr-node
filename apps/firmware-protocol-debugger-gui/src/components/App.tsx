@@ -1,10 +1,10 @@
 import { ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
-import { FC } from 'react';
+import React from 'react';
 import { useDebuggerStore } from '../store';
 import { ServerControlPanel } from './ServerControlPanel';
 import { Trackers } from './TrackerList';
 
-export const App: FC<unknown> = () => {
+export const App: React.FC<unknown> = () => {
   const serverStatus = useDebuggerStore((state) => state.serverStatus);
 
   return (

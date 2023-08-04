@@ -14,7 +14,7 @@ export type Store = {
 };
 
 export const useDebuggerStore = create<Store>()(
-  devtools((set, get) => ({
+  devtools((set) => ({
     serverStatus: ServerStatus.Stopped,
     trackers: {},
 
