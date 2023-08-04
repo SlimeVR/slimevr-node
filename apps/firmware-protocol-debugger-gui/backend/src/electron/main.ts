@@ -1,5 +1,5 @@
 import { SerializedTracker, ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow, app, ipcMain } from 'electron';
 import { join } from 'node:path';
 import merge from 'ts-deepmerge';
 import { Server } from '../Server';
@@ -78,26 +78,25 @@ const createWindow = async () => {
     }
   });
 
-  if (app.isPackaged) {
-    mainWindow.loadURL(`file://${__dirname}/../../index.html`);
+  const url = app.isPackaged ? `file://${__dirname}/../../index.html` : (process.env.ELECTRON_START_URL as string);
 
-    mainWindow.webContents.openDevTools();
-  } else {
-    const devtoolsInstaller = await import('electron-devtools-installer');
+  console.log(url);
 
-    devtoolsInstaller.default
-      .default(devtoolsInstaller.REACT_DEVELOPER_TOOLS)
-      .then((name) => console.log(`Added Extension:  ${name}`))
-      .catch((err) => console.log('An error occurred: ', err));
-
-    devtoolsInstaller.default
-      .default(devtoolsInstaller.REDUX_DEVTOOLS)
-      .then((name) => console.log(`Added Extension:  ${name}`))
-      .catch((err) => console.log('An error occurred: ', err));
-
-    mainWindow.loadURL(process.env.ELECTRON_START_URL as string);
-    mainWindow.webContents.openDevTools();
+  if (!app.isPackaged) {
+    // const devtoolsInstaller = await import('electron-devtools-installer');
+    // devtoolsInstaller.default
+    //   .default(devtoolsInstaller.REACT_DEVELOPER_TOOLS)
+    //   .then((name) => console.log(`Added Extension:  ${name}`))
+    //   .catch((err) => console.log('An error occurred: ', err));
+    //
+    // devtoolsInstaller.default
+    //   .default(devtoolsInstaller.REDUX_DEVTOOLS)
+    //   .then((name) => console.log(`Added Extension:  ${name}`))
+    //   .catch((err) => console.log('An error occurred: ', err));
   }
+
+  mainWindow.loadURL(url);
+  mainWindow.webContents.openDevTools();
 };
 
 app.on('ready', () => {

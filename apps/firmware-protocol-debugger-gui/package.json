@@ -34,6 +34,7 @@
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.6",
     "@types/three": "0.146.0",
+    "@vitejs/plugin-react": "4.0.4",
     "autoprefixer": "10.4.13",
     "concurrently": "7.5.0",
     "cross-env": "7.0.3",
@@ -41,20 +42,16 @@
     "electron-builder": "23.6.0",
     "electron-devtools-installer": "3.2.0",
     "postcss": "8.4.18",
-    "react-scripts": "5.0.1",
     "tailwindcss": "3.2.2",
     "typescript": "4.8.4",
-    "wait-for-it": "1.0.0"
+    "wait-for-it": "1.0.0",
+    "vite": "4.4.8"
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "dev": "concurrently \"tsc -w -p backend/tsconfig.json\" \"react-scripts start\" \"npm run dev:electron\"",
-    "dev:electron": "cross-env ELECTRON_START_URL=http://localhost:3000 electron .",
-    "build": "react-scripts build && tsc -p backend/tsconfig.json && electron-builder --publish never",
-    "react:start": "react-scripts start",
-    "react:build": "react-scripts build",
-    "react:test": "react-scripts test",
-    "react:eject": "react-scripts eject",
+    "dev": "concurrently --names 'be-tsc,fe,be-electron' \"tsc -w -p backend/tsconfig.json\" \"vite\" \"npm run dev:electron\"",
+    "dev:electron": "cross-env ELECTRON_START_URL=http://localhost:5173 electron .",
+    "build": "vite build && tsc -p backend/tsconfig.json && electron-builder --publish never",
     "dist": "electron-builder",
     "pack": "electron-builder --dir"
   },
