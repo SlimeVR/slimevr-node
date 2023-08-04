@@ -1,5 +1,22 @@
 # @slimevr/firmware-protocol
 
+## 0.4.0
+
+### Minor Changes
+
+- 422164b: implement feature flag packets
+- 8966103: implement packet bundling
+
+### Patch Changes
+
+- 2e9a5c2: fix missing packages
+- 2e9a5c2: implement bundling to ESM
+- 2e9a5c2: bump dependencies
+- Updated dependencies [2e9a5c2]
+- Updated dependencies [2e9a5c2]
+- Updated dependencies [2e9a5c2]
+  - @slimevr/common@0.0.1
+
 ## 0.3.0
 
 ### Minor Changes
