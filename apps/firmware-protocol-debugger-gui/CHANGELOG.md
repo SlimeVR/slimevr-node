@@ -1,5 +1,12 @@
 # slimevr-firmware-protocol-debugger-gui
 
+## 0.2.2
+
+### Patch Changes
+
+- 01f1248: fix warnings in dev console, this should also fix some lag
+- 85df672: fix GUI not loading
+
 ## 0.2.1
 
 ### Patch Changes
