@@ -64,8 +64,8 @@ importers:
   apps/firmware-protocol-debugger-gui:
     dependencies:
       '@react-three/fiber':
-        specifier: 8.9.1
-        version: 8.9.1(react-dom@18.2.0)(react@18.2.0)(three@0.155.0)
+        specifier: ^8.13.6
+        version: 8.13.6(react-dom@18.2.0)(react@18.2.0)(three@0.155.0)
       '@slimevr/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -79,13 +79,13 @@ importers:
         specifier: workspace:*
         version: link:../../packages/firmware-protocol-debugger-utils
       react:
-        specifier: 18.2.0
+        specifier: ^18.2.0
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       strict-event-emitter-types:
-        specifier: 2.0.0
+        specifier: ^2.0.0
         version: 2.0.0
       three:
         specifier: ^0.155.0
@@ -1134,8 +1134,8 @@ packages:
     dev: true
     optional: true
 
-  /@react-three/fiber@8.9.1(react-dom@18.2.0)(react@18.2.0)(three@0.155.0):
-    resolution: {integrity: sha512-xRMO9RGp0DkxSFu5BmmkjCxJ4r0dEpLobtxXdZwI0h2rZZaCnkPM5zThRN8xaZNbZhzRSVICeNOFaZltr9xFyQ==}
+  /@react-three/fiber@8.13.6(react-dom@18.2.0)(react@18.2.0)(three@0.155.0):
+    resolution: {integrity: sha512-V49lldHcbsC7PMnnf4aYrMpHPQe8R7hJYL0AEFjqwioY0nkwga9A+Jx6lCLVG02DF03xwCfJZv5cjZCChffsWg==}
     peerDependencies:
       expo: '>=43.0'
       expo-asset: '>=8.4'
@@ -1164,7 +1164,7 @@ packages:
       react-reconciler: 0.27.0(react@18.2.0)
       react-use-measure: 2.1.1(react-dom@18.2.0)(react@18.2.0)
       scheduler: 0.21.0
-      suspend-react: 0.0.8(react@18.2.0)
+      suspend-react: 0.1.3(react@18.2.0)
       three: 0.155.0
       zustand: 3.7.2(react@18.2.0)
     dev: false
@@ -5132,8 +5132,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /suspend-react@0.0.8(react@18.2.0):
-    resolution: {integrity: sha512-ZC3r8Hu1y0dIThzsGw0RLZplnX9yXwfItcvaIzJc2VQVi8TGyGDlu92syMB5ulybfvGLHAI5Ghzlk23UBPF8xg==}
+  /suspend-react@0.1.3(react@18.2.0):
+    resolution: {integrity: sha512-aqldKgX9aZqpoDp3e8/BZ8Dm7x1pJl+qI3ZKxDN0i/IQTWUwBx/ManmlVJ3wowqbno6c2bmiIfs+Um6LbsjJyQ==}
     peerDependencies:
       react: '>=17.0'
     dependencies:
