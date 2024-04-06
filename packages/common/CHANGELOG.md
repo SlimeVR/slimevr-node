@@ -1,5 +1,11 @@
 # @slimevr/common
 
+## 0.0.2
+
+### Patch Changes
+
+- 96b22a9: release
+
 ## 0.0.1
 
 ### Patch Changes
