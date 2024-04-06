@@ -4,7 +4,8 @@
 
 ## Libraries
 
-- [`@slimevr/firmware-protocol`](packages/firmware-protocol): A library for encoding and decoding packets.
+- [`@slimevr/common`](packages/common): Shared library for the other libraries.
+- [`@slimevr/firmware-protocol`](packages/firmware-protocol): A library for encoding and decoding packets of the firmware.
 
 ## Applications
 
