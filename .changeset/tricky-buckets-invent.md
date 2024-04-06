@@ -1,0 +1,5 @@
+---
+'@slimevr/common': patch
+---
+
+release
