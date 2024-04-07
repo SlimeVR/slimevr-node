@@ -1,5 +1,11 @@
 # @slimevr/firmware-protocol
 
+## 0.5.0
+
+### Minor Changes
+
+- 6e57adf: rename Incoming* packets to ServerBound* to more accurately reflect where they go
+
 ## 0.4.1
 
 ### Patch Changes
