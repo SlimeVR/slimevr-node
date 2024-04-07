@@ -1,10 +1,10 @@
 import { PacketWithSensorId } from './Packet';
 
-export class IncomingTapPacket extends PacketWithSensorId {
+export class ServerBoundTapPacket extends PacketWithSensorId {
   readonly value: number;
 
   constructor(number: bigint, data: Buffer) {
-    super(number, IncomingTapPacket.type, data.readUintBE(0, 1) & 0xff);
+    super(number, ServerBoundTapPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.value = data.readUintBE(1, 1);
   }
@@ -14,6 +14,6 @@ export class IncomingTapPacket extends PacketWithSensorId {
   }
 
   override toString() {
-    return `IncomingTapPacket{sensorId: ${this.sensorId}, value: ${this.value}}`;
+    return `ServerBoundTapPacket{sensorId: ${this.sensorId}, value: ${this.value}}`;
   }
 }

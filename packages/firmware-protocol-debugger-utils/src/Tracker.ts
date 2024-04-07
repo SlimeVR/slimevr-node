@@ -5,19 +5,19 @@ import {
   DeviceBoundPingPacket,
   DeviceBoundSensorInfoPacket,
   FirmwareFeatureFlags,
-  IncomingCalibrationFinishedPacket,
-  IncomingCorrectionDataPacket,
-  IncomingErrorPacket,
-  IncomingFusedIMUDataPacket,
-  IncomingGyroPacket,
-  IncomingHeartbeatPacket,
-  IncomingMagnetometerAccuracyPacket,
-  IncomingRawCalibrationDataPacket,
-  IncomingRawIMUDataPacket,
-  IncomingRotationPacket,
-  IncomingSignalStrengthPacket,
-  IncomingTapPacket,
-  IncomingTemperaturePacket,
+  ServerBoundCalibrationFinishedPacket,
+  ServerBoundCorrectionDataPacket,
+  ServerBoundErrorPacket,
+  ServerBoundFusedIMUDataPacket,
+  ServerBoundGyroPacket,
+  ServerBoundHeartbeatPacket,
+  ServerBoundMagnetometerAccuracyPacket,
+  ServerBoundRawCalibrationDataPacket,
+  ServerBoundRawIMUDataPacket,
+  ServerBoundRotationPacket,
+  ServerBoundSignalStrengthPacket,
+  ServerBoundTapPacket,
+  ServerBoundTemperaturePacket,
   MCUType,
   Packet,
   PacketWithSensorId,
@@ -160,22 +160,22 @@ export class Tracker {
 
   private handlePacket(packet: Packet) {
     switch (packet.type) {
-      case IncomingHeartbeatPacket.type: {
+      case ServerBoundHeartbeatPacket.type: {
         this.log('Received heartbeat');
 
         break;
       }
 
-      case IncomingRotationPacket.type: {
-        const rotation = packet as IncomingRotationPacket;
+      case ServerBoundRotationPacket.type: {
+        const rotation = packet as ServerBoundRotationPacket;
 
         this.handleSensorPacket(ServerBoundRotationDataPacket.fromRotationPacket(rotation));
 
         break;
       }
 
-      case IncomingGyroPacket.type: {
-        const rot = packet as IncomingGyroPacket;
+      case ServerBoundGyroPacket.type: {
+        const rot = packet as ServerBoundGyroPacket;
 
         this.log(`Gyroscope: ${rot.rotation.join(', ')}`);
 
@@ -222,16 +222,16 @@ export class Tracker {
         break;
       }
 
-      case IncomingRawCalibrationDataPacket.type: {
-        const rawCalibrationData = packet as IncomingRawCalibrationDataPacket;
+      case ServerBoundRawCalibrationDataPacket.type: {
+        const rawCalibrationData = packet as ServerBoundRawCalibrationDataPacket;
 
         this.handleSensorPacket(rawCalibrationData);
 
         break;
       }
 
-      case IncomingCalibrationFinishedPacket.type: {
-        const calibrationFinished = packet as IncomingCalibrationFinishedPacket;
+      case ServerBoundCalibrationFinishedPacket.type: {
+        const calibrationFinished = packet as ServerBoundCalibrationFinishedPacket;
 
         this.handleSensorPacket(calibrationFinished);
 
@@ -268,16 +268,16 @@ export class Tracker {
         break;
       }
 
-      case IncomingTapPacket.type: {
-        const tap = packet as IncomingTapPacket;
+      case ServerBoundTapPacket.type: {
+        const tap = packet as ServerBoundTapPacket;
 
         this.handleSensorPacket(tap);
 
         break;
       }
 
-      case IncomingErrorPacket.type: {
-        const error = packet as IncomingErrorPacket;
+      case ServerBoundErrorPacket.type: {
+        const error = packet as ServerBoundErrorPacket;
 
         this.handleSensorPacket(error);
 
@@ -308,16 +308,16 @@ export class Tracker {
         break;
       }
 
-      case IncomingMagnetometerAccuracyPacket.type: {
-        const magnetometerAccuracy = packet as IncomingMagnetometerAccuracyPacket;
+      case ServerBoundMagnetometerAccuracyPacket.type: {
+        const magnetometerAccuracy = packet as ServerBoundMagnetometerAccuracyPacket;
 
         this.handleSensorPacket(magnetometerAccuracy);
 
         break;
       }
 
-      case IncomingSignalStrengthPacket.type: {
-        const signalStrength = packet as IncomingSignalStrengthPacket;
+      case ServerBoundSignalStrengthPacket.type: {
+        const signalStrength = packet as ServerBoundSignalStrengthPacket;
 
         this.signalStrength = signalStrength.signalStrength;
 
@@ -328,16 +328,16 @@ export class Tracker {
         break;
       }
 
-      case IncomingTemperaturePacket.type: {
-        const temperature = packet as IncomingTemperaturePacket;
+      case ServerBoundTemperaturePacket.type: {
+        const temperature = packet as ServerBoundTemperaturePacket;
 
         this.handleSensorPacket(temperature);
 
         break;
       }
 
-      case IncomingRawIMUDataPacket.type: {
-        const raw = packet as IncomingRawIMUDataPacket;
+      case ServerBoundRawIMUDataPacket.type: {
+        const raw = packet as ServerBoundRawIMUDataPacket;
 
         if (shouldDumpRawIMUDataRaw()) {
           this.log(raw.toString());
@@ -370,8 +370,8 @@ export class Tracker {
         break;
       }
 
-      case IncomingFusedIMUDataPacket.type: {
-        const fused = packet as IncomingFusedIMUDataPacket;
+      case ServerBoundFusedIMUDataPacket.type: {
+        const fused = packet as ServerBoundFusedIMUDataPacket;
 
         if (shouldDumpFusedDataRaw()) {
           this.log(fused.toString());
@@ -391,8 +391,8 @@ export class Tracker {
         break;
       }
 
-      case IncomingCorrectionDataPacket.type: {
-        const correction = packet as IncomingCorrectionDataPacket;
+      case ServerBoundCorrectionDataPacket.type: {
+        const correction = packet as ServerBoundCorrectionDataPacket;
 
         if (shouldDumpCorrectionDataRaw()) {
           this.log(correction.toString());

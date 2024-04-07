@@ -1,5 +1,5 @@
 import { Quaternion } from '@slimevr/common';
-import { IncomingRotationPacket } from '.';
+import { ServerBoundRotationPacket } from '.';
 import { PacketWithSensorId } from './Packet';
 
 export enum RotationDataType {
@@ -26,7 +26,7 @@ export class ServerBoundRotationDataPacket extends PacketWithSensorId {
     return 17;
   }
 
-  static fromRotationPacket(packet: IncomingRotationPacket): ServerBoundRotationDataPacket {
+  static fromRotationPacket(packet: ServerBoundRotationPacket): ServerBoundRotationDataPacket {
     const buf = Buffer.alloc(18);
 
     // owoTrack only has one IMU so it will always be sensor ID 0

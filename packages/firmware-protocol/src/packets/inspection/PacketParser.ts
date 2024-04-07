@@ -1,7 +1,7 @@
 import { PacketType } from './constants';
-import { IncomingCorrectionDataPacket } from './IncomingCorrectionDataPacket';
-import { IncomingFusedIMUDataPacket } from './IncomingFusedIMUDataPacket';
-import { IncomingRawIMUDataPacket } from './IncomingRawIMUDataPacket';
+import { ServerBoundCorrectionDataPacket } from './ServerBoundCorrectionDataPacket';
+import { ServerBoundFusedIMUDataPacket } from './ServerBoundFusedIMUDataPacket';
+import { ServerBoundRawIMUDataPacket } from './ServerBoundRawIMUDataPacket';
 
 export class InspectionPacketParser {
   static parseRawDataPacket = (number: bigint, data: Buffer) => {
@@ -11,13 +11,13 @@ export class InspectionPacketParser {
 
     switch (packetType) {
       case PacketType.RAW:
-        return new IncomingRawIMUDataPacket(number, data);
+        return new ServerBoundRawIMUDataPacket(number, data);
 
       case PacketType.FUSED:
-        return new IncomingFusedIMUDataPacket(number, data);
+        return new ServerBoundFusedIMUDataPacket(number, data);
 
       case PacketType.CORRECTION:
-        return new IncomingCorrectionDataPacket(number, data);
+        return new ServerBoundCorrectionDataPacket(number, data);
 
       default:
         console.log(`Unknown packet type: ${PacketType}`);

@@ -1,10 +1,10 @@
 import { PacketWithSensorId } from './Packet';
 
-export class IncomingErrorPacket extends PacketWithSensorId {
+export class ServerBoundErrorPacket extends PacketWithSensorId {
   readonly reason: number;
 
   constructor(number: bigint, data: Buffer) {
-    super(number, IncomingErrorPacket.type, data.readUintBE(0, 1) & 0xff);
+    super(number, ServerBoundErrorPacket.type, data.readUintBE(0, 1) & 0xff);
 
     this.reason = data.readUintBE(1, 1);
   }
@@ -14,6 +14,6 @@ export class IncomingErrorPacket extends PacketWithSensorId {
   }
 
   override toString() {
-    return `IncomingErrorPacket{sensorId: ${this.sensorId}, reason: ${this.reason}}`;
+    return `ServerBoundErrorPacket{sensorId: ${this.sensorId}, reason: ${this.reason}}`;
   }
 }

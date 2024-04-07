@@ -1,11 +1,11 @@
 import { Quaternion } from '@slimevr/common';
 import {
-  IncomingCalibrationFinishedPacket,
-  IncomingErrorPacket,
-  IncomingMagnetometerAccuracyPacket,
-  IncomingRawCalibrationDataPacket,
-  IncomingRotationPacket,
-  IncomingTemperaturePacket,
+  ServerBoundCalibrationFinishedPacket,
+  ServerBoundErrorPacket,
+  ServerBoundMagnetometerAccuracyPacket,
+  ServerBoundRawCalibrationDataPacket,
+  ServerBoundRotationPacket,
+  ServerBoundTemperaturePacket,
   Packet,
   RawCalibrationDataType,
   SensorStatus,
@@ -40,8 +40,8 @@ export class Sensor {
 
   handle(packet: Packet) {
     switch (packet.type) {
-      case IncomingRawCalibrationDataPacket.type: {
-        const rawCalibrationData = packet as IncomingRawCalibrationDataPacket;
+      case ServerBoundRawCalibrationDataPacket.type: {
+        const rawCalibrationData = packet as ServerBoundRawCalibrationDataPacket;
 
         this.log(
           `Received raw calibration data for type ${
@@ -52,16 +52,16 @@ export class Sensor {
         break;
       }
 
-      case IncomingCalibrationFinishedPacket.type: {
-        const calibrationFinished = packet as IncomingCalibrationFinishedPacket;
+      case ServerBoundCalibrationFinishedPacket.type: {
+        const calibrationFinished = packet as ServerBoundCalibrationFinishedPacket;
 
         this.log(`Received calibration finished for type ${calibrationFinished.dataType}`);
 
         break;
       }
 
-      case IncomingErrorPacket.type: {
-        const error = packet as IncomingErrorPacket;
+      case ServerBoundErrorPacket.type: {
+        const error = packet as ServerBoundErrorPacket;
 
         this.log(`Received error: ${error.reason}`);
 
@@ -80,8 +80,8 @@ export class Sensor {
         break;
       }
 
-      case IncomingMagnetometerAccuracyPacket.type: {
-        const magnetometerAccuracy = packet as IncomingMagnetometerAccuracyPacket;
+      case ServerBoundMagnetometerAccuracyPacket.type: {
+        const magnetometerAccuracy = packet as ServerBoundMagnetometerAccuracyPacket;
 
         this.log(`Received magnetometer accuracy: ${magnetometerAccuracy.accuracy}`);
 
@@ -116,8 +116,8 @@ export class Sensor {
         break;
       }
 
-      case IncomingRotationPacket.type: {
-        const rotation = packet as IncomingRotationPacket;
+      case ServerBoundRotationPacket.type: {
+        const rotation = packet as ServerBoundRotationPacket;
 
         if (shouldDumpRotationDataPacketsRaw()) {
           this.log(rotation.toString());
@@ -134,8 +134,8 @@ export class Sensor {
         break;
       }
 
-      case IncomingTemperaturePacket.type: {
-        const temperature = packet as IncomingTemperaturePacket;
+      case ServerBoundTemperaturePacket.type: {
+        const temperature = packet as ServerBoundTemperaturePacket;
 
         this.log(`Received temperature: ${temperature.temperature}`);
 

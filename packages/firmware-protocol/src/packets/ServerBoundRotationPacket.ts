@@ -1,11 +1,11 @@
 import { Quaternion } from '@slimevr/common';
 import { Packet } from './Packet';
 
-export class IncomingRotationPacket extends Packet {
+export class ServerBoundRotationPacket extends Packet {
   readonly rotation: Quaternion;
 
   constructor(number: bigint, data: Buffer) {
-    super(number, IncomingRotationPacket.type);
+    super(number, ServerBoundRotationPacket.type);
 
     this.rotation = [data.readFloatBE(0), data.readFloatBE(4), data.readFloatBE(8), data.readFloatBE(12)];
   }
@@ -15,6 +15,6 @@ export class IncomingRotationPacket extends Packet {
   }
 
   override toString() {
-    return `IncomingRotationPacket{rotation: ${this.rotation}}`;
+    return `ServerBoundRotationPacket{rotation: ${this.rotation}}`;
   }
 }

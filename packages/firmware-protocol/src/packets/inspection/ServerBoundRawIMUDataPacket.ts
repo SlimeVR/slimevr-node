@@ -2,7 +2,7 @@ import { Vector } from '@slimevr/common';
 import { Packet } from '../Packet';
 import { DataType } from './constants';
 
-export class IncomingRawIMUDataPacket extends Packet {
+export class ServerBoundRawIMUDataPacket extends Packet {
   readonly sensorId: number;
 
   readonly rotation: Vector;
@@ -14,7 +14,7 @@ export class IncomingRawIMUDataPacket extends Packet {
   readonly magnetometerAccuracy: number;
 
   constructor(number: bigint, data: Buffer) {
-    super(number, IncomingRawIMUDataPacket.type);
+    super(number, ServerBoundRawIMUDataPacket.type);
 
     this.sensorId = data.readUInt8(0);
 
@@ -29,7 +29,7 @@ export class IncomingRawIMUDataPacket extends Packet {
       this.acceleration = [data.readFloatBE(15), data.readFloatBE(19), data.readFloatBE(23)];
       this.magnetometer = [data.readFloatBE(28), data.readFloatBE(32), data.readFloatBE(36)];
     } else {
-      throw new Error('IncomingRawIMUDataPacket: data type must be float or int');
+      throw new Error('ServerBoundRawIMUDataPacket: data type must be float or int');
     }
 
     this.rotationAccuracy = data.readUintBE(14, 1);
@@ -42,6 +42,6 @@ export class IncomingRawIMUDataPacket extends Packet {
   }
 
   override toString() {
-    return `IncomingRawIMUDataPacket{sensorId: ${this.sensorId}, rotation: ${this.rotation}, rotationAccuracy: ${this.rotationAccuracy}, acceleration: ${this.acceleration}, accelerationAccuracy: ${this.accelerationAccuracy}, magnetometer: ${this.magnetometer}, magnetometerAccuracy: ${this.magnetometerAccuracy}}`;
+    return `ServerBoundRawIMUDataPacket{sensorId: ${this.sensorId}, rotation: ${this.rotation}, rotationAccuracy: ${this.rotationAccuracy}, acceleration: ${this.acceleration}, accelerationAccuracy: ${this.accelerationAccuracy}, magnetometer: ${this.magnetometer}, magnetometerAccuracy: ${this.magnetometerAccuracy}}`;
   }
 }
