@@ -178,11 +178,7 @@ export class Tracker {
       case ServerBoundGyroPacket.type: {
         const rot = packet as ServerBoundGyroPacket;
 
-        if (Array.isArray(rot.rotation)) {
-          this.log(`Gyroscope: ${rot.rotation.join(', ')}`);
-        } else {
-          this.log(`Gyroscope: ${rot.rotation.x}, ${rot.rotation.y}, ${rot.rotation.z}`);
-        }
+        this.log(`Gyroscope: ${toVector(rot.rotation).join(', ')}`);
 
         break;
       }
@@ -222,11 +218,7 @@ export class Tracker {
       case ServerBoundAccelPacket.type: {
         const accel = packet as ServerBoundAccelPacket;
 
-        if (Array.isArray(accel.acceleration)) {
-          this.log(`Acceleration: ${accel.acceleration.join(', ')}`);
-        } else {
-          this.log(`Acceleration: ${accel.acceleration.x}, ${accel.acceleration.y}, ${accel.acceleration.z}`);
-        }
+        this.log(`Acceleration: ${toVector(accel.acceleration).join(', ')}`);
 
         break;
       }

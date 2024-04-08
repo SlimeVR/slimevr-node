@@ -63,17 +63,10 @@ export class ServerBoundRotationDataPacket extends PacketWithSensorId {
     buf.writeUintBE(sensorId, 12, 1);
     buf.writeUintBE(dataType, 13, 1);
 
-    if (Array.isArray(rotation)) {
-      buf.writeFloatBE(rotation[0], 14);
-      buf.writeFloatBE(rotation[1], 18);
-      buf.writeFloatBE(rotation[2], 22);
-      buf.writeFloatBE(rotation[3], 26);
-    } else {
-      buf.writeFloatBE(rotation.x, 14);
-      buf.writeFloatBE(rotation.y, 18);
-      buf.writeFloatBE(rotation.z, 22);
-      buf.writeFloatBE(rotation.w, 26);
-    }
+    buf.writeFloatBE(toQuaternion(rotation)[0], 14);
+    buf.writeFloatBE(toQuaternion(rotation)[1], 18);
+    buf.writeFloatBE(toQuaternion(rotation)[2], 22);
+    buf.writeFloatBE(toQuaternion(rotation)[3], 26);
 
     buf.writeUintBE(accuracyInfo, 30, 1);
 

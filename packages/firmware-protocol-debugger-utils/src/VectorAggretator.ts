@@ -1,4 +1,4 @@
-import { Vector, toVector } from "@slimevr/common";
+import { Vector } from "@slimevr/common";
 
 export class VectorAggregator<T extends number[] | Vector> {
   private readonly samples: number[];
