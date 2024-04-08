@@ -1,4 +1,4 @@
-import { Quaternion } from '@slimevr/common';
+import { Quaternion, toQuaternion, toVector } from '@slimevr/common';
 import {
   ServerBoundCalibrationFinishedPacket,
   ServerBoundErrorPacket,
@@ -46,7 +46,7 @@ export class Sensor {
         this.log(
           `Received raw calibration data for type ${
             RawCalibrationDataType[rawCalibrationData.dataType]
-          }: ${rawCalibrationData.data.join(', ')}`
+          }: ${toVector(rawCalibrationData.data).join(', ')}`
         );
 
         break;
@@ -165,6 +165,6 @@ export class Sensor {
   }
 
   getRotation() {
-    return this.rotation.latestData;
+    return toQuaternion(this.rotation.latestData);
   }
 }

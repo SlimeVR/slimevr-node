@@ -1,4 +1,4 @@
-import { Vector } from '@slimevr/common';
+import { Vector, toVector } from '@slimevr/common';
 import { Packet } from './Packet';
 
 export class ServerBoundAccelPacket extends Packet {
@@ -27,9 +27,9 @@ export class ServerBoundAccelPacket extends Packet {
     data.writeInt32BE(ServerBoundAccelPacket.type, 0);
     data.writeBigInt64BE(number, 4);
 
-    data.writeFloatBE(acceleration[0], 12);
-    data.writeFloatBE(acceleration[1], 16);
-    data.writeFloatBE(acceleration[2], 20);
+    data.writeFloatBE(toVector(acceleration)[0], 12);
+    data.writeFloatBE(toVector(acceleration)[1], 16);
+    data.writeFloatBE(toVector(acceleration)[2], 20);
 
     if (sensorId !== null) {
       data.writeUInt8(sensorId, 24);

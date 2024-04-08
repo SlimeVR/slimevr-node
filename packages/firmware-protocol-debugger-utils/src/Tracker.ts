@@ -1,3 +1,4 @@
+import { toVector, toQuaternion } from '@slimevr/common';
 import {
   BoardType,
   DeviceBoundFeatureFlagsPacket,
@@ -177,7 +178,11 @@ export class Tracker {
       case ServerBoundGyroPacket.type: {
         const rot = packet as ServerBoundGyroPacket;
 
-        this.log(`Gyroscope: ${rot.rotation.join(', ')}`);
+        if (Array.isArray(rot.rotation)) {
+          this.log(`Gyroscope: ${rot.rotation.join(', ')}`);
+        } else {
+          this.log(`Gyroscope: ${rot.rotation.x}, ${rot.rotation.y}, ${rot.rotation.z}`);
+        }
 
         break;
       }
@@ -217,7 +222,11 @@ export class Tracker {
       case ServerBoundAccelPacket.type: {
         const accel = packet as ServerBoundAccelPacket;
 
-        this.log(`Acceleration: ${accel.acceleration.join(', ')}`);
+        if (Array.isArray(accel.acceleration)) {
+          this.log(`Acceleration: ${accel.acceleration.join(', ')}`);
+        } else {
+          this.log(`Acceleration: ${accel.acceleration.x}, ${accel.acceleration.y}, ${accel.acceleration.z}`);
+        }
 
         break;
       }
@@ -343,9 +352,9 @@ export class Tracker {
           this.log(raw.toString());
         }
 
-        this.rawRotation.update(raw.rotation);
-        this.rawAcceleration.update(raw.acceleration);
-        this.rawMagnetometer.update(raw.magnetometer);
+        this.rawRotation.update(toVector(raw.rotation));
+        this.rawAcceleration.update(toVector(raw.acceleration));
+        this.rawMagnetometer.update(toVector(raw.magnetometer));
 
         if (shouldDumpRawIMUDataProcessed()) {
           this.log(`Raw | ROT | ${this.rawRotation.toString()}`);
@@ -357,11 +366,11 @@ export class Tracker {
           const csv =
             [
               Date.now(),
-              ...raw.rotation,
+              ...toVector(raw.rotation),
               raw.rotationAccuracy,
-              ...raw.acceleration,
+              ...toVector(raw.acceleration),
               raw.accelerationAccuracy,
-              ...raw.magnetometer,
+              ...toVector(raw.magnetometer),
               raw.magnetometerAccuracy
             ].join(',') + '\n';
           this.rawIMUDataRawStream.write(csv);
@@ -377,14 +386,14 @@ export class Tracker {
           this.log(fused.toString());
         }
 
-        this.fusedRotation.update(fused.quaternion);
+        this.fusedRotation.update(toQuaternion(fused.quaternion));
 
         if (shouldDumpFusedDataProcessed()) {
           this.log(`Fused | ${this.fusedRotation.toString()}`);
         }
 
         if (this.fusedIMUDataRawStream !== null) {
-          const csv = [Date.now(), ...fused.quaternion].join(',') + '\n';
+          const csv = [Date.now(), ...toQuaternion(fused.quaternion)].join(',') + '\n';
           this.fusedIMUDataRawStream.write(csv);
         }
 
@@ -398,14 +407,14 @@ export class Tracker {
           this.log(correction.toString());
         }
 
-        this.correctedRotation.update(correction.quaternion);
+        this.correctedRotation.update(toQuaternion(correction.quaternion));
 
         if (shouldDumpCorrectionDataProcessed()) {
           this.log(`Correction | ${this.correctedRotation.toString()}`);
         }
 
         if (this.correctionDataRawStream !== null) {
-          const csv = [Date.now(), ...correction.quaternion].join(',') + '\n';
+          const csv = [Date.now(), ...toQuaternion(correction.quaternion)].join(',') + '\n';
           this.correctionDataRawStream.write(csv);
         }
 

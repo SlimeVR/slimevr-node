@@ -1,4 +1,4 @@
-import { Quaternion } from '@slimevr/common';
+import { Quaternion, toQuaternion } from '@slimevr/common';
 import { ServerBoundRotationPacket } from '.';
 import { PacketWithSensorId } from './Packet';
 
@@ -32,10 +32,11 @@ export class ServerBoundRotationDataPacket extends PacketWithSensorId {
     // owoTrack only has one IMU so it will always be sensor ID 0
     buf.writeUintBE(0, 0, 1);
     buf.writeUintBE(RotationDataType.NORMAL, 1, 1);
-    buf.writeFloatBE(packet.rotation[0], 2);
-    buf.writeFloatBE(packet.rotation[1], 6);
-    buf.writeFloatBE(packet.rotation[2], 10);
-    buf.writeFloatBE(packet.rotation[3], 14);
+
+    buf.writeFloatBE(toQuaternion(packet.rotation)[0], 2);
+    buf.writeFloatBE(toQuaternion(packet.rotation)[1], 6);
+    buf.writeFloatBE(toQuaternion(packet.rotation)[2], 10);
+    buf.writeFloatBE(toQuaternion(packet.rotation)[3], 14);
 
     // I'd rather not want to jump through the deserializer
     return new ServerBoundRotationDataPacket(packet.number, buf);
@@ -61,10 +62,18 @@ export class ServerBoundRotationDataPacket extends PacketWithSensorId {
 
     buf.writeUintBE(sensorId, 12, 1);
     buf.writeUintBE(dataType, 13, 1);
-    buf.writeFloatBE(rotation[0], 14);
-    buf.writeFloatBE(rotation[1], 18);
-    buf.writeFloatBE(rotation[2], 22);
-    buf.writeFloatBE(rotation[3], 26);
+
+    if (Array.isArray(rotation)) {
+      buf.writeFloatBE(rotation[0], 14);
+      buf.writeFloatBE(rotation[1], 18);
+      buf.writeFloatBE(rotation[2], 22);
+      buf.writeFloatBE(rotation[3], 26);
+    } else {
+      buf.writeFloatBE(rotation.x, 14);
+      buf.writeFloatBE(rotation.y, 18);
+      buf.writeFloatBE(rotation.z, 22);
+      buf.writeFloatBE(rotation.w, 26);
+    }
 
     buf.writeUintBE(accuracyInfo, 30, 1);
 
