@@ -1,5 +1,13 @@
 # @slimevr/firmware-protocol
 
+## 0.5.1
+
+### Patch Changes
+
+- 85438bb: Allow Vector and Quaternion types to accept objects
+- Updated dependencies [85438bb]
+  - @slimevr/common@0.0.3
+
 ## 0.5.0
 
 ### Minor Changes
