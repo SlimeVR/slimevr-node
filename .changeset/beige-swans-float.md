@@ -1,5 +1,5 @@
 ---
-'@slimevr/common': minor
+'@slimevr/common': patch
 '@slimevr/firmware-protocol': patch
 '@slimevr/firmware-protocol-debugger-utils': patch
 ---
