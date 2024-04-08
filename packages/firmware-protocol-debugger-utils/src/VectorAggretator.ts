@@ -1,4 +1,6 @@
-export class VectorAggregator<T extends number[]> {
+import { Vector } from "@slimevr/common";
+
+export class VectorAggregator<T extends number[] | Vector> {
   private readonly samples: number[];
   private readonly averages: number[];
   private readonly deviances: number[];
@@ -19,12 +21,13 @@ export class VectorAggregator<T extends number[]> {
   }
 
   update(raw: T) {
-    if (raw.length !== this.components) {
-      throw new Error(`Expected ${this.components} components, got ${raw.length}`);
+    const length = Array.isArray(raw) ? raw.length : this.components;
+    if (length !== this.components) {
+      throw new Error(`Expected ${this.components} components, got ${raw}`);
     }
 
-    for (let component = 0; component < raw.length; component++) {
-      const value = raw[component];
+    for (let component = 0; component < length; component++) {
+      const value = Array.isArray(raw) ? raw[component] : 0;
 
       const previousSamples = this.samples[component];
       const previousAverage = this.averages[component];

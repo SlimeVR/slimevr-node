@@ -1,4 +1,4 @@
-import { Quaternion } from '@slimevr/common';
+import { Quaternion, toQuaternion } from '@slimevr/common';
 import { networkInterfaces } from 'os';
 
 export const getBroadcastAddresses = (): [string[], string[]] => {
@@ -31,10 +31,13 @@ export const getBroadcastAddresses = (): [string[], string[]] => {
 };
 
 export const quaternionIsEqualWithEpsilon = (a: Quaternion, b: Quaternion) => {
+  const aQuaternion = toQuaternion(a);
+  const bQuaternion = toQuaternion(b);
+
   return (
-    Math.abs(a[0] - b[0]) < 0.0001 &&
-    Math.abs(a[1] - b[1]) < 0.0001 &&
-    Math.abs(a[2] - b[2]) < 0.0001 &&
-    Math.abs(a[3] - b[3]) < 0.0001
+    Math.abs(aQuaternion[0] - bQuaternion[0]) < 0.0001 &&
+    Math.abs(aQuaternion[1] - bQuaternion[1]) < 0.0001 &&
+    Math.abs(aQuaternion[2] - bQuaternion[2]) < 0.0001 &&
+    Math.abs(aQuaternion[3] - bQuaternion[3]) < 0.0001
   );
 };
