@@ -27,9 +27,11 @@ export class ServerBoundAccelPacket extends Packet {
     data.writeInt32BE(ServerBoundAccelPacket.type, 0);
     data.writeBigInt64BE(number, 4);
 
-    data.writeFloatBE(toVector(acceleration)[0], 12);
-    data.writeFloatBE(toVector(acceleration)[1], 16);
-    data.writeFloatBE(toVector(acceleration)[2], 20);
+    const accelerationVector = toVector(acceleration);
+
+    data.writeFloatBE(accelerationVector[0], 12);
+    data.writeFloatBE(accelerationVector[1], 16);
+    data.writeFloatBE(accelerationVector[2], 20);
 
     if (sensorId !== null) {
       data.writeUInt8(sensorId, 24);

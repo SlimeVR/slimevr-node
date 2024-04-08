@@ -31,10 +31,13 @@ export const getBroadcastAddresses = (): [string[], string[]] => {
 };
 
 export const quaternionIsEqualWithEpsilon = (a: Quaternion, b: Quaternion) => {
+  const aQuaternion = toQuaternion(a);
+  const bQuaternion = toQuaternion(b);
+
   return (
-    Math.abs(toQuaternion(a)[0] - toQuaternion(b)[0]) < 0.0001 &&
-    Math.abs(toQuaternion(a)[1] - toQuaternion(b)[1]) < 0.0001 &&
-    Math.abs(toQuaternion(a)[2] - toQuaternion(b)[2]) < 0.0001 &&
-    Math.abs(toQuaternion(a)[3] - toQuaternion(b)[3]) < 0.0001
+    Math.abs(aQuaternion[0] - bQuaternion[0]) < 0.0001 &&
+    Math.abs(aQuaternion[1] - bQuaternion[1]) < 0.0001 &&
+    Math.abs(aQuaternion[2] - bQuaternion[2]) < 0.0001 &&
+    Math.abs(aQuaternion[3] - bQuaternion[3]) < 0.0001
   );
 };
