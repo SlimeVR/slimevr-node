@@ -1,5 +1,13 @@
 # @slimevr/firmware-protocol
 
+## 0.5.3
+
+### Patch Changes
+
+- 227500c: revert exports change
+- Updated dependencies [227500c]
+  - @slimevr/common@0.0.5
+
 ## 0.5.2
 
 ### Patch Changes
