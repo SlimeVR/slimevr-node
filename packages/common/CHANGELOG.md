@@ -1,5 +1,11 @@
 # @slimevr/common
 
+## 0.0.5
+
+### Patch Changes
+
+- 227500c: revert exports change
+
 ## 0.0.4
 
 ### Patch Changes
