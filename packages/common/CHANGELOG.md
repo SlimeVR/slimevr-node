@@ -1,5 +1,11 @@
 # @slimevr/common
 
+## 0.0.4
+
+### Patch Changes
+
+- 52e3a81: fix packaging
+
 ## 0.0.3
 
 ### Patch Changes

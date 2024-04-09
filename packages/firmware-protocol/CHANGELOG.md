@@ -1,5 +1,13 @@
 # @slimevr/firmware-protocol
 
+## 0.5.2
+
+### Patch Changes
+
+- 52e3a81: fix packaging
+- Updated dependencies [52e3a81]
+  - @slimevr/common@0.0.4
+
 ## 0.5.1
 
 ### Patch Changes
