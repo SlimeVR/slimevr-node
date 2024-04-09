@@ -12,7 +12,8 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "pnpm run build -- --watch"
+    "prepack": "pnpm build",
+    "dev": "pnpm build -- --watch"
   },
   "devDependencies": {
     "@slimevr/tsconfig": "workspace:*",

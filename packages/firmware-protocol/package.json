@@ -12,7 +12,8 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "watch": "pnpm run build -- --watch",
+    "prepack": "pnpm build",
+    "watch": "pnpm build -- --watch",
     "clean": "rimraf dist"
   },
   "dependencies": {
