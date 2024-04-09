@@ -44,9 +44,9 @@ export class Sensor {
         const rawCalibrationData = packet as ServerBoundRawCalibrationDataPacket;
 
         this.log(
-          `Received raw calibration data for type ${
-            RawCalibrationDataType[rawCalibrationData.dataType]
-          }: ${toVector(rawCalibrationData.data).join(', ')}`
+          `Received raw calibration data for type ${RawCalibrationDataType[rawCalibrationData.dataType]}: ${toVector(
+            rawCalibrationData.data
+          ).join(', ')}`
         );
 
         break;
