@@ -6,15 +6,15 @@
   "private": true,
   "homepage": ".",
   "author": {
-    "name": "TheDevMinerTV",
-    "email": "tobigames200@gmail.com"
+    "name": "DevMiner",
+    "email": "devminer@devminer.xyz"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/SlimeVR/slimevr-node.git/tree/master/apps/firmware-protocol-debugger-gui"
   },
   "bugs": {
-    "url": "https://github.com/SlimeVR/slimevr.ts/issues"
+    "url": "https://github.com/SlimeVR/slimevr-node/issues"
   },
   "dependencies": {
     "@react-three/fiber": "^8.13.6",

@@ -5,6 +5,17 @@
   "types": "dist/index.d.ts",
   "module": "dist/index.mjs",
   "license": "(MIT OR Apache-2.0)",
+  "author": {
+    "name": "DevMiner",
+    "email": "devminer@devminer.xyz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SlimeVR/slimevr-node.git/tree/master/packages/firmware-protocol"
+  },
+  "bugs": {
+    "url": "https://github.com/SlimeVR/slimevr-node/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
