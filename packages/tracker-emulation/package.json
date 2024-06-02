@@ -1,0 +1,40 @@
+{
+  "name": "@slimevr/tracker-emulation",
+  "version": "0.0.0",
+  "main": "dist/cjs/index.js",
+  "types": "dist/dts/index.d.ts",
+  "module": "dist/esm/index.js",
+  "type": "module",
+  "license": "(MIT OR Apache-2.0)",
+  "author": {
+    "name": "DevMiner",
+    "email": "devminer@devminer.xyz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SlimeVR/slimevr-node.git/tree/master/packages/tracker-emulation"
+  },
+  "bugs": {
+    "url": "https://github.com/SlimeVR/slimevr-node/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "pnpm run build:esm && pnpm run build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "babel dist/esm --plugins @babel/transform-export-namespace-from --plugins @babel/transform-modules-commonjs --out-dir dist/cjs --source-maps",
+    "prepack": "pnpm build",
+    "watch": "pnpm build -- --watch",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@slimevr/common": "workspace:*",
+    "@slimevr/firmware-protocol": "workspace:*",
+    "strict-event-emitter-types": "^2.0.0"
+  },
+  "devDependencies": {
+    "@slimevr/tsconfig": "workspace:*",
+    "@types/node": "^18.17.2"
+  }
+}
