@@ -1,5 +1,18 @@
 # slimevr-firmware-protocol-debugger-gui
 
+## 0.2.8
+
+### Patch Changes
+
+- d4a39bb: limited the digits on sensor temperature and mag accuracy
+- 125278c: each sensor face is now colored with a different color
+- d72dd07: fixed that local clients get ignored
+- Updated dependencies [751dab5]
+  - @slimevr/firmware-protocol@0.6.0
+  - @slimevr/common@0.1.0
+  - @slimevr/firmware-protocol-debugger-shared@0.0.7
+  - @slimevr/firmware-protocol-debugger-utils@0.0.7
+
 ## 0.2.7
 
 ### Patch Changes

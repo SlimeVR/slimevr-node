@@ -1,5 +1,11 @@
 # @slimevr/common
 
+## 0.1.0
+
+### Minor Changes
+
+- 751dab5: rewrite packet decoding, encoding and parsing
+
 ## 0.0.5
 
 ### Patch Changes
