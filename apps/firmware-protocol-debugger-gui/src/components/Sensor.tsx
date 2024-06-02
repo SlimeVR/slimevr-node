@@ -18,7 +18,19 @@ const SensorRenderable: React.FC<{ rotation: SerializedQuaternion }> = ({ rotati
   return (
     <mesh ref={ref} scale={1}>
       <boxGeometry args={[2, 1, 1]} />
-      <meshStandardMaterial color={'orange'} />
+
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-0" color="#00FF00" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-1" color="#FF0000" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-2" color="#0000FF" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-3" color="#FFFF00" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-4" color="#FF00FF" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-5" color="#00FFFF" />
     </mesh>
   );
 };
@@ -46,7 +58,8 @@ export const SensorComponent: React.FC<{ sensor: SerializedSensor; sensorId: num
       <div>
         <Canvas>
           <ambientLight />
-          <pointLight position={[-2, 0, 5]} />
+          {/* eslint-disable-next-line react/no-unknown-property */}
+          <pointLight position={[0, 5, 0]} castShadow={true} intensity={10} />
           <SensorRenderable rotation={sensor.rotation} />
         </Canvas>
       </div>
