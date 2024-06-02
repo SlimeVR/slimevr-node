@@ -51,6 +51,10 @@ export const SensorComponent: React.FC<{ sensor: SerializedSensor; sensorId: num
       <p className="mx-2 font-xs">Status: {SensorStatus[sensor.status]}</p>
       <p className="mx-2 font-xs">Magnetometer Accuracy: {sensor.magnetometerAccuracy.toFixed(1)}</p>
       <p className="mx-2 font-xs">Temperature: {sensor.temperature.toFixed(1)}</p>
+      <p className="mx-2 font-xs">
+        WiFi Signal Strength: {sensor.signalStrength}dBm (
+        {Math.max(Math.min(((sensor.signalStrength - -95) * (100 - 0)) / (-40 - -95) + 0, 100), 0).toFixed(1)}%)
+      </p>
 
       <hr className="border-dark-purple-100" />
 

@@ -1,12 +1,15 @@
 import { PacketWithSensorId } from './Packet';
 
 export class ServerBoundTapPacket extends PacketWithSensorId {
-  readonly value: number;
+  constructor(sensorId: number, readonly value: number) {
+    super(ServerBoundTapPacket.type, sensorId);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundTapPacket.type, data.readUintBE(0, 1) & 0xff);
+  static fromBuffer(data: Buffer) {
+    const sensorId = data.readUintBE(0, 1) & 0xff;
+    const value = data.readUintBE(1, 1);
 
-    this.value = data.readUintBE(1, 1);
+    return new ServerBoundTapPacket(sensorId, value);
   }
 
   static get type() {
@@ -15,5 +18,17 @@ export class ServerBoundTapPacket extends PacketWithSensorId {
 
   override toString() {
     return `ServerBoundTapPacket{sensorId: ${this.sensorId}, value: ${this.value}}`;
+  }
+
+  encode(num: bigint): Buffer {
+    const buf = Buffer.alloc(4 + 8 + 1 + 1);
+
+    buf.writeInt32BE(ServerBoundTapPacket.type, 0);
+    buf.writeBigInt64BE(num, 4);
+
+    buf.writeUInt8(this.sensorId, 12);
+    buf.writeUInt8(this.value, 13);
+
+    return buf;
   }
 }

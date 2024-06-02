@@ -2,12 +2,14 @@ import { Vector } from '@slimevr/common';
 import { Packet } from './Packet';
 
 export class ServerBoundGyroPacket extends Packet {
-  readonly rotation: Vector;
+  constructor(readonly rotation: Vector) {
+    super(ServerBoundGyroPacket.type);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundGyroPacket.type);
+  static fromBuffer(data: Buffer) {
+    const rotation = Vector.readFloatBE(data, 0);
 
-    this.rotation = [data.readFloatBE(0), data.readFloatBE(4), data.readFloatBE(8)];
+    return new ServerBoundGyroPacket(rotation);
   }
 
   static get type() {
@@ -16,5 +18,16 @@ export class ServerBoundGyroPacket extends Packet {
 
   override toString() {
     return `ServerBoundGyroPacket{rotation: ${this.rotation}}`;
+  }
+
+  encode(number: bigint): Buffer {
+    const buf = Buffer.alloc(4 + 8 + this.rotation.byteLength);
+
+    buf.writeInt32BE(this.type, 0);
+    buf.writeBigInt64BE(number, 4);
+
+    this.rotation.writeFloatBE(buf, 12);
+
+    return buf;
   }
 }

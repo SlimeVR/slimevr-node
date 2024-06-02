@@ -3,6 +3,7 @@ import { DeviceBoundHandshakePacket } from './DeviceBoundHandshakePacket';
 import { DeviceBoundHeartbeatPacket } from './DeviceBoundHeartbeatPacket';
 import { DeviceBoundPingPacket } from './DeviceBoundPingPacket';
 import { DeviceBoundSensorInfoPacket } from './DeviceBoundSensorInfoPacket';
+import { Packet } from './Packet';
 import { ServerBoundAccelPacket } from './ServerBoundAccelPacket';
 import { ServerBoundBatteryLevelPacket } from './ServerBoundBatteryLevelPacket';
 import { ServerBoundBundlePacket } from './ServerBoundBundlePacket';
@@ -23,104 +24,106 @@ import { ServerBoundTapPacket } from './ServerBoundTapPacket';
 import { ServerBoundTemperaturePacket } from './ServerBoundTemperaturePacket';
 import { InspectionPacketParser } from './inspection/PacketParser';
 
+const bundle = (num: bigint, packet: Packet | null) => [num, packet] as const;
+
 export const parse = (data: Buffer, isDeviceBound: boolean, isInBundle = false) => {
   if (isDeviceBound) {
     if (data.readUint8(0) === DeviceBoundHandshakePacket.type) {
-      return new DeviceBoundHandshakePacket(0n);
+      return bundle(0n, new DeviceBoundHandshakePacket());
     }
 
     const type = data.readUInt32BE();
 
     if (type === DeviceBoundSensorInfoPacket.type) {
-      return new DeviceBoundSensorInfoPacket(0n, data);
+      return bundle(0n, DeviceBoundSensorInfoPacket.fromBuffer(data));
     }
 
-    const number = data.readBigInt64BE(4);
+    const num = data.readBigInt64BE(4);
 
     data = data.slice(12);
 
     switch (type) {
       case DeviceBoundHeartbeatPacket.type:
-        return new DeviceBoundHeartbeatPacket(number);
+        return bundle(num, new DeviceBoundHeartbeatPacket());
 
       case DeviceBoundPingPacket.type:
-        return new DeviceBoundPingPacket(number, data);
+        return bundle(num, DeviceBoundPingPacket.fromBuffer(data));
 
       case DeviceBoundFeatureFlagsPacket.type:
-        return new DeviceBoundFeatureFlagsPacket(number, data);
+        return bundle(num, DeviceBoundFeatureFlagsPacket.fromBuffer(data));
 
       default:
         console.log(data.toString('hex'));
         console.log(`Unknown packet type: ${type}`);
-        return null;
+        return bundle(num, null);
     }
   } else {
     const type = data.readUInt32BE();
-    const number = isInBundle ? BigInt(0) : data.readBigInt64BE(4);
+    const num = isInBundle ? BigInt(0) : data.readBigInt64BE(4);
 
     data = data.slice(isInBundle ? 4 : 12);
 
     switch (type) {
       case ServerBoundHeartbeatPacket.type:
-        return new ServerBoundHeartbeatPacket(number);
+        return bundle(num, new ServerBoundHeartbeatPacket());
 
       case ServerBoundRotationPacket.type:
-        return new ServerBoundRotationPacket(number, data);
+        return bundle(num, ServerBoundRotationPacket.fromBuffer(data));
 
       case ServerBoundGyroPacket.type:
-        return new ServerBoundGyroPacket(number, data);
+        return bundle(num, ServerBoundGyroPacket.fromBuffer(data));
 
       case ServerBoundHandshakePacket.type:
-        return new ServerBoundHandshakePacket(number, data);
+        return bundle(num, ServerBoundHandshakePacket.fromBuffer(data));
 
       case ServerBoundAccelPacket.type:
-        return new ServerBoundAccelPacket(number, data);
+        return bundle(num, ServerBoundAccelPacket.fromBuffer(data));
 
       case ServerBoundRawCalibrationDataPacket.type:
-        return new ServerBoundRawCalibrationDataPacket(number, data);
+        return bundle(num, ServerBoundRawCalibrationDataPacket.fromBuffer(data));
 
       case ServerBoundCalibrationFinishedPacket.type:
-        return new ServerBoundCalibrationFinishedPacket(number, data);
+        return bundle(num, ServerBoundCalibrationFinishedPacket.fromBuffer(data));
 
       case ServerBoundPongPacket.type:
-        return new ServerBoundPongPacket(number, data);
+        return bundle(num, ServerBoundPongPacket.fromBuffer(data));
 
       case ServerBoundBatteryLevelPacket.type:
-        return new ServerBoundBatteryLevelPacket(number, data);
+        return bundle(num, ServerBoundBatteryLevelPacket.fromBuffer(data));
 
       case ServerBoundTapPacket.type:
-        return new ServerBoundTapPacket(number, data);
+        return bundle(num, ServerBoundTapPacket.fromBuffer(data));
 
       case ServerBoundErrorPacket.type:
-        return new ServerBoundErrorPacket(number, data);
+        return bundle(num, ServerBoundErrorPacket.fromBuffer(data));
 
       case ServerBoundSensorInfoPacket.type:
-        return new ServerBoundSensorInfoPacket(number, data);
+        return bundle(num, ServerBoundSensorInfoPacket.fromBuffer(data));
 
       case ServerBoundRotationDataPacket.type:
-        return new ServerBoundRotationDataPacket(number, data);
+        return bundle(num, ServerBoundRotationDataPacket.fromBuffer(data));
 
       case ServerBoundFeatureFlagsPacket.type:
-        return new ServerBoundFeatureFlagsPacket(number, data);
+        return bundle(num, ServerBoundFeatureFlagsPacket.fromBuffer(data));
 
       case ServerBoundBundlePacket.type:
-        return new ServerBoundBundlePacket(number, data);
+        return bundle(num, ServerBoundBundlePacket.fromBuffer(data));
 
       case ServerBoundMagnetometerAccuracyPacket.type:
-        return new ServerBoundMagnetometerAccuracyPacket(number, data);
+        return bundle(num, ServerBoundMagnetometerAccuracyPacket.fromBuffer(data));
 
       case ServerBoundSignalStrengthPacket.type:
-        return new ServerBoundSignalStrengthPacket(number, data);
+        return bundle(num, ServerBoundSignalStrengthPacket.fromBuffer(data));
 
       case ServerBoundTemperaturePacket.type:
-        return new ServerBoundTemperaturePacket(number, data);
+        return bundle(num, ServerBoundTemperaturePacket.fromBuffer(data));
 
       case InspectionPacketParser.type:
-        return InspectionPacketParser.parseRawDataPacket(number, data);
+        return bundle(num, InspectionPacketParser.parseRawDataPacket(data));
 
       default:
         console.log(`Unknown packet type: ${type}`);
-        return null;
+        return bundle(num, null);
     }
   }
 };

@@ -42,11 +42,6 @@ export const TrackerComponent: React.FC<{ tracker: SerializedTracker }> = ({ tra
         Battery: {tracker.batteryLevel.voltage.toFixed(2)}V ({tracker.batteryLevel.percentage.toFixed(1)}%)
       </p>
 
-      <p className="mx-2 font-xs">
-        WiFi Signal Strength: {tracker.signalStrength}dBm (
-        {Math.max(Math.min(((tracker.signalStrength - -95) * (100 - 0)) / (-40 - -95) + 0, 100), 0).toFixed(1)}%)
-      </p>
-
       <p className="mx-2 font-xs">Ping: {tracker.ping}ms</p>
 
       <p className="mx-2 font-xs">Microcontroller: {MCUType[tracker.mcuType]}</p>

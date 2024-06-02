@@ -1,12 +1,15 @@
 import { PacketWithSensorId } from './Packet';
 
 export class ServerBoundErrorPacket extends PacketWithSensorId {
-  readonly reason: number;
+  constructor(sensorId: number, readonly reason: number) {
+    super(ServerBoundErrorPacket.type, sensorId);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundErrorPacket.type, data.readUintBE(0, 1) & 0xff);
+  static fromBuffer(data: Buffer) {
+    const sensorId = data.readUintBE(0, 1) & 0xff;
+    const reason = data.readUintBE(1, 1);
 
-    this.reason = data.readUintBE(1, 1);
+    return new ServerBoundErrorPacket(sensorId, reason);
   }
 
   static get type() {
@@ -15,5 +18,17 @@ export class ServerBoundErrorPacket extends PacketWithSensorId {
 
   override toString() {
     return `ServerBoundErrorPacket{sensorId: ${this.sensorId}, reason: ${this.reason}}`;
+  }
+
+  encode(num: bigint): Buffer {
+    const buf = Buffer.alloc(4 + 8 + 1 + 1);
+
+    buf.writeInt32BE(ServerBoundErrorPacket.type, 0);
+    buf.writeBigInt64BE(num, 4);
+
+    buf.writeUInt8(this.sensorId, 12);
+    buf.writeUInt8(this.reason, 13);
+
+    return buf;
   }
 }

@@ -1,3 +1,4 @@
+import { MACAddress } from '@slimevr/common';
 import type { Events } from './Events';
 import { serializeTracker } from './serialization';
 import type { Tracker } from './Tracker';
@@ -16,8 +17,8 @@ export class ConnectionTracker {
     return this.connectionsByIP.get(ip);
   }
 
-  getConnectionByMAC(mac: string) {
-    return this.connectionsByMAC.get(mac);
+  getConnectionByMAC(mac: MACAddress) {
+    return this.connectionsByMAC.get(mac.toString());
   }
 
   addConnection(tracker: Tracker) {
@@ -26,7 +27,7 @@ export class ConnectionTracker {
     this.log(`Added tracker ${tracker.getIP()}`);
 
     if (tracker.getMAC()) {
-      this.connectionsByMAC.set(tracker.getMAC(), tracker);
+      this.connectionsByMAC.set(tracker.getMAC().toString(), tracker);
       this.log(`Added tracker ${tracker.getMAC()}`);
 
       this.events.emit('tracker:new', serializeTracker(tracker));
@@ -37,7 +38,7 @@ export class ConnectionTracker {
     const connection = this.connectionsByIP.get(ip);
 
     if (connection && connection.getMAC()) {
-      this.connectionsByMAC.delete(connection.getMAC());
+      this.connectionsByMAC.delete(connection.getMAC().toString());
 
       this.log(`Removed tracker ${connection.getMAC()}`);
 
@@ -49,8 +50,8 @@ export class ConnectionTracker {
     this.log(`Removed tracker ${ip}`);
   }
 
-  removeConnectionByMAC(mac: string) {
-    const connection = this.connectionsByMAC.get(mac);
+  removeConnectionByMAC(mac: MACAddress) {
+    const connection = this.connectionsByMAC.get(mac.toString());
 
     if (connection) {
       this.connectionsByIP.delete(connection.getIP());
@@ -60,7 +61,7 @@ export class ConnectionTracker {
       this.events.emit('tracker:removed', serializeTracker(connection));
     }
 
-    this.connectionsByMAC.delete(mac);
+    this.connectionsByMAC.delete(mac.toString());
 
     this.log(`Removed tracker ${mac}`);
   }

@@ -1,4 +1,4 @@
-import { Quaternion, toQuaternion } from '@slimevr/common';
+import { Quaternion } from '@slimevr/common';
 import { ServerBoundRotationPacket } from '.';
 import { PacketWithSensorId } from './Packet';
 
@@ -8,18 +8,23 @@ export enum RotationDataType {
 }
 
 export class ServerBoundRotationDataPacket extends PacketWithSensorId {
-  readonly dataType: RotationDataType;
+  constructor(
+    sensorId: number,
+    readonly dataType: RotationDataType,
+    readonly rotation: Quaternion,
+    readonly accuracyInfo: number
+  ) {
+    super(ServerBoundRotationDataPacket.type, sensorId);
+  }
 
-  readonly rotation: Quaternion;
-  readonly accuracyInfo: number;
+  static fromBuffer(data: Buffer) {
+    const sensorId = data.readUintBE(0, 1) & 0xff;
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundRotationDataPacket.type, data.readUintBE(0, 1) & 0xff);
+    const dataType = data.readUintBE(1, 1) & 0xff;
+    const rotation = Quaternion.read(data, 2);
+    const accuracyInfo = data.readUintBE(18, 1);
 
-    this.dataType = data.readUintBE(1, 1) & 0xff;
-
-    this.rotation = [data.readFloatBE(2), data.readFloatBE(6), data.readFloatBE(10), data.readFloatBE(14)];
-    this.accuracyInfo = data.readUintBE(18, 1);
+    return new ServerBoundRotationDataPacket(sensorId, dataType, rotation, accuracyInfo);
   }
 
   static get type() {
@@ -33,15 +38,10 @@ export class ServerBoundRotationDataPacket extends PacketWithSensorId {
     buf.writeUintBE(0, 0, 1);
     buf.writeUintBE(RotationDataType.NORMAL, 1, 1);
 
-    const rotationQuaternion = toQuaternion(packet.rotation);
-
-    buf.writeFloatBE(rotationQuaternion[0], 2);
-    buf.writeFloatBE(rotationQuaternion[1], 6);
-    buf.writeFloatBE(rotationQuaternion[2], 10);
-    buf.writeFloatBE(rotationQuaternion[3], 14);
+    packet.rotation.write(buf, 2);
 
     // I'd rather not want to jump through the deserializer
-    return new ServerBoundRotationDataPacket(packet.number, buf);
+    return ServerBoundRotationDataPacket.fromBuffer(buf);
   }
 
   override toString() {
@@ -50,29 +50,18 @@ export class ServerBoundRotationDataPacket extends PacketWithSensorId {
     }, rotation: ${this.rotation}}, accuracyInfo: ${this.accuracyInfo}}`;
   }
 
-  static encode(
-    number: bigint,
-    sensorId: number,
-    dataType: RotationDataType,
-    rotation: Quaternion,
-    accuracyInfo: number
-  ): Buffer {
-    const buf = Buffer.alloc(4 + 8 + 1 + 1 + 4 + 4 + 4 + 4 + 1);
+  encode(number: bigint): Buffer {
+    const buf = Buffer.alloc(4 + 8 + 1 + 1 + this.rotation.byteLength + 1);
 
     buf.writeInt32BE(ServerBoundRotationDataPacket.type, 0);
     buf.writeBigInt64BE(number, 4);
 
-    buf.writeUintBE(sensorId, 12, 1);
-    buf.writeUintBE(dataType, 13, 1);
+    buf.writeUintBE(this.sensorId, 12, 1);
+    buf.writeUintBE(this.dataType, 13, 1);
 
-    const rotationQuaternion = toQuaternion(rotation);
+    this.rotation.write(buf, 14);
 
-    buf.writeFloatBE(rotationQuaternion[0], 14);
-    buf.writeFloatBE(rotationQuaternion[1], 18);
-    buf.writeFloatBE(rotationQuaternion[2], 22);
-    buf.writeFloatBE(rotationQuaternion[3], 26);
-
-    buf.writeUintBE(accuracyInfo, 30, 1);
+    buf.writeUintBE(this.accuracyInfo, 30, 1);
 
     return buf;
   }

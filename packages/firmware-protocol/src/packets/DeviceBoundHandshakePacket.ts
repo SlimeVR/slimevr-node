@@ -1,8 +1,8 @@
 import { Packet } from './Packet';
 
 export class DeviceBoundHandshakePacket extends Packet {
-  constructor(number: bigint) {
-    super(number, DeviceBoundHandshakePacket.type);
+  constructor() {
+    super(DeviceBoundHandshakePacket.type);
   }
 
   static get type() {
@@ -13,7 +13,7 @@ export class DeviceBoundHandshakePacket extends Packet {
     return 'DeviceBoundHandshakePacket{}';
   }
 
-  static encode() {
+  encode() {
     const buf = Buffer.alloc(14);
 
     buf.writeUint8(this.type);

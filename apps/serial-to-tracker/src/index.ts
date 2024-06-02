@@ -1,3 +1,4 @@
+import { MACAddress, Quaternion, Vector } from '@slimevr/common';
 import {
   BoardType,
   DeviceBoundHandshakePacket,
@@ -19,7 +20,7 @@ import {
 } from '@slimevr/firmware-protocol';
 import { createSocket, RemoteInfo, Socket } from 'node:dgram';
 import { SerialPort } from 'serialport';
-import { getRandomMacAddress, MACAddress, portFlag, readQuaternion, readVector } from './utils';
+import { portFlag } from './utils';
 
 const READY_TYPE = 0x00;
 const ROTATION_DATA_TYPE = 0x01;
@@ -62,7 +63,7 @@ type State =
 
 let state = {
   state: 'starting',
-  mac: getRandomMacAddress()
+  mac: MACAddress.random()
 } as State;
 
 const send = (socket: Socket, addr: string, port: number, data: Buffer) => {
@@ -86,7 +87,7 @@ const parsePacket = (data: Buffer) => {
 
     case ROTATION_DATA_TYPE: {
       const sensorId = data.readUInt8(1);
-      const rotation = readQuaternion(data, 2);
+      const rotation = Quaternion.read(data, 2);
 
       return {
         type: ROTATION_DATA_TYPE,
@@ -97,7 +98,7 @@ const parsePacket = (data: Buffer) => {
 
     case ACCELERATION_DATA_TYPE: {
       const sensorId = data.readUInt8(1);
-      const acceleration = readVector(data, 2);
+      const acceleration = Vector.readFloatBE(data, 2);
 
       return {
         type: ACCELERATION_DATA_TYPE,
@@ -150,15 +151,14 @@ const connectToServer = () => {
         state.socket,
         '172.31.179.23',
         6969,
-        ServerBoundHandshakePacket.encode(
-          0n,
+        new ServerBoundHandshakePacket(
           BoardType.CUSTOM,
           SensorType.BMI160,
           MCUType.UNKNOWN,
           13,
           '0.0.1',
           state.mac
-        )
+        ).encode(0n)
       );
     }, 1000);
 
@@ -215,7 +215,7 @@ const sendSensorInfo = () => {
       state.socket,
       state.serverAddress,
       state.serverPort,
-      ServerBoundSensorInfoPacket.encode(state.packetNumber, i, SensorStatus.OK, SensorType.BMI160)
+      new ServerBoundSensorInfoPacket(i, SensorStatus.OK, SensorType.BMI160).encode(state.packetNumber)
     );
     state.packetNumber += 1n;
 
@@ -289,12 +289,8 @@ const main = async () => {
               state.socket,
               state.serverAddress,
               state.serverPort,
-              ServerBoundRotationDataPacket.encode(
-                state.packetNumber,
-                parsed.sensorId,
-                RotationDataType.NORMAL,
-                parsed.rotation,
-                0
+              new ServerBoundRotationDataPacket(parsed.sensorId, RotationDataType.NORMAL, parsed.rotation, 0).encode(
+                state.packetNumber
               )
             );
             state.packetNumber += 1n;
@@ -311,7 +307,7 @@ const main = async () => {
               state.socket,
               state.serverAddress,
               state.serverPort,
-              ServerBoundAccelPacket.encode(state.packetNumber, parsed.sensorId, parsed.acceleration)
+              new ServerBoundAccelPacket(parsed.sensorId, parsed.acceleration).encode(state.packetNumber)
             );
             state.packetNumber += 1n;
           } else {
@@ -329,11 +325,10 @@ const main = async () => {
               state.socket,
               state.serverAddress,
               state.serverPort,
-              ServerBoundBatteryLevelPacket.encode(
-                state.packetNumber,
+              new ServerBoundBatteryLevelPacket(
                 ((4.2 - 3.7) * state.lowestBatteryLevel) / 100 + 3.7,
                 state.lowestBatteryLevel
-              )
+              ).encode(state.packetNumber)
             );
             state.packetNumber += 1n;
           } else {
@@ -356,7 +351,7 @@ const main = async () => {
       return;
     }
 
-    const packet = parse(msg, true);
+    const [_num, packet] = parse(msg, true);
     if (packet === null) {
       return;
     }
@@ -367,7 +362,7 @@ const main = async () => {
           state.socket,
           state.serverAddress,
           state.serverPort,
-          ServerBoundPongPacket.encode(state.packetNumber, (packet as DeviceBoundPingPacket).id)
+          new ServerBoundPongPacket((packet as DeviceBoundPingPacket).id).encode(state.packetNumber)
         );
         state.packetNumber += 1n;
 
@@ -378,7 +373,7 @@ const main = async () => {
           state.socket,
           state.serverAddress,
           state.serverPort,
-          ServerBoundHeartbeatPacket.encode(state.packetNumber)
+          new ServerBoundHeartbeatPacket().encode(state.packetNumber)
         );
         state.packetNumber += 1n;
 
