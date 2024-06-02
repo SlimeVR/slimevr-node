@@ -55,7 +55,8 @@
     "dev:electron": "cross-env ELECTRON_START_URL=http://localhost:5173 electron .",
     "build": "vite build && tsc -p backend/tsconfig.json && electron-builder --publish never",
     "dist": "electron-builder",
-    "pack": "electron-builder --dir"
+    "pack": "electron-builder --dir",
+    "clean": "rimraf dist build"
   },
   "engines": {
     "node": ">=16.0.0"
