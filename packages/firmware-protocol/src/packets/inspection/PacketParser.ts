@@ -4,20 +4,20 @@ import { ServerBoundFusedIMUDataPacket } from './ServerBoundFusedIMUDataPacket';
 import { ServerBoundRawIMUDataPacket } from './ServerBoundRawIMUDataPacket';
 
 export class InspectionPacketParser {
-  static parseRawDataPacket = (number: bigint, data: Buffer) => {
+  static parseRawDataPacket = (data: Buffer) => {
     const packetType = data.readUInt8(0);
 
     data = data.slice(1);
 
     switch (packetType) {
       case PacketType.RAW:
-        return new ServerBoundRawIMUDataPacket(number, data);
+        return ServerBoundRawIMUDataPacket.fromBuffer(data);
 
       case PacketType.FUSED:
-        return new ServerBoundFusedIMUDataPacket(number, data);
+        return ServerBoundFusedIMUDataPacket.fromBuffer(data);
 
       case PacketType.CORRECTION:
-        return new ServerBoundCorrectionDataPacket(number, data);
+        return ServerBoundCorrectionDataPacket.fromBuffer(data);
 
       default:
         console.log(`Unknown packet type: ${PacketType}`);

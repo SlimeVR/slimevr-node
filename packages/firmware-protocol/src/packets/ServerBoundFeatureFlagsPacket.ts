@@ -2,12 +2,14 @@ import { FirmwareFeatureFlags } from '../FeatureFlags';
 import { Packet } from './Packet';
 
 export class ServerBoundFeatureFlagsPacket extends Packet {
-  readonly flags: FirmwareFeatureFlags;
+  constructor(readonly flags: FirmwareFeatureFlags) {
+    super(ServerBoundFeatureFlagsPacket.type);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundFeatureFlagsPacket.type);
+  static fromBuffer(data: Buffer) {
+    const flags = FirmwareFeatureFlags.unpack(data);
 
-    this.flags = FirmwareFeatureFlags.unpack(data);
+    return new ServerBoundFeatureFlagsPacket(flags);
   }
 
   static get type() {
@@ -16,5 +18,14 @@ export class ServerBoundFeatureFlagsPacket extends Packet {
 
   override toString() {
     return `ServerBoundFeatureFlagsPacket{flags: ${this.flags.getAllEnabled().join(',')}}`;
+  }
+
+  encode(num: bigint): Buffer {
+    const buf = Buffer.alloc(4 + 8);
+
+    buf.writeInt32BE(ServerBoundFeatureFlagsPacket.type, 0);
+    buf.writeBigUInt64BE(num, 4);
+
+    return Buffer.concat([buf, this.flags.pack()]);
   }
 }

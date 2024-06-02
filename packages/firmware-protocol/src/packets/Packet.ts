@@ -4,11 +4,13 @@ export abstract class Packet {
   static readonly ROTATION_2 = 16;
   static readonly PROTOCOL_CHANGE = 200;
 
-  constructor(readonly number: bigint, readonly type: number) {}
+  constructor(readonly type: number) {}
+
+  abstract encode(num: bigint): Buffer;
 }
 
 export abstract class PacketWithSensorId extends Packet {
-  constructor(number: bigint, type: number, readonly sensorId: number) {
-    super(number, type);
+  constructor(type: number, readonly sensorId: number) {
+    super(type);
   }
 }

@@ -1,11 +1,13 @@
 import { Packet } from './Packet';
 
 export class DeviceBoundPingPacket extends Packet {
-  readonly id: number;
-  constructor(number: bigint, data: Buffer) {
-    super(number, DeviceBoundPingPacket.type);
+  constructor(readonly id: number) {
+    super(DeviceBoundPingPacket.type);
+  }
+  static fromBuffer(data: Buffer) {
+    const id = data.readInt32BE(0);
 
-    this.id = data.readInt32BE(0);
+    return new DeviceBoundPingPacket(id);
   }
 
   static get type() {
@@ -16,13 +18,13 @@ export class DeviceBoundPingPacket extends Packet {
     return `DeviceBoundPingPacket{id: ${this.id}}`;
   }
 
-  static encode(number: bigint, id: number) {
+  encode(num: bigint) {
     const buf = Buffer.alloc(4 + 8 + 4);
 
     buf.writeInt32BE(this.type, 0);
-    buf.writeBigInt64BE(number, 4);
+    buf.writeBigInt64BE(num, 4);
 
-    buf.writeInt32BE(id, 12);
+    buf.writeInt32BE(this.id, 12);
 
     return buf;
   }

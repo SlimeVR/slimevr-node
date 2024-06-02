@@ -1,23 +1,25 @@
 import { Packet } from './Packet';
 
 export class ServerBoundBatteryLevelPacket extends Packet {
-  readonly voltage: number;
-  readonly percentage: number;
+  constructor(readonly voltage: number, readonly percentage: number) {
+    super(ServerBoundBatteryLevelPacket.type);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundBatteryLevelPacket.type);
-
-    this.voltage = 0;
+  static fromBuffer(data: Buffer) {
+    let voltage = 0;
+    let percentage = 0;
 
     const tmp = data.readFloatBE(0);
     data = data.slice(4);
 
     if (data.length >= 4) {
-      this.percentage = data.readFloatBE(0) * 100;
-      this.voltage = tmp;
+      percentage = data.readFloatBE(0) * 100;
+      voltage = tmp;
     } else {
-      this.percentage = tmp;
+      percentage = tmp;
     }
+
+    return new ServerBoundBatteryLevelPacket(voltage, percentage);
   }
 
   static get type() {
@@ -28,14 +30,14 @@ export class ServerBoundBatteryLevelPacket extends Packet {
     return `ServerBoundBatteryLevelPacket{voltage: ${this.voltage}, percentage: ${this.percentage}}`;
   }
 
-  static encode(number: bigint, voltage: number, percentage: number) {
+  encode(num: bigint): Buffer {
     const data = Buffer.alloc(4 + 8 + 4 + 4);
 
     data.writeInt32BE(ServerBoundBatteryLevelPacket.type, 0);
-    data.writeBigInt64BE(number, 4);
+    data.writeBigInt64BE(num, 4);
 
-    data.writeFloatBE(voltage, 12);
-    data.writeFloatBE(percentage / 100, 16);
+    data.writeFloatBE(this.voltage, 12);
+    data.writeFloatBE(this.percentage / 100, 16);
 
     return data;
   }

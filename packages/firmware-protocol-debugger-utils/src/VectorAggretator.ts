@@ -1,6 +1,4 @@
-import { Vector } from '@slimevr/common';
-
-export class VectorAggregator<T extends number[] | Vector> {
+export class VectorAggregator<T extends number[] | { bytes: readonly number[] }> {
   private readonly samples: number[];
   private readonly averages: number[];
   private readonly deviances: number[];
@@ -10,24 +8,25 @@ export class VectorAggregator<T extends number[] | Vector> {
 
   private _latestData: T;
 
-  constructor(private readonly components: number) {
+  constructor(private readonly components: number, initialData: T) {
     this.samples = new Array(components).fill(0);
     this.averages = new Array(components).fill(0);
     this.deviances = new Array(components).fill(0);
     this.variance = new Array(components).fill(0);
     this.mins = new Array(components).fill(Infinity);
     this.maxs = new Array(components).fill(-Infinity);
-    this._latestData = new Array<number>(this.components).fill(0) as T;
+    this._latestData = initialData;
   }
 
   update(raw: T) {
-    const length = Array.isArray(raw) ? raw.length : this.components;
-    if (length !== this.components) {
+    const sample = Array.isArray(raw) ? (raw as number[]) : raw.bytes;
+
+    if (sample.length !== this.components) {
       throw new Error(`Expected ${this.components} components, got ${raw}`);
     }
 
-    for (let component = 0; component < length; component++) {
-      const value = Array.isArray(raw) ? raw[component] : 0;
+    for (let component = 0; component < sample.length; component++) {
+      const value = sample[component];
 
       const previousSamples = this.samples[component];
       const previousAverage = this.averages[component];

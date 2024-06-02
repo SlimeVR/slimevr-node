@@ -1,8 +1,8 @@
 import { Packet } from './Packet';
 
 export class ServerBoundHeartbeatPacket extends Packet {
-  constructor(number: bigint) {
-    super(number, ServerBoundHeartbeatPacket.type);
+  constructor() {
+    super(ServerBoundHeartbeatPacket.type);
   }
 
   static get type() {
@@ -13,7 +13,7 @@ export class ServerBoundHeartbeatPacket extends Packet {
     return `ServerBoundHeartbeatPacket{}`;
   }
 
-  static encode(number: bigint): Buffer {
+  encode(number: bigint): Buffer {
     const buf = Buffer.alloc(4 + 8);
 
     buf.writeInt32BE(ServerBoundHeartbeatPacket.type, 0);

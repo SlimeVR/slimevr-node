@@ -1,9 +1,9 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "baseBranch": "origin/master",
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
+      "inputs": ["src/**"],
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {

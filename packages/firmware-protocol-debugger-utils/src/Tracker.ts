@@ -1,4 +1,4 @@
-import { toVector, toQuaternion } from '@slimevr/common';
+import { MACAddress, Quaternion, Vector } from '@slimevr/common';
 import {
   BoardType,
   DeviceBoundFeatureFlagsPacket,
@@ -6,19 +6,6 @@ import {
   DeviceBoundPingPacket,
   DeviceBoundSensorInfoPacket,
   FirmwareFeatureFlags,
-  ServerBoundCalibrationFinishedPacket,
-  ServerBoundCorrectionDataPacket,
-  ServerBoundErrorPacket,
-  ServerBoundFusedIMUDataPacket,
-  ServerBoundGyroPacket,
-  ServerBoundHeartbeatPacket,
-  ServerBoundMagnetometerAccuracyPacket,
-  ServerBoundRawCalibrationDataPacket,
-  ServerBoundRawIMUDataPacket,
-  ServerBoundRotationPacket,
-  ServerBoundSignalStrengthPacket,
-  ServerBoundTapPacket,
-  ServerBoundTemperaturePacket,
   MCUType,
   Packet,
   PacketWithSensorId,
@@ -28,11 +15,24 @@ import {
   ServerBoundAccelPacket,
   ServerBoundBatteryLevelPacket,
   ServerBoundBundlePacket,
+  ServerBoundCalibrationFinishedPacket,
+  ServerBoundCorrectionDataPacket,
+  ServerBoundErrorPacket,
   ServerBoundFeatureFlagsPacket,
+  ServerBoundFusedIMUDataPacket,
+  ServerBoundGyroPacket,
   ServerBoundHandshakePacket,
+  ServerBoundHeartbeatPacket,
+  ServerBoundMagnetometerAccuracyPacket,
   ServerBoundPongPacket,
+  ServerBoundRawCalibrationDataPacket,
+  ServerBoundRawIMUDataPacket,
   ServerBoundRotationDataPacket,
+  ServerBoundRotationPacket,
   ServerBoundSensorInfoPacket,
+  ServerBoundSignalStrengthPacket,
+  ServerBoundTapPacket,
+  ServerBoundTemperaturePacket,
   ServerFeatureFlag,
   ServerFeatureFlags
 } from '@slimevr/firmware-protocol';
@@ -72,7 +72,7 @@ export class Tracker {
     duration: 0
   };
 
-  private _mac = '';
+  private _mac = MACAddress.zero();
   private protocol = Protocol.UNKNOWN;
   private firmware = '';
   private firmwareBuild = -1;
@@ -81,15 +81,14 @@ export class Tracker {
   private featureFlags = new FirmwareFeatureFlags();
 
   private sensors: Sensor[] = [];
-  private signalStrength = 0;
   private batteryVoltage = 0;
   private batteryPercentage = 0;
 
-  private readonly fusedRotation = new VectorAggregator(4);
-  private readonly correctedRotation = new VectorAggregator(4);
-  private readonly rawRotation = new VectorAggregator(3);
-  private readonly rawAcceleration = new VectorAggregator(3);
-  private readonly rawMagnetometer = new VectorAggregator(3);
+  private readonly fusedRotation = new VectorAggregator(4, Quaternion.zero());
+  private readonly correctedRotation = new VectorAggregator(4, Quaternion.zero());
+  private readonly rawRotation = new VectorAggregator(3, Vector.zero());
+  private readonly rawAcceleration = new VectorAggregator(3, Vector.zero());
+  private readonly rawMagnetometer = new VectorAggregator(3, Vector.zero());
 
   private readonly rawIMUDataRawStream: WriteStream | null = null;
   private readonly fusedIMUDataRawStream: WriteStream | null = null;
@@ -139,15 +138,15 @@ export class Tracker {
   }
 
   handle(msg: Buffer) {
-    const packet = parse(msg, false);
+    const [num, packet] = parse(msg, false);
     if (packet === null) {
       this.log(`Received unknown packet (${msg.length} bytes): ${msg.toString('hex')}`);
 
       return;
     }
 
-    if (!this.isNextPacket(packet.number)) {
-      this.log(`Received packet with wrong packet number: ${packet.number}`);
+    if (!this.isNextPacket(num)) {
+      this.log(`Received packet with wrong packet number: ${num}`);
     }
 
     this.lastPacket = Date.now();
@@ -178,7 +177,7 @@ export class Tracker {
       case ServerBoundGyroPacket.type: {
         const rot = packet as ServerBoundGyroPacket;
 
-        this.log(`Gyroscope: ${toVector(rot.rotation).join(', ')}`);
+        this.log(`Gyroscope: ${rot.rotation}`);
 
         break;
       }
@@ -205,12 +204,12 @@ export class Tracker {
         this.handshook = true;
 
         if (this.protocol === Protocol.OWO_LEGACY || this.firmwareBuild < 9) {
-          const buf = ServerBoundSensorInfoPacket.encode(0n, 0, SensorStatus.OK, handshake.imuType);
+          const buf = new ServerBoundSensorInfoPacket(0, SensorStatus.OK, handshake.imuType).encode(0n);
 
-          this.handleSensorPacket(new ServerBoundSensorInfoPacket(packet.number, buf));
+          this.handleSensorPacket(ServerBoundSensorInfoPacket.fromBuffer(buf));
         }
 
-        this.socket.send(DeviceBoundHandshakePacket.encode(), this._port, this._ip);
+        this.socket.send(new DeviceBoundHandshakePacket().encode(), this._port, this._ip);
 
         break;
       }
@@ -218,7 +217,7 @@ export class Tracker {
       case ServerBoundAccelPacket.type: {
         const accel = packet as ServerBoundAccelPacket;
 
-        this.log(`Acceleration: ${toVector(accel.acceleration).join(', ')}`);
+        this.log(`Acceleration: ${accel.acceleration}`);
 
         break;
       }
@@ -293,7 +292,7 @@ export class Tracker {
         this.handleSensorPacket(sensorInfo);
 
         this.socket.send(
-          DeviceBoundSensorInfoPacket.encode(sensorInfo.sensorId, sensorInfo.sensorStatus),
+          new DeviceBoundSensorInfoPacket(sensorInfo.sensorId, sensorInfo.sensorStatus).encode(),
           this._port,
           this._ip
         );
@@ -318,14 +317,7 @@ export class Tracker {
       }
 
       case ServerBoundSignalStrengthPacket.type: {
-        const signalStrength = packet as ServerBoundSignalStrengthPacket;
-
-        this.signalStrength = signalStrength.signalStrength;
-
-        this.log(`Signal strength changed to ${this.signalStrength}`);
-
-        this.events.emit('tracker:changed', serializeTracker(this));
-
+        this.handleSensorPacket(packet as ServerBoundSignalStrengthPacket);
         break;
       }
 
@@ -344,9 +336,9 @@ export class Tracker {
           this.log(raw.toString());
         }
 
-        this.rawRotation.update(toVector(raw.rotation));
-        this.rawAcceleration.update(toVector(raw.acceleration));
-        this.rawMagnetometer.update(toVector(raw.magnetometer));
+        this.rawRotation.update(raw.rotation);
+        this.rawAcceleration.update(raw.acceleration);
+        this.rawMagnetometer.update(raw.magnetometer);
 
         if (shouldDumpRawIMUDataProcessed()) {
           this.log(`Raw | ROT | ${this.rawRotation.toString()}`);
@@ -358,11 +350,11 @@ export class Tracker {
           const csv =
             [
               Date.now(),
-              ...toVector(raw.rotation),
+              ...raw.rotation.bytes,
               raw.rotationAccuracy,
-              ...toVector(raw.acceleration),
+              ...raw.acceleration.bytes,
               raw.accelerationAccuracy,
-              ...toVector(raw.magnetometer),
+              ...raw.magnetometer.bytes,
               raw.magnetometerAccuracy
             ].join(',') + '\n';
           this.rawIMUDataRawStream.write(csv);
@@ -378,14 +370,14 @@ export class Tracker {
           this.log(fused.toString());
         }
 
-        this.fusedRotation.update(toQuaternion(fused.quaternion));
+        this.fusedRotation.update(fused.quaternion);
 
         if (shouldDumpFusedDataProcessed()) {
           this.log(`Fused | ${this.fusedRotation.toString()}`);
         }
 
         if (this.fusedIMUDataRawStream !== null) {
-          const csv = [Date.now(), ...toQuaternion(fused.quaternion)].join(',') + '\n';
+          const csv = [Date.now(), ...fused.quaternion.bytes].join(',') + '\n';
           this.fusedIMUDataRawStream.write(csv);
         }
 
@@ -399,14 +391,14 @@ export class Tracker {
           this.log(correction.toString());
         }
 
-        this.correctedRotation.update(toQuaternion(correction.quaternion));
+        this.correctedRotation.update(correction.quaternion);
 
         if (shouldDumpCorrectionDataProcessed()) {
           this.log(`Correction | ${this.correctedRotation.toString()}`);
         }
 
         if (this.correctionDataRawStream !== null) {
-          const csv = [Date.now(), ...toQuaternion(correction.quaternion)].join(',') + '\n';
+          const csv = [Date.now(), ...correction.quaternion.bytes].join(',') + '\n';
           this.correctionDataRawStream.write(csv);
         }
 
@@ -422,7 +414,7 @@ export class Tracker {
 
         this._packetNumber = this._packetNumber + BigInt(1);
         this.socket.send(
-          DeviceBoundFeatureFlagsPacket.encode(this._packetNumber, serverFeatures),
+          new DeviceBoundFeatureFlagsPacket(serverFeatures).encode(this._packetNumber),
           this._port,
           this._ip
         );
@@ -471,7 +463,7 @@ export class Tracker {
 
     this._packetNumber = this._packetNumber + BigInt(1);
 
-    this.socket.send(DeviceBoundPingPacket.encode(this._packetNumber, this.lastPing.id + 1), this._port, this._ip);
+    this.socket.send(new DeviceBoundPingPacket(this.lastPing.id + 1).encode(this._packetNumber), this._port, this._ip);
 
     this.log('Sent ping');
   }
@@ -513,7 +505,7 @@ export class Tracker {
     return this._port;
   }
 
-  getMAC(): string {
+  getMAC(): MACAddress {
     return this._mac;
   }
 
@@ -523,10 +515,6 @@ export class Tracker {
 
   getCurrentPacketNumber(): bigint {
     return this._packetNumber;
-  }
-
-  getSignalStrength(): number {
-    return this.signalStrength;
   }
 
   getPing(): number {

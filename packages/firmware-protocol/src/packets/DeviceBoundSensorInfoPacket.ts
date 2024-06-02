@@ -2,12 +2,15 @@ import { SensorStatus } from '../constants';
 import { PacketWithSensorId } from './Packet';
 
 export class DeviceBoundSensorInfoPacket extends PacketWithSensorId {
-  readonly sensorStatus: SensorStatus;
+  constructor(sensorId: number, readonly sensorStatus: SensorStatus) {
+    super(DeviceBoundSensorInfoPacket.type, sensorId);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, DeviceBoundSensorInfoPacket.type, data.readUint8(0));
+  static fromBuffer(data: Buffer) {
+    const sensorId = data.readUIntBE(0, 1) & 0xff;
+    const sensorStatus = data.readUint8(1);
 
-    this.sensorStatus = data.readUint8(1);
+    return new DeviceBoundSensorInfoPacket(sensorId, sensorStatus);
   }
 
   static get type() {
@@ -18,13 +21,13 @@ export class DeviceBoundSensorInfoPacket extends PacketWithSensorId {
     return `DeviceBoundSensorInfoPacket{sensorId: ${this.sensorId}, sensorStatus: ${SensorStatus[this.sensorStatus]}}`;
   }
 
-  static encode(sensorId: number, sensorStatus: SensorStatus) {
+  encode() {
     const buffer = Buffer.alloc(4 + 1 + 1);
 
     buffer.writeInt32BE(DeviceBoundSensorInfoPacket.type, 0);
 
-    buffer.writeUInt8(sensorId, 4);
-    buffer.writeUInt8(sensorStatus, 5);
+    buffer.writeUInt8(this.sensorId, 4);
+    buffer.writeUInt8(this.sensorStatus, 5);
 
     return buffer;
   }

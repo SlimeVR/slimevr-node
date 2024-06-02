@@ -10,11 +10,10 @@ export const serializeTracker = (tracker: Tracker): SerializedTracker => {
   }
 
   return {
-    mac: tracker.getMAC(),
+    mac: tracker.getMAC().toString(),
     ip: tracker.getIP(),
     port: tracker.getPort(),
 
-    signalStrength: tracker.getSignalStrength(),
     ping: tracker.getPing(),
 
     protocol: tracker.getProtocol(),
@@ -41,6 +40,7 @@ export const serializeSensor = (sensor: Sensor): SerializedSensor => {
     status: sensor.getStatus(),
     magnetometerAccuracy: sensor.getMagnetometerAccuracy(),
     temperature: sensor.getTemperature(),
-    rotation: sensor.getRotation()
+    signalStrength: sensor.getSignalStrength(),
+    rotation: sensor.getRotation().bytes
   };
 };

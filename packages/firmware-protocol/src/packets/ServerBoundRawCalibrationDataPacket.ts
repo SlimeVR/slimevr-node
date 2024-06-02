@@ -3,15 +3,16 @@ import { RawCalibrationDataType } from '../constants';
 import { PacketWithSensorId } from './Packet';
 
 export class ServerBoundRawCalibrationDataPacket extends PacketWithSensorId {
-  readonly dataType: RawCalibrationDataType;
-  readonly data: Vector;
+  constructor(sensorId: number, readonly dataType: RawCalibrationDataType, readonly data: Vector) {
+    super(ServerBoundRawCalibrationDataPacket.type, sensorId);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundRawCalibrationDataPacket.type, data.readUintBE(0, 1) & 0xff);
+  static fromBuffer(data: Buffer) {
+    const sensorId = data.readUIntBE(0, 1) & 0xff;
+    const dataType = data.readInt32BE(1);
+    const calibrationData = Vector.readFloatBE(data, 5);
 
-    this.dataType = data.readInt32BE(1);
-
-    this.data = [data.readFloatBE(5), data.readFloatBE(9), data.readFloatBE(13)];
+    return new ServerBoundRawCalibrationDataPacket(sensorId, dataType, calibrationData);
   }
 
   static get type() {
@@ -22,5 +23,18 @@ export class ServerBoundRawCalibrationDataPacket extends PacketWithSensorId {
     return `ServerBoundRawCalibrationDataPacket{sensorId: ${this.sensorId}, dataType: ${
       RawCalibrationDataType[this.dataType]
     }, data: ${this.data}}`;
+  }
+
+  encode(num: bigint): Buffer {
+    const buf = Buffer.alloc(4 + 8 + 1 + 4 + this.data.byteLength);
+
+    buf.writeInt32BE(ServerBoundRawCalibrationDataPacket.type, 0);
+    buf.writeBigInt64BE(num, 4);
+
+    buf.writeUInt8(this.sensorId, 12);
+    buf.writeInt32BE(this.dataType, 13);
+    this.data.writeFloatBE(buf, 17);
+
+    return buf;
   }
 }

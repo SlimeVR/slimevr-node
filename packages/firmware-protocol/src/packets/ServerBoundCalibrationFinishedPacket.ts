@@ -1,12 +1,15 @@
 import { PacketWithSensorId } from './Packet';
 
 export class ServerBoundCalibrationFinishedPacket extends PacketWithSensorId {
-  readonly dataType: number;
+  constructor(sensorId: number, readonly dataType: number) {
+    super(ServerBoundCalibrationFinishedPacket.type, sensorId);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundCalibrationFinishedPacket.type, data.readUintBE(0, 1) & 0xff);
+  static fromBuffer(data: Buffer) {
+    const sensorId = data.readUintBE(0, 1) & 0xff;
+    const dataType = data.readInt32BE(1);
 
-    this.dataType = data.readInt32BE(1);
+    return new ServerBoundCalibrationFinishedPacket(sensorId, dataType);
   }
 
   static get type() {
@@ -15,5 +18,17 @@ export class ServerBoundCalibrationFinishedPacket extends PacketWithSensorId {
 
   override toString() {
     return `ServerBoundCalibrationFinishedPacket{sensorId: ${this.sensorId}, dataType: ${this.dataType}}`;
+  }
+
+  encode(num: bigint): Buffer {
+    const buf = Buffer.alloc(4 + 8 + 1 + 4);
+
+    buf.writeInt32BE(ServerBoundCalibrationFinishedPacket.type, 0);
+    buf.writeBigInt64BE(num, 4);
+
+    buf.writeUInt8(this.sensorId, 12);
+    buf.writeInt32BE(this.dataType, 13);
+
+    return buf;
   }
 }

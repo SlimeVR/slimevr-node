@@ -1,12 +1,14 @@
 import { Packet } from './Packet';
 
 export class ServerBoundPongPacket extends Packet {
-  readonly id: number;
+  constructor(readonly id: number) {
+    super(ServerBoundPongPacket.type);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundPongPacket.type);
+  static fromBuffer(data: Buffer) {
+    const id = data.readInt32BE(0);
 
-    this.id = data.readInt32BE(0);
+    return new ServerBoundPongPacket(id);
   }
 
   static get type() {
@@ -17,11 +19,13 @@ export class ServerBoundPongPacket extends Packet {
     return `ServerBoundPongPacket{id: ${this.id}}`;
   }
 
-  static encode(number: bigint, id: number): Buffer {
+  encode(num: bigint): Buffer {
     const buf = Buffer.alloc(4 + 8 + 4);
+
     buf.writeInt32BE(ServerBoundPongPacket.type, 0);
-    buf.writeBigUInt64BE(number, 4);
-    buf.writeInt32BE(id, 12);
+    buf.writeBigUInt64BE(num, 4);
+    buf.writeInt32BE(this.id, 12);
+
     return buf;
   }
 }

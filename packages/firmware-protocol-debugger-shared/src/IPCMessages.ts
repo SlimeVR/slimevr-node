@@ -5,7 +5,6 @@ export type SerializedTracker = {
   ip: string;
   port: number;
 
-  signalStrength: number;
   ping: number;
 
   protocol: Protocol;
@@ -35,8 +34,9 @@ export type SerializedSensor = {
   status: SensorStatus;
   magnetometerAccuracy: number;
   temperature: number;
+  signalStrength: number;
 
   rotation: SerializedQuaternion;
 };
 
-export type SerializedQuaternion = [number, number, number, number];
+export type SerializedQuaternion = readonly [number, number, number, number];

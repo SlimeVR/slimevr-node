@@ -2,7 +2,9 @@ import { ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
 import { ConnectionTracker, newEvents, Tracker, utils } from '@slimevr/firmware-protocol-debugger-utils';
 import { createSocket } from 'node:dgram';
 
-const addressBlacklist = utils.getBroadcastAddresses()[1];
+const [broadcastBlacklist, addressBlacklist] = utils.getBroadcastAddresses();
+console.log('Blacklisted broadcast IPs:', broadcastBlacklist.join(', '));
+console.log('Blacklisted IPs:', addressBlacklist.join(', '));
 
 export class Server {
   readonly events = newEvents();
@@ -19,7 +21,7 @@ export class Server {
     });
 
     this.socket.on('message', (msg, rinfo) => {
-      if (addressBlacklist.includes(rinfo.address)) {
+      if (addressBlacklist.includes(rinfo.address) && rinfo.port === 6969) {
         return;
       }
 

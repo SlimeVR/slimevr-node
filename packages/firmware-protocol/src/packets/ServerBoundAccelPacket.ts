@@ -1,16 +1,16 @@
-import { Vector, toVector } from '@slimevr/common';
+import { Vector } from '@slimevr/common';
 import { Packet } from './Packet';
 
 export class ServerBoundAccelPacket extends Packet {
-  readonly acceleration: Vector;
-  readonly sensorId: number | null;
+  constructor(readonly sensorId: number | null, readonly acceleration: Vector) {
+    super(ServerBoundAccelPacket.type);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundAccelPacket.type);
+  static fromBuffer(data: Buffer) {
+    const acceleration = Vector.readFloatBE(data, 0);
+    const sensorId = data.length >= 12 ? data.readUInt8(12) : null;
 
-    this.acceleration = [data.readFloatBE(0), data.readFloatBE(4), data.readFloatBE(8)];
-
-    this.sensorId = data.length >= 12 ? data.readUInt8(12) : null;
+    return new ServerBoundAccelPacket(sensorId, acceleration);
   }
 
   static get type() {
@@ -21,21 +21,15 @@ export class ServerBoundAccelPacket extends Packet {
     return `ServerBoundAccelPacket{acceleration: ${this.acceleration}, sensorId: ${this.sensorId}}`;
   }
 
-  static encode(number: bigint, sensorId: number | null, acceleration: Vector): Buffer {
-    const data = Buffer.alloc(4 + 8 + 4 + 4 + 4 + (sensorId !== null ? 1 : 0));
+  encode(num: bigint): Buffer {
+    const data = Buffer.alloc(4 + 8 + this.acceleration.byteLength + (this.sensorId !== null ? 1 : 0));
 
     data.writeInt32BE(ServerBoundAccelPacket.type, 0);
-    data.writeBigInt64BE(number, 4);
+    data.writeBigInt64BE(num, 4);
 
-    const accelerationVector = toVector(acceleration);
+    this.acceleration.writeFloatBE(data, 12);
 
-    data.writeFloatBE(accelerationVector[0], 12);
-    data.writeFloatBE(accelerationVector[1], 16);
-    data.writeFloatBE(accelerationVector[2], 20);
-
-    if (sensorId !== null) {
-      data.writeUInt8(sensorId, 24);
-    }
+    if (this.sensorId !== null) data.writeUInt8(this.sensorId, 24);
 
     return data;
   }

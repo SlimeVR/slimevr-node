@@ -18,7 +18,19 @@ const SensorRenderable: React.FC<{ rotation: SerializedQuaternion }> = ({ rotati
   return (
     <mesh ref={ref} scale={1}>
       <boxGeometry args={[2, 1, 1]} />
-      <meshStandardMaterial color={'orange'} />
+
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-0" color="#00FF00" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-1" color="#FF0000" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-2" color="#0000FF" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-3" color="#FFFF00" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-4" color="#FF00FF" />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <meshBasicMaterial attach="material-5" color="#00FFFF" />
     </mesh>
   );
 };
@@ -37,8 +49,12 @@ export const SensorComponent: React.FC<{ sensor: SerializedSensor; sensorId: num
 
       <p className="mx-2 font-xs">Type: {SensorType[sensor.type]}</p>
       <p className="mx-2 font-xs">Status: {SensorStatus[sensor.status]}</p>
-      <p className="mx-2 font-xs">Magnetometer Accuracy: {sensor.magnetometerAccuracy}</p>
-      <p className="mx-2 font-xs">Temperature: {sensor.temperature}</p>
+      <p className="mx-2 font-xs">Magnetometer Accuracy: {sensor.magnetometerAccuracy.toFixed(1)}</p>
+      <p className="mx-2 font-xs">Temperature: {sensor.temperature.toFixed(1)}</p>
+      <p className="mx-2 font-xs">
+        WiFi Signal Strength: {sensor.signalStrength}dBm (
+        {Math.max(Math.min(((sensor.signalStrength - -95) * (100 - 0)) / (-40 - -95) + 0, 100), 0).toFixed(1)}%)
+      </p>
 
       <hr className="border-dark-purple-100" />
 
@@ -46,7 +62,8 @@ export const SensorComponent: React.FC<{ sensor: SerializedSensor; sensorId: num
       <div>
         <Canvas>
           <ambientLight />
-          <pointLight position={[-2, 0, 5]} />
+          {/* eslint-disable-next-line react/no-unknown-property */}
+          <pointLight position={[0, 5, 0]} castShadow={true} intensity={10} />
           <SensorRenderable rotation={sensor.rotation} />
         </Canvas>
       </div>

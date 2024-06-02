@@ -1,21 +1,22 @@
 import { Quaternion } from '@slimevr/common';
-import { Packet } from '../Packet';
+import { PacketWithSensorId } from '../Packet';
 import { DataType } from './constants';
 
-export class ServerBoundFusedIMUDataPacket extends Packet {
-  readonly sensorId: number;
-  readonly quaternion: Quaternion;
+export class ServerBoundFusedIMUDataPacket extends PacketWithSensorId {
+  constructor(sensorId: number, readonly quaternion: Quaternion) {
+    super(ServerBoundFusedIMUDataPacket.type, sensorId);
+  }
 
-  constructor(number: bigint, data: Buffer) {
-    super(number, ServerBoundFusedIMUDataPacket.type);
-
-    this.sensorId = data.readUInt8(0);
+  static fromBuffer(data: Buffer) {
+    const sensorId = data.readUInt8(0);
 
     if (data.readUintBE(1, 1) !== DataType.FLOAT) {
       throw new Error('ServerBoundFusedIMUDataPacket: data type must be float');
     }
 
-    this.quaternion = [data.readFloatBE(2), data.readFloatBE(6), data.readFloatBE(10), data.readFloatBE(14)];
+    const quaternion = Quaternion.read(data, 2);
+
+    return new ServerBoundFusedIMUDataPacket(sensorId, quaternion);
   }
 
   static get type() {
@@ -24,5 +25,18 @@ export class ServerBoundFusedIMUDataPacket extends Packet {
 
   override toString() {
     return `ServerBoundFusedIMUDataPacket{sensorId: ${this.sensorId}, quaternion: ${this.quaternion}}`;
+  }
+
+  encode(num: bigint): Buffer {
+    const buf = Buffer.alloc(4 + 8 + 1 + 4 + this.quaternion.byteLength);
+
+    buf.writeInt32BE(ServerBoundFusedIMUDataPacket.type, 0);
+    buf.writeBigInt64BE(num, 4);
+
+    buf.writeUInt8(this.sensorId, 12);
+    buf.writeUInt8(DataType.FLOAT, 13);
+    this.quaternion.write(buf, 14);
+
+    return buf;
   }
 }
