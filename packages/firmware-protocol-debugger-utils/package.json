@@ -1,6 +1,6 @@
 {
   "name": "@slimevr/firmware-protocol-debugger-utils",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "dist/cjs/index.js",
   "types": "dist/dts/index.d.ts",
   "module": "dist/esm/index.js",

@@ -1,5 +1,15 @@
 # @slimevr/firmware-protocol-debugger-utils
 
+## 0.0.8
+
+### Patch Changes
+
+- 2aef2cb: fixed declaration maps, allowing to see the source code instead of just types
+- Updated dependencies [2aef2cb]
+  - @slimevr/firmware-protocol-debugger-shared@0.0.8
+  - @slimevr/firmware-protocol@0.6.1
+  - @slimevr/common@0.1.1
+
 ## 0.0.7
 
 ### Patch Changes

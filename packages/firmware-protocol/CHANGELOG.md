@@ -1,5 +1,13 @@
 # @slimevr/firmware-protocol
 
+## 0.6.1
+
+### Patch Changes
+
+- 2aef2cb: fixed declaration maps, allowing to see the source code instead of just types
+- Updated dependencies [2aef2cb]
+  - @slimevr/common@0.1.1
+
 ## 0.6.0
 
 ### Minor Changes
