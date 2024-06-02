@@ -14,7 +14,7 @@
     "build:esm": "tsc",
     "build:cjs": "babel dist/esm --plugins @babel/transform-export-namespace-from --plugins @babel/transform-modules-commonjs --out-dir dist/cjs --source-maps",
     "prepack": "pnpm build",
-    "dev": "pnpm build -- --watch",
+    "dev": "pnpm build:esm -- -w",
     "clean": "rimraf dist"
   },
   "devDependencies": {
