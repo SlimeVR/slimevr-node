@@ -1,5 +1,11 @@
 # @slimevr/common
 
+## 0.1.1
+
+### Patch Changes
+
+- 2aef2cb: fixed declaration maps, allowing to see the source code instead of just types
+
 ## 0.1.0
 
 ### Minor Changes
