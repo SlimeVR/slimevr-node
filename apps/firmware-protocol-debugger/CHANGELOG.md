@@ -1,5 +1,16 @@
 # @slimevr/firmware-protocol-debugger
 
+## 0.2.7
+
+### Patch Changes
+
+- d72dd07: fixed that local clients get ignored
+- Updated dependencies [751dab5]
+  - @slimevr/firmware-protocol@0.6.0
+  - @slimevr/common@0.1.0
+  - @slimevr/firmware-protocol-debugger-shared@0.0.7
+  - @slimevr/firmware-protocol-debugger-utils@0.0.7
+
 ## 0.2.6
 
 ### Patch Changes

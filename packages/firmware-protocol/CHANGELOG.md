@@ -1,5 +1,16 @@
 # @slimevr/firmware-protocol
 
+## 0.6.0
+
+### Minor Changes
+
+- 751dab5: rewrite packet decoding, encoding and parsing
+
+### Patch Changes
+
+- Updated dependencies [751dab5]
+  - @slimevr/common@0.1.0
+
 ## 0.5.3
 
 ### Patch Changes
