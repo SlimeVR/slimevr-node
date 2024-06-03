@@ -23,4 +23,4 @@ export * from './ServerBoundSensorInfoPacket';
 export * from './ServerBoundSignalStrengthPacket';
 export * from './ServerBoundTapPacket';
 export * from './ServerBoundTemperaturePacket';
-export * from './inspection';
+export * from './ServerBoundUserActionPacket';

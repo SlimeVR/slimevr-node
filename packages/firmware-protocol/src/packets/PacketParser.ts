@@ -22,6 +22,7 @@ import { ServerBoundSensorInfoPacket } from './ServerBoundSensorInfoPacket';
 import { ServerBoundSignalStrengthPacket } from './ServerBoundSignalStrengthPacket';
 import { ServerBoundTapPacket } from './ServerBoundTapPacket';
 import { ServerBoundTemperaturePacket } from './ServerBoundTemperaturePacket';
+import { ServerBoundUserActionPacket } from './ServerBoundUserActionPacket';
 import { InspectionPacketParser } from './inspection/PacketParser';
 
 const bundle = (num: bigint, packet: Packet | null) => [num, packet] as const;
@@ -117,6 +118,9 @@ export const parse = (data: Buffer, isDeviceBound: boolean, isInBundle = false) 
 
       case ServerBoundTemperaturePacket.type:
         return bundle(num, ServerBoundTemperaturePacket.fromBuffer(data));
+
+      case ServerBoundUserActionPacket.type:
+        return bundle(num, ServerBoundUserActionPacket.fromBuffer(data));
 
       case InspectionPacketParser.type:
         return bundle(num, InspectionPacketParser.parseRawDataPacket(data));
