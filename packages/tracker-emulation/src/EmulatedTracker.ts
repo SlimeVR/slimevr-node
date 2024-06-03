@@ -70,7 +70,9 @@ export class EmulatedTracker extends (EventEmitter as {
     private readonly firmware: string,
     private readonly featureFlags: FirmwareFeatureFlags,
     private readonly boardType: BoardType = BoardType.UNKNOWN,
-    private readonly mcuType: MCUType = MCUType.UNKNOWN
+    private readonly mcuType: MCUType = MCUType.UNKNOWN,
+    private readonly serverDiscoveryIP = '255.255.255.255',
+    private readonly serverDiscoveryPort = 6969
   ) {
     super();
 
@@ -78,9 +80,7 @@ export class EmulatedTracker extends (EventEmitter as {
     this.socket.on('message', (msg, addr) => this.handle(msg, addr));
     this.socket.on('error', (err) => this.emit('error', err));
 
-    this.state = {
-      status: 'initializing'
-    };
+    this.state = { status: 'initializing' };
 
     this.on('connected-to-server', async () => {
       await this.sendPacketToServer(new ServerBoundFeatureFlagsPacket(this.featureFlags));
@@ -114,8 +114,8 @@ export class EmulatedTracker extends (EventEmitter as {
         this.firmware,
         this.mac
       ),
-      6969,
-      '255.255.255.255'
+      this.serverDiscoveryPort,
+      this.serverDiscoveryIP
     );
   }
 
