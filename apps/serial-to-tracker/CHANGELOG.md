@@ -1,5 +1,12 @@
 # @slimevr/serial-to-tracker
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [1b2cd7f]
+  - @slimevr/firmware-protocol@0.6.2
+
 ## 0.1.8
 
 ### Patch Changes
