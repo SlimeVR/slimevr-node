@@ -3,6 +3,7 @@ export * from './DeviceBoundHandshakePacket';
 export * from './DeviceBoundHeartbeatPacket';
 export * from './DeviceBoundPingPacket';
 export * from './DeviceBoundSensorInfoPacket';
+export * from './inspection';
 export * from './Packet';
 export * from './PacketParser';
 export * from './ServerBoundAccelPacket';
