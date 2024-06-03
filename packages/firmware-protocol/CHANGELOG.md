@@ -1,5 +1,11 @@
 # @slimevr/firmware-protocol
 
+## 0.6.2
+
+### Patch Changes
+
+- 1b2cd7f: added missing UserAction (21) packet
+
 ## 0.6.1
 
 ### Patch Changes
