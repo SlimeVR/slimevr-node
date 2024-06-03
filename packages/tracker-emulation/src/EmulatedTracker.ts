@@ -22,7 +22,9 @@ import {
   ServerBoundRotationDataPacket,
   ServerBoundSignalStrengthPacket,
   ServerBoundTemperaturePacket,
-  ServerFeatureFlags
+  ServerBoundUserActionPacket,
+  ServerFeatureFlags,
+  UserAction
 } from '@slimevr/firmware-protocol';
 import { createSocket, RemoteInfo, Socket } from 'dgram';
 import EventEmitter from 'events';
@@ -164,6 +166,10 @@ export class EmulatedTracker extends (EventEmitter as {
 
   async sendSignalStrength(sensorId: number, signalStrength: number) {
     await this.sendPacketToServer(new ServerBoundSignalStrengthPacket(sensorId, signalStrength));
+  }
+
+  async sendUserAction(action: UserAction) {
+    await this.sendPacketToServer(new ServerBoundUserActionPacket(action));
   }
 
   async sendPacketToServer(packet: Packet) {
