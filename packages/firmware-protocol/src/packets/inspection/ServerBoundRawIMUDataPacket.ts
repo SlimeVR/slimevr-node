@@ -1,6 +1,6 @@
 import { Vector } from '@slimevr/common';
-import { PacketWithSensorId } from '../Packet';
-import { DataType } from './constants';
+import { PacketWithSensorId } from '../Packet.js';
+import { DataType } from './constants.js';
 
 export class ServerBoundRawIMUDataPacket extends PacketWithSensorId {
   constructor(

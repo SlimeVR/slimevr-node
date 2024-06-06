@@ -1,5 +1,5 @@
 import { Vector } from '@slimevr/common';
-import { Packet } from './Packet';
+import { Packet } from './Packet.js';
 
 export class ServerBoundGyroPacket extends Packet {
   constructor(readonly rotation: Vector) {

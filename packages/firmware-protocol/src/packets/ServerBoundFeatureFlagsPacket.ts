@@ -1,5 +1,5 @@
-import { FirmwareFeatureFlags } from '../FeatureFlags';
-import { Packet } from './Packet';
+import { FirmwareFeatureFlags } from '../FeatureFlags.js';
+import { Packet } from './Packet.js';
 
 export class ServerBoundFeatureFlagsPacket extends Packet {
   constructor(readonly flags: FirmwareFeatureFlags) {

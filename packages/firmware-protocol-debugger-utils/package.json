@@ -1,15 +1,21 @@
 {
   "name": "@slimevr/firmware-protocol-debugger-utils",
   "version": "0.0.9",
-  "main": "dist/cjs/index.js",
-  "types": "dist/dts/index.d.ts",
-  "module": "dist/esm/index.js",
   "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/dts/index.d.ts",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js",
+    "types": "./dist/dts/index.d.ts",
+    "default": "./dist/esm/index.js"
+  },
   "private": true,
   "scripts": {
     "build": "pnpm run build:esm && pnpm run build:cjs",
-    "build:esm": "tsc",
-    "build:cjs": "babel dist/esm --plugins @babel/transform-export-namespace-from --plugins @babel/transform-modules-commonjs --out-dir dist/cjs --source-maps",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
     "dev": "pnpm run build:esm -- -w",
     "clean": "rimraf dist"
   },

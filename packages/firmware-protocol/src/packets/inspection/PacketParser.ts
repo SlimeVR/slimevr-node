@@ -1,7 +1,7 @@
-import { PacketType } from './constants';
-import { ServerBoundCorrectionDataPacket } from './ServerBoundCorrectionDataPacket';
-import { ServerBoundFusedIMUDataPacket } from './ServerBoundFusedIMUDataPacket';
-import { ServerBoundRawIMUDataPacket } from './ServerBoundRawIMUDataPacket';
+import { PacketType } from './constants.js';
+import { ServerBoundCorrectionDataPacket } from './ServerBoundCorrectionDataPacket.js';
+import { ServerBoundFusedIMUDataPacket } from './ServerBoundFusedIMUDataPacket.js';
+import { ServerBoundRawIMUDataPacket } from './ServerBoundRawIMUDataPacket.js';
 
 export class InspectionPacketParser {
   static parseRawDataPacket = (data: Buffer) => {

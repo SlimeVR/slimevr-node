@@ -1,4 +1,4 @@
-import { Packet } from './Packet';
+import { Packet } from './Packet.js';
 
 export class DeviceBoundHandshakePacket extends Packet {
   constructor() {

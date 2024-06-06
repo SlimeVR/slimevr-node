@@ -14,11 +14,11 @@ import {
   ServerBoundSignalStrengthPacket,
   ServerBoundTemperaturePacket
 } from '@slimevr/firmware-protocol';
-import { Events } from './Events';
-import { shouldDumpRotationDataPacketsProcessed, shouldDumpRotationDataPacketsRaw } from './flags';
-import { serializeTracker } from './serialization';
-import { Tracker } from './Tracker';
-import { VectorAggregator } from './VectorAggretator';
+import { Events } from './Events.js';
+import { shouldDumpRotationDataPacketsProcessed, shouldDumpRotationDataPacketsRaw } from './flags.js';
+import { serializeTracker } from './serialization.js';
+import { Tracker } from './Tracker.js';
+import { VectorAggregator } from './VectorAggretator.js';
 
 export class Sensor {
   private readonly rotation = new VectorAggregator<Quaternion>(4, Quaternion.zero());

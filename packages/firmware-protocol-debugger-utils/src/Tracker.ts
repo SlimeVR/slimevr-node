@@ -38,8 +38,8 @@ import {
 } from '@slimevr/firmware-protocol';
 import { Socket } from 'dgram';
 import { createWriteStream, WriteStream } from 'fs';
-import type { ConnectionTracker } from './ConnectionTracker';
-import { Events } from './Events';
+import type { ConnectionTracker } from './ConnectionTracker.js';
+import { Events } from './Events.js';
 import {
   correctionDataDumpFile,
   fusedIMUDataDumpFile,
@@ -51,10 +51,10 @@ import {
   shouldDumpFusedDataRaw,
   shouldDumpRawIMUDataProcessed,
   shouldDumpRawIMUDataRaw
-} from './flags';
-import { Sensor } from './Sensor';
-import { serializeTracker } from './serialization';
-import { VectorAggregator } from './VectorAggretator';
+} from './flags.js';
+import { Sensor } from './Sensor.js';
+import { serializeTracker } from './serialization.js';
+import { VectorAggregator } from './VectorAggretator.js';
 
 const serverFeatures = (() => {
   const flags = new Map<ServerFeatureFlag, boolean>();

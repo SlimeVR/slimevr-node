@@ -1,2 +1,2 @@
-export * from './EmulatedSensor';
-export * from './EmulatedTracker';
+export * from './EmulatedSensor.js';
+export * from './EmulatedTracker.js';

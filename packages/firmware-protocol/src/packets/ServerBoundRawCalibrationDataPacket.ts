@@ -1,6 +1,6 @@
 import { Vector } from '@slimevr/common';
-import { RawCalibrationDataType } from '../constants';
-import { PacketWithSensorId } from './Packet';
+import { RawCalibrationDataType } from '../constants.js';
+import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundRawCalibrationDataPacket extends PacketWithSensorId {
   constructor(sensorId: number, readonly dataType: RawCalibrationDataType, readonly data: Vector) {
