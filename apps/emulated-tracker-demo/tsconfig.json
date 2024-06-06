@@ -3,7 +3,9 @@
   "include": ["src/**/*.ts"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "outDir": "./dist"
   }
 }

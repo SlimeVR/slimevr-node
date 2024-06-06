@@ -20,19 +20,21 @@ const tracker = new EmulatedTracker(
 const sensors: EmulatedSensor[] = [];
 
 const main = async () => {
-  tracker.on('ready', () => {
-    console.log('searching for server...');
-  });
-
-  tracker.on('connected-to-server', async (ip, port) => {
-    console.log('connected to server', ip, port);
-  });
-
-  tracker.on('unknown-incoming-packet', (packet) => {
-    console.log('unknown packet type', packet.type);
-  });
-
+  tracker.on('ready', (ip, port) => console.log(`ready and running on ${ip}:${port}`));
   tracker.on('error', (err) => console.error(err));
+
+  tracker.on('searching-for-server', () => console.log('searching for server...'));
+  tracker.on('connected-to-server', (ip, port) => console.log('connected to server', ip, port));
+  tracker.on('disconnected-from-server', (reason) => {
+    console.log('disconnected from server', reason);
+    tracker.searchForServer();
+  });
+
+  tracker.on('server-feature-flags', (flags) => console.log('server feature flags', flags.getAllEnabled()));
+
+  tracker.on('incoming-packet', (packet) => console.log('unknown packet type', packet.type));
+  tracker.on('unknown-incoming-packet', (buf) => console.log('unknown packet', buf));
+  tracker.on('outgoing-packet', (packet) => console.log('outgoing packet', packet.type));
 
   await tracker.init();
 
@@ -44,7 +46,7 @@ const main = async () => {
   {
     let i = 0;
     setInterval(() => {
-      tracker.changeBatteryLevel(Math.sin(i) * 0.5 + 3.7, Math.sin(i) * 100);
+      tracker.changeBatteryLevel(Math.sin(i) * 0.5 + 3.7, Math.sin(i) * 50 + 50);
       i += 0.1;
     }, 1000).unref();
   }

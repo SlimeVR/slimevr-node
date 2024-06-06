@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "license": "(MIT OR Apache-2.0)",
   "private": true,
+  "type": "module",
   "author": {
     "name": "DevMiner",
     "email": "devminer@devminer.xyz"

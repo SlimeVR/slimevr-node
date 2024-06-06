@@ -5,6 +5,7 @@ import {
   DeviceBoundHandshakePacket,
   DeviceBoundHeartbeatPacket,
   DeviceBoundPingPacket,
+  DeviceBoundSensorInfoPacket,
   FirmwareFeatureFlags,
   MCUType,
   Packet,
@@ -28,21 +29,42 @@ import {
 } from '@slimevr/firmware-protocol';
 import { createSocket, RemoteInfo, Socket } from 'dgram';
 import EventEmitter from 'events';
-import { AddressInfo } from 'net';
 import { type StrictEventEmitter } from 'strict-event-emitter-types';
 import { EmulatedSensor } from './EmulatedSensor.js';
 
 type State =
   | { status: 'initializing' }
+  | { status: 'disconnected' }
   | { status: 'searching-for-server'; discoveryInterval: NodeJS.Timeout }
-  | { status: 'connected-to-server'; packetNumber: bigint; serverIP: string; serverPort: number };
+  | {
+      status: 'connected-to-server';
+      packetNumber: bigint;
+      serverIP: string;
+      serverPort: number;
+      lastReceivedPacketTimestamp: number;
+      timeoutCheckInterval: NodeJS.Timeout;
+    };
+
+export class TimeoutError extends Error {
+  constructor(desired: string, timeout: number) {
+    super(`Timed out waiting for ${desired}, waited ${timeout}ms`);
+  }
+}
+
+type DisconnectReason = TimeoutError | Error;
 
 interface EmulatedTrackerEvents {
   error: (error: Error) => void;
-  ready: (address: AddressInfo) => void;
+  ready: (ip: string, port: number) => void;
+
+  'searching-for-server': () => void;
   'connected-to-server': (serverIP: string, serverPort: number) => void;
+  'disconnected-from-server': (reason: DisconnectReason) => void;
+
   'server-feature-flags': (flags: ServerFeatureFlags) => void;
-  'unknown-incoming-packet': (packet: Packet) => void;
+
+  'incoming-packet': (packet: Packet) => void;
+  'unknown-incoming-packet': (buf: Buffer) => void;
   'outgoing-packet': (packet: Packet) => void;
 }
 
@@ -51,19 +73,11 @@ const SUPPORTED_FIRMWARE_PROTOCOL_VERSION = 13;
 export class EmulatedTracker extends (EventEmitter as {
   new (): StrictEventEmitter<EventEmitter, EmulatedTrackerEvents>;
 }) {
-  // TODO: Implement timing out the server connection if no packets are received for a while
-  private lastPacket = Date.now();
-  private lastPing = {
-    id: 0,
-    startTimestamp: 0,
-    duration: 0
-  };
-
   private batteryVoltage = 0;
   private batteryPercentage = 0;
 
   private readonly socket: Socket;
-  private state: State;
+  private state: State = { status: 'initializing' };
 
   private sensors: EmulatedSensor[] = [];
 
@@ -74,21 +88,31 @@ export class EmulatedTracker extends (EventEmitter as {
     private readonly boardType: BoardType = BoardType.UNKNOWN,
     private readonly mcuType: MCUType = MCUType.UNKNOWN,
     private readonly serverDiscoveryIP = '255.255.255.255',
-    private readonly serverDiscoveryPort = 6969
+    private readonly serverDiscoveryPort = 6969,
+    private readonly serverTimeout = 5000,
+    private readonly autoReconnect = true
   ) {
     super();
 
     this.socket = createSocket('udp4');
     this.socket.on('message', (msg, addr) => this.handle(msg, addr));
     this.socket.on('error', (err) => this.emit('error', err));
-
-    this.state = { status: 'initializing' };
-
-    this.on('connected-to-server', async () => {
-      await this.sendPacketToServer(new ServerBoundFeatureFlagsPacket(this.featureFlags));
-      await this.sendBatteryLevel();
-      await Promise.all(this.sensors.map((sensor) => sensor.sendSensorInfo()));
+    this.socket.on('error', (err) => {
+      if (this.state.status === 'connected-to-server') this.emit('disconnected-from-server', err);
     });
+  }
+
+  private disconnectFromServer(reason: DisconnectReason) {
+    if (this.state.status === 'searching-for-server') {
+      clearInterval(this.state.discoveryInterval);
+    }
+
+    this.state = { status: 'disconnected' };
+    this.emit('disconnected-from-server', reason);
+
+    if (this.autoReconnect) {
+      this.searchForServer();
+    }
   }
 
   unref() {
@@ -125,12 +149,16 @@ export class EmulatedTracker extends (EventEmitter as {
     await new Promise<void>((resolve) => this.socket.bind(0, () => resolve()));
     this.socket.setBroadcast(true);
 
-    this.emit('ready', this.socket.address());
+    const addr = this.socket.address();
+    this.emit('ready', addr.address, addr.port);
+  }
 
+  searchForServer() {
     this.state = {
       status: 'searching-for-server',
       discoveryInterval: setInterval(() => this.sendDiscovery(), 1000)
     };
+    this.emit('searching-for-server');
   }
 
   private log(msg: string) {
@@ -182,18 +210,18 @@ export class EmulatedTracker extends (EventEmitter as {
   }
 
   private async sendPacket(packet: Packet, port: number, ip: string) {
-    this.emit('outgoing-packet', packet);
-
     const encoded = packet.encode(this.state.status === 'connected-to-server' ? this.state.packetNumber++ : 0n);
 
     await new Promise<void>((res, rej) =>
       this.socket.send(encoded, 0, encoded.length, port, ip, (err) => (err ? rej(err) : res()))
     );
 
-    this.log(`Sent packet to ${ip}:${port} (${encoded.length} bytes): ${encoded.toString('hex')}`);
+    this.emit('outgoing-packet', packet);
   }
 
-  private handle(msg: Buffer, addr: RemoteInfo) {
+  private async handle(msg: Buffer, addr: RemoteInfo) {
+    if (this.state.status === 'initializing' || this.state.status === 'disconnected') return;
+
     if (this.state.status === 'searching-for-server') {
       if (msg.readUint8(0) !== DeviceBoundHandshakePacket.type) return;
 
@@ -203,22 +231,37 @@ export class EmulatedTracker extends (EventEmitter as {
         status: 'connected-to-server',
         packetNumber: 0n,
         serverIP: addr.address,
-        serverPort: addr.port
+        serverPort: addr.port,
+        lastReceivedPacketTimestamp: Date.now(),
+        timeoutCheckInterval: setInterval(() => {
+          if (this.state.status !== 'connected-to-server') return;
+          if (Date.now() - this.state.lastReceivedPacketTimestamp < this.serverTimeout) return;
+
+          this.disconnectFromServer(new TimeoutError('heartbeat', this.serverTimeout));
+        }, 1000).unref()
       };
+
+      await this.sendPacketToServer(new ServerBoundFeatureFlagsPacket(this.featureFlags));
+      await this.sendBatteryLevel();
+      await Promise.all(this.sensors.map((sensor) => sensor.sendSensorInfo()));
 
       this.emit('connected-to-server', addr.address, addr.port);
 
       return;
     }
 
-    const [_num, packet] = parse(msg, true);
-    if (packet === null) {
-      this.log(`Received unknown packet (${msg.length} bytes): ${msg.toString('hex')}`);
-
+    if (addr.address !== this.state.serverIP || addr.port !== this.state.serverPort) {
+      this.emit('error', new Error(`Received packet from unknown server ${addr.address}:${addr.port}`));
       return;
     }
 
-    this.lastPacket = Date.now();
+    const [_num, packet] = parse(msg, true);
+    if (packet === null) {
+      this.emit('unknown-incoming-packet', msg);
+      return;
+    }
+
+    this.state.lastReceivedPacketTimestamp = Date.now();
 
     switch (packet.type) {
       case DeviceBoundPingPacket.type: {
@@ -238,8 +281,12 @@ export class EmulatedTracker extends (EventEmitter as {
         break;
       }
 
-      default:
-        this.emit('unknown-incoming-packet', packet);
+      case DeviceBoundSensorInfoPacket.type: {
+        // Just ignore these packets, they only acknowledge the sensor info we sent
+        break;
+      }
     }
+
+    this.emit('incoming-packet', packet);
   }
 }
