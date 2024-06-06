@@ -1,5 +1,11 @@
 # @slimevr/common
 
+## 0.1.2
+
+### Patch Changes
+
+- 876591c: fixed ESM and CJS stuff
+
 ## 0.1.1
 
 ### Patch Changes
