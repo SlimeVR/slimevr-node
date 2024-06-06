@@ -1,4 +1,4 @@
-import { SerializedTracker, ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
+import { type SerializedTracker, type ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
 import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('api', {

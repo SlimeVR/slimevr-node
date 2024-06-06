@@ -1,9 +1,12 @@
 {
   "extends": "@slimevr/tsconfig/electron.json",
   "include": ["src/**/*.ts"],
-  "exclude": ["dist", "build", "node_modules"],
+  "exclude": ["dist", "build", "node_modules", "src/electron/preload.mts"],
   "compilerOptions": {
-    "target": "ES2022",
-    "outDir": "../build/backend"
+    "target": "ESNext",
+    "module": "NodeNext",
+    "esModuleInterop": true,
+    "outDir": "../build/backend",
+    "moduleResolution": "NodeNext"
   }
 }
