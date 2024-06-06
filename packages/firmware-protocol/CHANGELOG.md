@@ -1,5 +1,13 @@
 # @slimevr/firmware-protocol
 
+## 0.6.3
+
+### Patch Changes
+
+- 876591c: fixed ESM and CJS stuff
+- Updated dependencies [876591c]
+  - @slimevr/common@0.1.2
+
 ## 0.6.2
 
 ### Patch Changes

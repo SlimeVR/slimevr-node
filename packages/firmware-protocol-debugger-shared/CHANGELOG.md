@@ -1,5 +1,13 @@
 # @slimevr/firmware-protocol-debugger-shared
 
+## 0.0.10
+
+### Patch Changes
+
+- 876591c: fixed ESM and CJS stuff
+- Updated dependencies [876591c]
+  - @slimevr/firmware-protocol@0.6.3
+
 ## 0.0.9
 
 ### Patch Changes

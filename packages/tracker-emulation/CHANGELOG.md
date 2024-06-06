@@ -1,5 +1,14 @@
 # @slimevr/tracker-emulation
 
+## 0.0.3
+
+### Patch Changes
+
+- 876591c: fixed ESM and CJS stuff
+- Updated dependencies [876591c]
+  - @slimevr/firmware-protocol@0.6.3
+  - @slimevr/common@0.1.2
+
 ## 0.0.2
 
 ### Patch Changes
