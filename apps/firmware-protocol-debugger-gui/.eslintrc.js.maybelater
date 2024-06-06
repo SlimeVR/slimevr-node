@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   extends: ['@slimevr/eslint-config', 'plugin:react/recommended'],
   settings: {
     react: {
