@@ -1,8 +1,8 @@
 import { SerializedTracker, ServerStatus } from '@slimevr/firmware-protocol-debugger-shared';
 import { BrowserWindow, app, ipcMain } from 'electron';
 import { join } from 'node:path';
-import merge from 'ts-deepmerge';
-import { Server } from '../Server';
+import { merge } from 'ts-deepmerge';
+import { Server } from '../Server.js';
 
 let mainWindow: BrowserWindow | null;
 
@@ -74,11 +74,13 @@ const createWindow = async () => {
     height: 600,
     width: 800,
     webPreferences: {
-      preload: join(__dirname, 'preload.js')
+      preload: join(import.meta.dirname, 'preload.mjs')
     }
   });
 
-  const url = app.isPackaged ? `file://${__dirname}/../../index.html` : (process.env.ELECTRON_START_URL as string);
+  const url = app.isPackaged
+    ? `file://${import.meta.dirname}/../../index.html`
+    : (process.env.ELECTRON_START_URL as string);
 
   console.log(url);
 
@@ -93,10 +95,11 @@ const createWindow = async () => {
     //   .default(devtoolsInstaller.REDUX_DEVTOOLS)
     //   .then((name) => console.log(`Added Extension:  ${name}`))
     //   .catch((err) => console.log('An error occurred: ', err));
+
+    mainWindow.webContents.openDevTools();
   }
 
   mainWindow.loadURL(url);
-  mainWindow.webContents.openDevTools();
 };
 
 app.on('ready', () => {
