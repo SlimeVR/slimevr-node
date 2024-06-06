@@ -1,6 +1,6 @@
 import { Quaternion, Vector } from '@slimevr/common';
 import { RotationDataType, SensorStatus, SensorType, ServerBoundSensorInfoPacket } from '@slimevr/firmware-protocol';
-import { EmulatedTracker } from './EmulatedTracker';
+import { EmulatedTracker } from './EmulatedTracker.js';
 
 export class EmulatedSensor {
   constructor(

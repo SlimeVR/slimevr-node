@@ -1,5 +1,5 @@
-import { Packet } from './Packet';
-import { parse } from './PacketParser';
+import { Packet } from './Packet.js';
+import { parse } from './PacketParser.js';
 
 export class ServerBoundBundlePacket extends Packet {
   constructor(readonly packets: Packet[]) {

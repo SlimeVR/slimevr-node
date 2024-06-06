@@ -1,7 +1,7 @@
 import { MACAddress } from '@slimevr/common';
-import type { Events } from './Events';
-import { serializeTracker } from './serialization';
-import type { Tracker } from './Tracker';
+import type { Events } from './Events.js';
+import { serializeTracker } from './serialization.js';
+import type { Tracker } from './Tracker.js';
 
 export class ConnectionTracker {
   private readonly connectionsByMAC = new Map<string, Tracker>();

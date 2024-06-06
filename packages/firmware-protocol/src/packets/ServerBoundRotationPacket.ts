@@ -1,5 +1,5 @@
 import { Quaternion } from '@slimevr/common';
-import { Packet } from './Packet';
+import { Packet } from './Packet.js';
 
 export class ServerBoundRotationPacket extends Packet {
   constructor(readonly rotation: Quaternion) {

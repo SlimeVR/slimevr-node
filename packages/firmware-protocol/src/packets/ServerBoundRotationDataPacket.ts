@@ -1,6 +1,6 @@
 import { Quaternion } from '@slimevr/common';
-import { ServerBoundRotationPacket } from '.';
-import { PacketWithSensorId } from './Packet';
+import { PacketWithSensorId } from './Packet.js';
+import { ServerBoundRotationPacket } from './ServerBoundRotationPacket.js';
 
 export enum RotationDataType {
   NORMAL = 1,

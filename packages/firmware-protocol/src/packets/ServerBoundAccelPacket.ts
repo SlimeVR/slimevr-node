@@ -1,5 +1,5 @@
 import { Vector } from '@slimevr/common';
-import { Packet } from './Packet';
+import { Packet } from './Packet.js';
 
 export class ServerBoundAccelPacket extends Packet {
   constructor(readonly sensorId: number | null, readonly acceleration: Vector) {

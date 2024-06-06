@@ -1,4 +1,4 @@
-import { PacketWithSensorId } from './Packet';
+import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundMagnetometerAccuracyPacket extends PacketWithSensorId {
   constructor(sensorId: number, readonly accuracy: number) {

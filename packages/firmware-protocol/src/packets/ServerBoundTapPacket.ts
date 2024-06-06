@@ -1,4 +1,4 @@
-import { PacketWithSensorId } from './Packet';
+import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundTapPacket extends PacketWithSensorId {
   constructor(sensorId: number, readonly value: number) {

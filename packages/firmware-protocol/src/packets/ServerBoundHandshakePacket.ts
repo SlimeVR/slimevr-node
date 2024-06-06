@@ -1,6 +1,6 @@
 import { MACAddress } from '@slimevr/common';
-import { BoardType, MCUType, SensorType } from '../constants';
-import { Packet } from './Packet';
+import { BoardType, MCUType, SensorType } from '../constants.js';
+import { Packet } from './Packet.js';
 
 export class ServerBoundHandshakePacket extends Packet {
   constructor(

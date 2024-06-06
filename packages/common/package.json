@@ -2,17 +2,23 @@
   "name": "@slimevr/common",
   "version": "0.1.1",
   "license": "(MIT OR Apache-2.0)",
-  "main": "dist/cjs/index.js",
-  "types": "dist/dts/index.d.ts",
-  "module": "dist/esm/index.js",
   "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/dts/index.d.ts",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js",
+    "types": "./dist/dts/index.d.ts",
+    "default": "./dist/esm/index.js"
+  },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "pnpm run build:esm && pnpm run build:cjs",
-    "build:esm": "tsc",
-    "build:cjs": "babel dist/esm --plugins @babel/transform-export-namespace-from --plugins @babel/transform-modules-commonjs --out-dir dist/cjs --source-maps",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
     "prepack": "pnpm build",
     "dev": "pnpm build:esm -- -w",
     "clean": "rimraf dist"

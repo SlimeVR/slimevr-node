@@ -1,4 +1,4 @@
-import { Packet } from './Packet';
+import { Packet } from './Packet.js';
 
 export class ServerBoundPongPacket extends Packet {
   constructor(readonly id: number) {

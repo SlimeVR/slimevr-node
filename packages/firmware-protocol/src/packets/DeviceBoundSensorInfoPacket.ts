@@ -1,5 +1,5 @@
-import { SensorStatus } from '../constants';
-import { PacketWithSensorId } from './Packet';
+import { SensorStatus } from '../constants.js';
+import { PacketWithSensorId } from './Packet.js';
 
 export class DeviceBoundSensorInfoPacket extends PacketWithSensorId {
   constructor(sensorId: number, readonly sensorStatus: SensorStatus) {

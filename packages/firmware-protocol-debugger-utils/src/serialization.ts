@@ -1,6 +1,6 @@
 import { SerializedSensor, SerializedTracker } from '@slimevr/firmware-protocol-debugger-shared';
-import { Sensor } from './Sensor';
-import { Tracker } from './Tracker';
+import { Sensor } from './Sensor.js';
+import { Tracker } from './Tracker.js';
 
 export const serializeTracker = (tracker: Tracker): SerializedTracker => {
   const sensors: Record<string, SerializedSensor> = {};

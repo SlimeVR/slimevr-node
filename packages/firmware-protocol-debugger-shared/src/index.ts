@@ -1,1 +1,1 @@
-export * from './IPCMessages';
+export * from './IPCMessages.js';

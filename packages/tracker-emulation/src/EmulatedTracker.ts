@@ -30,7 +30,7 @@ import { createSocket, RemoteInfo, Socket } from 'dgram';
 import EventEmitter from 'events';
 import { AddressInfo } from 'net';
 import { type StrictEventEmitter } from 'strict-event-emitter-types';
-import { EmulatedSensor } from './EmulatedSensor';
+import { EmulatedSensor } from './EmulatedSensor.js';
 
 type State =
   | { status: 'initializing' }

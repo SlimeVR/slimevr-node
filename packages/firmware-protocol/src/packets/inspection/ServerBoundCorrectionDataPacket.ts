@@ -1,6 +1,6 @@
 import { Quaternion } from '@slimevr/common';
-import { PacketWithSensorId } from '../Packet';
-import { DataType } from './constants';
+import { PacketWithSensorId } from '../Packet.js';
+import { DataType } from './constants.js';
 
 export class ServerBoundCorrectionDataPacket extends PacketWithSensorId {
   constructor(sensorId: number, readonly quaternion: Quaternion) {

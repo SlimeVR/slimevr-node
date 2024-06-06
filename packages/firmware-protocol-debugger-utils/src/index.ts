@@ -1,8 +1,8 @@
-export { ConnectionTracker } from './ConnectionTracker';
-export { newEvents } from './Events';
-export type { EmittableEvents, Events } from './Events';
-export * as flags from './flags';
-export * as serialization from './serialization';
-export { Tracker } from './Tracker';
-export * as utils from './utils';
-export { VectorAggregator } from './VectorAggretator';
+export { ConnectionTracker } from './ConnectionTracker.js';
+export { newEvents } from './Events.js';
+export type { EmittableEvents, Events } from './Events.js';
+export * as flags from './flags.js';
+export * as serialization from './serialization.js';
+export { Tracker } from './Tracker.js';
+export * as utils from './utils.js';
+export { VectorAggregator } from './VectorAggretator.js';
