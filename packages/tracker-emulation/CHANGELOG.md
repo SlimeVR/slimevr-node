@@ -1,5 +1,11 @@
 # @slimevr/tracker-emulation
 
+## 0.1.0
+
+### Minor Changes
+
+- bd5f47f: implemented server timeouts !BREAKING!
+
 ## 0.0.3
 
 ### Patch Changes
