@@ -1,5 +1,11 @@
 # slimevr-firmware-protocol-debugger-gui
 
+## 0.2.12
+
+### Patch Changes
+
+- fa0f33c: fixed startup
+
 ## 0.2.11
 
 ### Patch Changes
