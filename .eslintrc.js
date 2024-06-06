@@ -3,7 +3,7 @@ module.exports = {
   extends: ['@slimevr/eslint-config'],
   parserOptions: {
     project: [
-      './packages/*/tsconfig.json',
+      './packages/*/tsconfig.esm.json',
       './apps/*/tsconfig.json',
       './apps/firmware-protocol-debugger-gui/backend/tsconfig.json'
     ]
