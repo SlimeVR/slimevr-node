@@ -52,12 +52,15 @@ export class TimeoutError extends Error {
 }
 
 type DisconnectReason = TimeoutError | Error;
+type SearchStopReason = 'manual' | 'found-server';
 
 interface EmulatedTrackerEvents {
   error: (error: Error) => void;
   ready: (ip: string, port: number) => void;
 
   'searching-for-server': () => void;
+  'stopped-searching-for-server': (reason: SearchStopReason) => void;
+
   'connected-to-server': (serverIP: string, serverPort: number) => void;
   'disconnected-from-server': (reason: DisconnectReason) => void;
 
@@ -90,7 +93,7 @@ export class EmulatedTracker extends (EventEmitter as {
     private readonly serverDiscoveryIP = '255.255.255.255',
     private readonly serverDiscoveryPort = 6969,
     private readonly serverTimeout = 5000,
-    private readonly autoReconnect = true
+    private readonly autoSearchForServer = true
   ) {
     super();
 
@@ -110,7 +113,7 @@ export class EmulatedTracker extends (EventEmitter as {
     this.state = { status: 'disconnected' };
     this.emit('disconnected-from-server', reason);
 
-    if (this.autoReconnect) {
+    if (this.autoSearchForServer) {
       this.searchForServer();
     }
   }
@@ -151,6 +154,10 @@ export class EmulatedTracker extends (EventEmitter as {
 
     const addr = this.socket.address();
     this.emit('ready', addr.address, addr.port);
+
+    if (this.autoSearchForServer) {
+      this.searchForServer();
+    }
   }
 
   searchForServer() {
@@ -159,6 +166,15 @@ export class EmulatedTracker extends (EventEmitter as {
       discoveryInterval: setInterval(() => this.sendDiscovery(), 1000)
     };
     this.emit('searching-for-server');
+  }
+
+  stopSearchingForServer() {
+    if (this.state.status !== 'searching-for-server') return;
+
+    clearInterval(this.state.discoveryInterval);
+    this.state = { status: 'disconnected' };
+
+    this.emit('stopped-searching-for-server', 'manual');
   }
 
   private log(msg: string) {
@@ -226,6 +242,7 @@ export class EmulatedTracker extends (EventEmitter as {
       if (msg.readUint8(0) !== DeviceBoundHandshakePacket.type) return;
 
       clearInterval(this.state.discoveryInterval);
+      this.emit('stopped-searching-for-server', 'found-server');
 
       this.state = {
         status: 'connected-to-server',

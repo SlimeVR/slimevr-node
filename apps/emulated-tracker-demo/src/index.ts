@@ -24,6 +24,8 @@ const main = async () => {
   tracker.on('error', (err) => console.error(err));
 
   tracker.on('searching-for-server', () => console.log('searching for server...'));
+  tracker.on('stopped-searching-for-server', () => console.log('stopped searching for server'));
+
   tracker.on('connected-to-server', (ip, port) => console.log('connected to server', ip, port));
   tracker.on('disconnected-from-server', (reason) => {
     console.log('disconnected from server', reason);
@@ -32,9 +34,9 @@ const main = async () => {
 
   tracker.on('server-feature-flags', (flags) => console.log('server feature flags', flags.getAllEnabled()));
 
-  tracker.on('incoming-packet', (packet) => console.log('unknown packet type', packet.type));
+  tracker.on('incoming-packet', (packet) => console.log('incoming packet', packet));
   tracker.on('unknown-incoming-packet', (buf) => console.log('unknown packet', buf));
-  tracker.on('outgoing-packet', (packet) => console.log('outgoing packet', packet.type));
+  tracker.on('outgoing-packet', (packet) => console.log('outgoing packet', packet));
 
   await tracker.init();
 
