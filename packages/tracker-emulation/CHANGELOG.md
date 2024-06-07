@@ -1,5 +1,11 @@
 # @slimevr/tracker-emulation
 
+## 0.2.1
+
+### Patch Changes
+
+- a608b5e: implement disconnecting and deinitializing for the trackers
+
 ## 0.2.0
 
 ### Minor Changes
