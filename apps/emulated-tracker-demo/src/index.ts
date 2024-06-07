@@ -21,6 +21,8 @@ const sensors: EmulatedSensor[] = [];
 
 const main = async () => {
   tracker.on('ready', (ip, port) => console.log(`ready and running on ${ip}:${port}`));
+  tracker.on('unready', () => console.log('unready'));
+
   tracker.on('error', (err) => console.error(err));
 
   tracker.on('searching-for-server', () => console.log('searching for server...'));
@@ -98,6 +100,12 @@ const main = async () => {
       i += 0.1;
     }, 100).unref();
   }
+
+  setTimeout(() => {
+    tracker.disconnectFromServer();
+
+    tracker.deinit()
+  }, 10000);
 };
 
 main();
