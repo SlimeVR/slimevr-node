@@ -32,9 +32,9 @@ const main = async () => {
 
   tracker.on('server-feature-flags', (flags) => console.log('server feature flags', flags.getAllEnabled()));
 
-  tracker.on('incoming-packet', (packet) => console.log('unknown packet type', packet.type));
+  tracker.on('incoming-packet', (packet) => console.log('incoming packet', packet));
   tracker.on('unknown-incoming-packet', (buf) => console.log('unknown packet', buf));
-  tracker.on('outgoing-packet', (packet) => console.log('outgoing packet', packet.type));
+  tracker.on('outgoing-packet', (packet) => console.log('outgoing packet', packet));
 
   await tracker.init();
 
