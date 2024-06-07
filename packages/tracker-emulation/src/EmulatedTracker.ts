@@ -52,12 +52,15 @@ export class TimeoutError extends Error {
 }
 
 type DisconnectReason = TimeoutError | Error;
+type SearchStopReason = 'manual' | 'found-server';
 
 interface EmulatedTrackerEvents {
   error: (error: Error) => void;
   ready: (ip: string, port: number) => void;
 
   'searching-for-server': () => void;
+  'stopped-searching-for-server': (reason: SearchStopReason) => void;
+
   'connected-to-server': (serverIP: string, serverPort: number) => void;
   'disconnected-from-server': (reason: DisconnectReason) => void;
 
@@ -163,6 +166,15 @@ export class EmulatedTracker extends (EventEmitter as {
     this.emit('searching-for-server');
   }
 
+  stopSearchingForServer() {
+    if (this.state.status !== 'searching-for-server') return;
+
+    clearInterval(this.state.discoveryInterval);
+    this.state = { status: 'disconnected' };
+
+    this.emit('stopped-searching-for-server', 'manual');
+  }
+
   private log(msg: string) {
     console.log(`[Tracker:${this.mac}] ${msg}`);
   }
@@ -228,6 +240,7 @@ export class EmulatedTracker extends (EventEmitter as {
       if (msg.readUint8(0) !== DeviceBoundHandshakePacket.type) return;
 
       clearInterval(this.state.discoveryInterval);
+      this.emit('stopped-searching-for-server', 'found-server');
 
       this.state = {
         status: 'connected-to-server',

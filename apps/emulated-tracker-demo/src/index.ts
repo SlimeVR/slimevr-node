@@ -24,6 +24,8 @@ const main = async () => {
   tracker.on('error', (err) => console.error(err));
 
   tracker.on('searching-for-server', () => console.log('searching for server...'));
+  tracker.on('stopped-searching-for-server', () => console.log('stopped searching for server'));
+
   tracker.on('connected-to-server', (ip, port) => console.log('connected to server', ip, port));
   tracker.on('disconnected-from-server', (reason) => {
     console.log('disconnected from server', reason);
