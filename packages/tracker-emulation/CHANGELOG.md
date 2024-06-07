@@ -1,5 +1,16 @@
 # @slimevr/tracker-emulation
 
+## 0.2.0
+
+### Minor Changes
+
+- d0ddac3: added ability to disable the automatic server search
+- 9c5cc92: added ability to stop searching for a server
+
+### Patch Changes
+
+- 5acaf30: fixed that the module automatically searches for a server
+
 ## 0.1.0
 
 ### Minor Changes

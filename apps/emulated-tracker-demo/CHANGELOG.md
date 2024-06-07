@@ -1,5 +1,15 @@
 # @slimevr/emulated-tracker-demo
 
+## 0.1.11
+
+### Patch Changes
+
+- 8cfad98: print full packets instead of just the packet types
+- Updated dependencies [5acaf30]
+- Updated dependencies [d0ddac3]
+- Updated dependencies [9c5cc92]
+  - @slimevr/tracker-emulation@0.2.0
+
 ## 0.1.10
 
 ### Patch Changes
