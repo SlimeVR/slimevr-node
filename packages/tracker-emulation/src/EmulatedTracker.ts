@@ -151,6 +151,8 @@ export class EmulatedTracker extends (EventEmitter as {
 
     const addr = this.socket.address();
     this.emit('ready', addr.address, addr.port);
+
+    this.searchForServer();
   }
 
   searchForServer() {
