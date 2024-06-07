@@ -34,7 +34,7 @@ import { EmulatedSensor } from './EmulatedSensor.js';
 
 type State =
   | { status: 'initializing' }
-  | { status: 'disconnected' }
+  | { status: 'idle' }
   | { status: 'searching-for-server'; discoveryInterval: NodeJS.Timeout }
   | {
       status: 'connected-to-server';
@@ -51,12 +51,13 @@ export class TimeoutError extends Error {
   }
 }
 
-type DisconnectReason = TimeoutError | Error;
+type DisconnectReason = TimeoutError | Error | 'manual';
 type SearchStopReason = 'manual' | 'found-server';
 
 interface EmulatedTrackerEvents {
   error: (error: Error) => void;
   ready: (ip: string, port: number) => void;
+  unready: () => void;
 
   'searching-for-server': () => void;
   'stopped-searching-for-server': (reason: SearchStopReason) => void;
@@ -105,17 +106,8 @@ export class EmulatedTracker extends (EventEmitter as {
     });
   }
 
-  private disconnectFromServer(reason: DisconnectReason) {
-    if (this.state.status === 'searching-for-server') {
-      clearInterval(this.state.discoveryInterval);
-    }
-
-    this.state = { status: 'disconnected' };
-    this.emit('disconnected-from-server', reason);
-
-    if (this.autoSearchForServer) {
-      this.searchForServer();
-    }
+  disconnectFromServer() {
+    this.disconnectFromServerWithReason('manual');
   }
 
   unref() {
@@ -133,24 +125,13 @@ export class EmulatedTracker extends (EventEmitter as {
     return sensor;
   }
 
-  private async sendDiscovery() {
-    await this.sendPacket(
-      new ServerBoundHandshakePacket(
-        this.boardType,
-        SensorType.UNKNOWN,
-        this.mcuType,
-        SUPPORTED_FIRMWARE_PROTOCOL_VERSION,
-        this.firmware,
-        this.mac
-      ),
-      this.serverDiscoveryPort,
-      this.serverDiscoveryIP
-    );
-  }
-
   async init() {
-    await new Promise<void>((resolve) => this.socket.bind(0, () => resolve()));
+    if (this.state.status !== 'initializing') return;
+
+    await new Promise<void>((resolve) => this.socket.bind(0, resolve));
     this.socket.setBroadcast(true);
+
+    this.state = { status: 'idle' };
 
     const addr = this.socket.address();
     this.emit('ready', addr.address, addr.port);
@@ -160,7 +141,20 @@ export class EmulatedTracker extends (EventEmitter as {
     }
   }
 
+  async deinit() {
+    if (this.state.status === 'initializing') return;
+
+    this.stopSearchingForServer();
+    this.disconnectFromServer();
+    await new Promise<void>((resolve) => this.socket.close(resolve));
+
+    this.state = { status: 'initializing' };
+    this.emit('unready');
+  }
+
   searchForServer() {
+    if (this.state.status !== 'idle') return;
+
     this.state = {
       status: 'searching-for-server',
       discoveryInterval: setInterval(() => this.sendDiscovery(), 1000)
@@ -172,7 +166,7 @@ export class EmulatedTracker extends (EventEmitter as {
     if (this.state.status !== 'searching-for-server') return;
 
     clearInterval(this.state.discoveryInterval);
-    this.state = { status: 'disconnected' };
+    this.state = { status: 'idle' };
 
     this.emit('stopped-searching-for-server', 'manual');
   }
@@ -226,6 +220,8 @@ export class EmulatedTracker extends (EventEmitter as {
   }
 
   private async sendPacket(packet: Packet, port: number, ip: string) {
+    if (this.state.status === 'initializing') return;
+
     const encoded = packet.encode(this.state.status === 'connected-to-server' ? this.state.packetNumber++ : 0n);
 
     await new Promise<void>((res, rej) =>
@@ -235,8 +231,32 @@ export class EmulatedTracker extends (EventEmitter as {
     this.emit('outgoing-packet', packet);
   }
 
+  private disconnectFromServerWithReason(reason: DisconnectReason) {
+    if (this.state.status !== 'connected-to-server') return;
+
+    clearInterval(this.state.timeoutCheckInterval);
+
+    this.state = { status: 'idle' };
+    this.emit('disconnected-from-server', reason);
+  }
+
+  private async sendDiscovery() {
+    await this.sendPacket(
+      new ServerBoundHandshakePacket(
+        this.boardType,
+        SensorType.UNKNOWN,
+        this.mcuType,
+        SUPPORTED_FIRMWARE_PROTOCOL_VERSION,
+        this.firmware,
+        this.mac
+      ),
+      this.serverDiscoveryPort,
+      this.serverDiscoveryIP
+    );
+  }
+
   private async handle(msg: Buffer, addr: RemoteInfo) {
-    if (this.state.status === 'initializing' || this.state.status === 'disconnected') return;
+    if (this.state.status === 'initializing' || this.state.status === 'idle') return;
 
     if (this.state.status === 'searching-for-server') {
       if (msg.readUint8(0) !== DeviceBoundHandshakePacket.type) return;
@@ -254,7 +274,11 @@ export class EmulatedTracker extends (EventEmitter as {
           if (this.state.status !== 'connected-to-server') return;
           if (Date.now() - this.state.lastReceivedPacketTimestamp < this.serverTimeout) return;
 
-          this.disconnectFromServer(new TimeoutError('heartbeat', this.serverTimeout));
+          this.disconnectFromServerWithReason(new TimeoutError('heartbeat', this.serverTimeout));
+
+          if (this.autoSearchForServer) {
+            this.searchForServer();
+          }
         }, 1000).unref()
       };
 
