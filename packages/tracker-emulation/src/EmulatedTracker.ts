@@ -93,7 +93,7 @@ export class EmulatedTracker extends (EventEmitter as {
     private readonly serverDiscoveryIP = '255.255.255.255',
     private readonly serverDiscoveryPort = 6969,
     private readonly serverTimeout = 5000,
-    private readonly autoReconnect = true
+    private readonly autoSearchForServer = true
   ) {
     super();
 
@@ -113,7 +113,7 @@ export class EmulatedTracker extends (EventEmitter as {
     this.state = { status: 'disconnected' };
     this.emit('disconnected-from-server', reason);
 
-    if (this.autoReconnect) {
+    if (this.autoSearchForServer) {
       this.searchForServer();
     }
   }
@@ -155,7 +155,9 @@ export class EmulatedTracker extends (EventEmitter as {
     const addr = this.socket.address();
     this.emit('ready', addr.address, addr.port);
 
-    this.searchForServer();
+    if (this.autoSearchForServer) {
+      this.searchForServer();
+    }
   }
 
   searchForServer() {
