@@ -1,5 +1,11 @@
 # @slimevr/tracker-emulation
 
+## 0.2.2
+
+### Patch Changes
+
+- abebffd: added the ability to remove all sensors or individually
+
 ## 0.2.1
 
 ### Patch Changes
