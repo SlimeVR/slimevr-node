@@ -125,6 +125,17 @@ export class EmulatedTracker extends (EventEmitter as {
     return sensor;
   }
 
+  removeSensor(sensor: EmulatedSensor) {
+    const index = this.sensors.indexOf(sensor);
+    if (index === -1) return;
+
+    this.sensors.splice(index, 1);
+  }
+
+  async clearSensors() {
+    this.sensors = [];
+  }
+
   async init() {
     if (this.state.status !== 'initializing') return;
 
@@ -169,10 +180,6 @@ export class EmulatedTracker extends (EventEmitter as {
     this.state = { status: 'idle' };
 
     this.emit('stopped-searching-for-server', 'manual');
-  }
-
-  private log(msg: string) {
-    console.log(`[Tracker:${this.mac}] ${msg}`);
   }
 
   async changeBatteryLevel(batteryVoltage: number, batteryPercentage: number) {
