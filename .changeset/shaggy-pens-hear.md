@@ -2,4 +2,4 @@
 '@slimevr/firmware-protocol': patch
 ---
 
-Adds missing constants from firmware
+Added missing sensor types, MCU types and board types
