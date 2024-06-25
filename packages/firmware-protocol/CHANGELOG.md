@@ -1,5 +1,11 @@
 # @slimevr/firmware-protocol
 
+## 0.6.4
+
+### Patch Changes
+
+- 3d3b4fb: Added missing sensor types, MCU types and board types
+
 ## 0.6.3
 
 ### Patch Changes

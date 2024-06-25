@@ -1,5 +1,12 @@
 # @slimevr/firmware-protocol-debugger-shared
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [3d3b4fb]
+  - @slimevr/firmware-protocol@0.6.4
+
 ## 0.0.10
 
 ### Patch Changes
