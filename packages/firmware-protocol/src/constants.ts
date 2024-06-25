@@ -31,13 +31,28 @@ export enum SensorType {
   MPU6050 = 6,
   BNO086 = 7,
   BMI160 = 8,
-  ICM20948 = 9
+  ICM20948 = 9,
+  ICM42688 = 10,
+  BMI270 = 11,
+  LSM6DS3TRC = 12,
+  LSM6DSV = 13,
+  LSM6DSO = 14,
+  LSM6DSR = 15,
+  MPU6050_SF = 16,
+  DEV_RESERVED = 250
 }
 
 export enum MCUType {
   UNKNOWN = 0,
   ESP8266 = 1,
-  ESP32 = 2
+  ESP32 = 2,
+  OWOTRACK_ANDROID = 3,
+  WRANGLER = 4,
+  OWOTRACK_IOS = 5,
+  ESP32_C3 = 6,
+  MOCOPI = 7,
+  HARITORA = 8,
+  DEV_RESERVED = 250
 }
 
 export enum BoardType {
@@ -51,5 +66,14 @@ export enum BoardType {
   TTGO_TBASE = 7,
   ESP01 = 8,
   SLIMEVR = 9,
-  LOLIN_C3_MINI = 10
+  LOLIN_C3_MINI = 10,
+  BEETLE32C3 = 11,
+  ES32C3DEVKITM1 = 12,
+  OWOTRACK = 13,
+  WRANGLER = 14,
+  MOCOPI = 15,
+  WEMOSWROOM02 = 16,
+  XIAO_ESP32C3 = 17,
+  HARITORA = 18,
+  DEV_RESERVED = 250
 }
