@@ -38,7 +38,6 @@ export enum SensorType {
   LSM6DSV = 13,
   LSM6DSO = 14,
   LSM6DSR = 15,
-  MPU6050_SF = 16,
   DEV_RESERVED = 250
 }
 
