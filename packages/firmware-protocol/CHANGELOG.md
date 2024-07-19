@@ -1,5 +1,11 @@
 # @slimevr/firmware-protocol
 
+## 0.6.5
+
+### Patch Changes
+
+- b174be6: Removed mistakenly added MPU6050 softfusion sensor ID
+
 ## 0.6.4
 
 ### Patch Changes
