@@ -1,6 +1,6 @@
 {
   "name": "@slimevr/firmware-protocol-debugger",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "main": "dist/index.js",
   "license": "(MIT OR Apache-2.0)",
   "type": "module",
