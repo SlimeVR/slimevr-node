@@ -1,9 +1,0 @@
-{
-  "extends": "@slimevr/tsconfig/node-lib.json",
-  "include": ["src/**/*.ts"],
-  "exclude": ["dist", "build", "node_modules"],
-  "compilerOptions": {
-    "outDir": "dist/esm",
-    "declarationDir": "dist/dts"
-  }
-}
