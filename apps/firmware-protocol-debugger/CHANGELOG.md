@@ -1,5 +1,11 @@
 # @slimevr/firmware-protocol-debugger
 
+## 0.2.16
+
+### Patch Changes
+
+- 72bd915: fixed missing shebang in binary
+
 ## 0.2.15
 
 ### Patch Changes
