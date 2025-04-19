@@ -8,7 +8,8 @@ export default {
   output: {
     file: 'dist/app.js',
     format: 'esm',
-    sourcemap: true
+    sourcemap: true,
+    banner: '#!/usr/bin/env node'
   },
   plugins: [resolve(), typescript()],
   external: [(id) => !ourPackages.includes(id)]
