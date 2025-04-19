@@ -1,5 +1,14 @@
 # @slimevr/emulated-tracker-demo
 
+## 0.1.16
+
+### Patch Changes
+
+- Updated dependencies [ff93643]
+  - @slimevr/tracker-emulation@0.2.5
+  - @slimevr/common@0.1.3
+  - @slimevr/firmware-protocol@0.6.6
+
 ## 0.1.15
 
 ### Patch Changes

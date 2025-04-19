@@ -1,5 +1,11 @@
 # @slimevr/common
 
+## 0.1.3
+
+### Patch Changes
+
+- ff93643: remove tsconfigs from release package
+
 ## 0.1.2
 
 ### Patch Changes

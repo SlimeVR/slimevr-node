@@ -1,5 +1,14 @@
 # @slimevr/tracker-emulation
 
+## 0.2.5
+
+### Patch Changes
+
+- ff93643: remove tsconfigs from release package
+- Updated dependencies [ff93643]
+  - @slimevr/common@0.1.3
+  - @slimevr/firmware-protocol@0.6.6
+
 ## 0.2.4
 
 ### Patch Changes

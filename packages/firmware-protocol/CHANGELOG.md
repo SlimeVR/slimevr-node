@@ -1,5 +1,13 @@
 # @slimevr/firmware-protocol
 
+## 0.6.6
+
+### Patch Changes
+
+- ff93643: remove tsconfigs from release package
+- Updated dependencies [ff93643]
+  - @slimevr/common@0.1.3
+
 ## 0.6.5
 
 ### Patch Changes
