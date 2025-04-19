@@ -1,5 +1,11 @@
 # @slimevr/firmware-protocol-debugger
 
+## 0.2.15
+
+### Patch Changes
+
+- 54fcc6a: fix the `slimevr-firmware-protocol-debugger` binary to the new path
+
 ## 0.2.14
 
 ### Patch Changes
