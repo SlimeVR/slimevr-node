@@ -1,5 +1,14 @@
 # @slimevr/firmware-protocol-debugger
 
+## 0.2.14
+
+### Patch Changes
+
+- 676d207: properly bundle the monorepo dependencies
+- Updated dependencies [ff93643]
+  - @slimevr/common@0.1.3
+  - @slimevr/firmware-protocol@0.6.6
+
 ## 0.2.13
 
 ### Patch Changes
