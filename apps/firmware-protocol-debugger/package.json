@@ -16,7 +16,7 @@
     "url": "https://github.com/SlimeVR/slimevr-node/issues"
   },
   "bin": {
-    "slimevr-firmware-protocol-debugger": "dist/index.js"
+    "slimevr-firmware-protocol-debugger": "dist/app.js"
   },
   "publishConfig": {
     "access": "public"
