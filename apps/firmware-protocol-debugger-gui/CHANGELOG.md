@@ -1,5 +1,11 @@
 # slimevr-firmware-protocol-debugger-gui
 
+## 0.2.16
+
+### Patch Changes
+
+- d910d2d: updated dependencies, this should fix any logging breaking on Windows
+
 ## 0.2.15
 
 ### Patch Changes
