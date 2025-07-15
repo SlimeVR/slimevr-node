@@ -35,7 +35,7 @@ const LATEST_WEB_INSTALLER =
   'https://github.com/SlimeVR/SlimeVR-Installer/releases/latest/download/slimevr_web_installer.exe';
 const WINDOWS_X86_64_ZIP_FILENAME = 'SlimeVR-win64.zip';
 const UPDATE_CONFIG_FILENAME = 'update-config.json';
-const INVALID_VERSION = '0.0.0-invalid' as Version;
+const INVALID_VERSION = 'v0.0.0-invalid' as Version;
 const NEWEST_UNSUPPORTED_VERSION = new SemVer('0.12.0');
 
 const STABLE_CHANNEL: UpdateConfig = {
@@ -81,9 +81,9 @@ for (const [channelName, releases] of Object.entries(releasesByChannel)) {
 
   for (const [_, version, tag, v, config] of releases) {
     if (v.release_notes) {
-      console.log(`Release ${version} has release notes.`);
+      console.log(`Release ${version} (${tag}) has release notes.`);
     } else {
-      console.warn(`Release ${version} has no release notes.`);
+      console.warn(`Release ${version} (${tag}) has no release notes.`);
     }
 
     if (version.prerelease.length === 0) {
