@@ -1,5 +1,11 @@
 # @slimevr/update-manifest-generator
 
+## 0.0.4
+
+### Patch Changes
+
+- 5f2616c: split out types
+
 ## 0.0.3
 
 ### Patch Changes
