@@ -1,0 +1,16 @@
+{
+  "extends": "@slimevr/tsconfig/node.json",
+  "include": ["src/**/*.ts", "src/**/*.mts"],
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "lib": ["ES2024"],
+    "target": "es2024",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "outDir": "./dist",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "noEmit": false,
+    "emitDeclarationOnly": false
+  }
+}

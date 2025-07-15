@@ -104,7 +104,7 @@ const main = async () => {
   setTimeout(() => {
     tracker.disconnectFromServer();
 
-    tracker.deinit()
+    tracker.deinit();
   }, 10000);
 };
 
