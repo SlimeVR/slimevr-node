@@ -1,5 +1,11 @@
 # @slimevr/update-manifest-generator
 
+## 0.0.3
+
+### Patch Changes
+
+- b135046: fix invalid semver not matching format of actual release tags
+
 ## 0.0.2
 
 ### Patch Changes
