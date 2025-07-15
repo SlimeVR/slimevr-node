@@ -10,7 +10,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "eslint --ext .ts,.tsx .",
-    "format": "prettier --write \"**/*.{mts,ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{mts,ts,tsx,md,json}\"",
     "release": "npm run build && changeset publish"
   },
   "devDependencies": {
