@@ -30,7 +30,7 @@ export const UpdateManifestSchema = v.object({
   channels: v.pipe(v.record(v.string(), UpdateManifestChannelSchema))
 });
 export type UpdateManifest = v.InferOutput<typeof UpdateManifestSchema>;
-export const parseUpdateManifest = (data: string): v.InferOutput<typeof UpdateManifestSchema> =>
+export const parseUpdateManifest = (data: unknown): v.InferOutput<typeof UpdateManifestSchema> =>
   v.parse(UpdateManifestSchema, data);
 
 export const UpdateConfigSchema = v.object({
@@ -41,5 +41,5 @@ export const UpdateConfigSchema = v.object({
   overrides: v.record(v.string(), v.record(v.string(), UpdateManifestChannelVersionBuildSchema))
 });
 export type UpdateConfig = v.InferOutput<typeof UpdateConfigSchema>;
-export const parseUpdateConfig = (data: string): v.InferOutput<typeof UpdateConfigSchema> =>
+export const parseUpdateConfig = (data: unknown): v.InferOutput<typeof UpdateConfigSchema> =>
   v.parse(UpdateConfigSchema, data);

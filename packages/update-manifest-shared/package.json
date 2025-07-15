@@ -1,0 +1,28 @@
+{
+  "name": "@slimevr/update-manifest-shared",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/dts/index.d.ts",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js",
+    "types": "./dist/dts/index.d.ts",
+    "default": "./dist/esm/index.js"
+  },
+  "private": true,
+  "scripts": {
+    "build": "pnpm run build:esm && pnpm run build:cjs",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "dev": "pnpm run build:esm -w",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "valibot": "^1.1.0"
+  },
+  "devDependencies": {
+    "@slimevr/tsconfig": "workspace:*"
+  }
+}
