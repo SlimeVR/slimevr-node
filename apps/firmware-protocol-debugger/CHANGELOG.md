@@ -1,5 +1,11 @@
 # @slimevr/firmware-protocol-debugger
 
+## 0.2.17
+
+### Patch Changes
+
+- 52a482e: fixed that we were accidentally bundling all dependencies
+
 ## 0.2.16
 
 ### Patch Changes
