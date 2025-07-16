@@ -1,7 +1,4 @@
 import { Octokit } from '@octokit/rest';
-import * as fs from 'node:fs';
-import { parse as parseSemver, SemVer } from 'semver';
-import { fetchAllReleases, GitHubRelease } from './github.mts';
 import {
   type ChannelName,
   parseUpdateConfig,
@@ -11,7 +8,10 @@ import {
   type UpdateManifestChannelVersion,
   type UpdateManifestChannelVersionBuild,
   type Version
-} from './types.mts';
+} from '@slimevr/update-manifest-shared';
+import * as fs from 'node:fs';
+import { parse as parseSemver, SemVer } from 'semver';
+import { fetchAllReleases, GitHubRelease } from './github.mts';
 import { asyncMap } from './utils.mts';
 
 const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
