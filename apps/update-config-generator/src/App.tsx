@@ -8,7 +8,7 @@ import {
   type ChannelName,
   type UpdateConfig,
   type UpdateManifestChannelVersionBuild
-} from '@slimevr/update-manifest-shared';
+} from '@slimevr/update-manifest';
 import { DownloadIcon, InfoIcon, Trash2Icon, UploadIcon } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';

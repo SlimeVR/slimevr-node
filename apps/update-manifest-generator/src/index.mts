@@ -8,7 +8,7 @@ import {
   type UpdateManifestChannelVersion,
   type UpdateManifestChannelVersionBuild,
   type Version
-} from '@slimevr/update-manifest-shared';
+} from '@slimevr/update-manifest';
 import * as fs from 'node:fs';
 import { parse as parseSemver, SemVer } from 'semver';
 import { fetchAllReleases, GitHubRelease } from './github.mts';

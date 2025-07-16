@@ -237,9 +237,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.7
         version: 1.2.7(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@slimevr/update-manifest-shared':
+      '@slimevr/update-manifest':
         specifier: workspace:*
-        version: link:../../packages/update-manifest-shared
+        version: link:../../packages/update-manifest
       '@tanstack/react-form':
         specifier: ^1.14.1
         version: 1.14.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -341,9 +341,9 @@ importers:
       '@slimevr/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
-      '@slimevr/update-manifest-shared':
+      '@slimevr/update-manifest':
         specifier: workspace:*
-        version: link:../../packages/update-manifest-shared
+        version: link:../../packages/update-manifest
       '@types/node':
         specifier: ^22.16.3
         version: 22.16.4
@@ -456,7 +456,7 @@ importers:
 
   packages/tsconfig: {}
 
-  packages/update-manifest-shared:
+  packages/update-manifest:
     dependencies:
       valibot:
         specifier: ^1.1.0

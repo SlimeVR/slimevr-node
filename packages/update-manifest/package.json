@@ -1,22 +1,37 @@
 {
-  "name": "@slimevr/update-manifest-shared",
-  "version": "0.0.1",
+  "name": "@slimevr/update-manifest",
+  "version": "0.0.0",
   "type": "module",
   "main": "./dist/cjs/index.js",
-  "types": "./dist/dts/index.d.ts",
   "module": "./dist/esm/index.js",
+  "types": "./dist/dts/index.d.ts",
   "exports": {
     "require": "./dist/cjs/index.js",
     "import": "./dist/esm/index.js",
     "types": "./dist/dts/index.d.ts",
     "default": "./dist/esm/index.js"
   },
-  "private": true,
+  "license": "(MIT OR Apache-2.0)",
+  "author": {
+    "name": "DevMiner",
+    "email": "devminer@devminer.xyz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SlimeVR/slimevr-node.git/tree/master/packages/update-manifest"
+  },
+  "bugs": {
+    "url": "https://github.com/SlimeVR/slimevr-node/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "pnpm run build:esm && pnpm run build:cjs",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "dev": "pnpm run build:esm -w",
+    "prepack": "pnpm build",
+    "dev": "pnpm build:esm -w",
     "clean": "rimraf dist"
   },
   "dependencies": {

@@ -30,7 +30,7 @@
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
     "@slimevr/tsconfig": "workspace:*",
-    "@slimevr/update-manifest-shared": "workspace:*",
+    "@slimevr/update-manifest": "workspace:*",
     "@types/node": "^22.16.3",
     "@types/semver": "^7.7.0",
     "concurrently": "^8.2.0",

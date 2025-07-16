@@ -3,7 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import { isAbsolute } from 'node:path';
 
-const privatePackages = ['@slimevr/update-manifest-shared'];
+const privatePackages = [];
 
 export default {
   input: './src/index.mts',

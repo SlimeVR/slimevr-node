@@ -31,7 +31,7 @@
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "prepack": "pnpm build",
-    "watch": "pnpm build:esm -- -w",
+    "dev": "pnpm build:esm -- -w",
     "clean": "rimraf dist"
   },
   "dependencies": {
