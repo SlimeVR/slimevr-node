@@ -1,5 +1,11 @@
 # @slimevr/update-manifest-generator
 
+## 0.0.5
+
+### Patch Changes
+
+- 082de4c: remove 0.12.1 from supported versions
+
 ## 0.0.4
 
 ### Patch Changes
