@@ -10,7 +10,7 @@ import {
   type Version
 } from '@slimevr/update-manifest';
 import * as fs from 'node:fs';
-import { parse as parseSemver, SemVer } from 'semver';
+import { parse as parseSemver, SemVer, lt as semverLt } from 'semver';
 import { fetchAllReleases, GitHubRelease } from './github.mts';
 import { asyncMap } from './utils.mts';
 
@@ -36,7 +36,7 @@ const LATEST_WEB_INSTALLER =
 const WINDOWS_X86_64_ZIP_FILENAME = 'SlimeVR-win64.zip';
 const UPDATE_CONFIG_FILENAME = 'update-config.json';
 const INVALID_VERSION = 'v0.0.0-invalid' as Version;
-const NEWEST_UNSUPPORTED_VERSION = new SemVer('0.12.0');
+const OLDEST_SUPPORTED_VERSION = new SemVer('0.13.0-rc.0'); // 0.13.0 and up
 
 const STABLE_CHANNEL: UpdateConfig = {
   channel: {
@@ -111,7 +111,7 @@ async function parseRelease(
     process.exit(1);
   }
 
-  if (version.compare(NEWEST_UNSUPPORTED_VERSION) <= 0) {
+  if (semverLt(version, OLDEST_SUPPORTED_VERSION)) {
     console.warn(`Skipping unsupported version: ${version}`);
     return null;
   }
