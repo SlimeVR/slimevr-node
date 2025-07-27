@@ -1,5 +1,11 @@
 # @slimevr/update-manifest-shared
 
+## 0.0.2
+
+### Patch Changes
+
+- 49ce283: removed unnecessary files from package
+
 ## 0.0.1
 
 ### Patch Changes
