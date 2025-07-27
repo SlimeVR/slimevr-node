@@ -1,6 +1,6 @@
 {
   "name": "@slimevr/update-manifest-generator",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/index.mjs",
   "license": "(MIT OR Apache-2.0)",
   "author": {
