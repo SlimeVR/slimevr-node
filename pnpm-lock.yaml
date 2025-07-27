@@ -322,6 +322,9 @@ importers:
       '@octokit/rest':
         specifier: ^22.0.0
         version: 22.0.0
+      '@slimevr/update-manifest':
+        specifier: workspace:*
+        version: link:../../packages/update-manifest
       semver:
         specifier: ^7.7.2
         version: 7.7.2
@@ -341,9 +344,6 @@ importers:
       '@slimevr/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
-      '@slimevr/update-manifest':
-        specifier: workspace:*
-        version: link:../../packages/update-manifest
       '@types/node':
         specifier: ^22.16.3
         version: 22.16.4
