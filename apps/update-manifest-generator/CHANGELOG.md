@@ -1,5 +1,11 @@
 # @slimevr/update-manifest-generator
 
+## 0.0.6
+
+### Patch Changes
+
+- c7cee3f: fixed dependencies
+
 ## 0.0.5
 
 ### Patch Changes
