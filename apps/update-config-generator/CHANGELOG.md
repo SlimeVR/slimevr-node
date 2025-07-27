@@ -1,5 +1,12 @@
 # @slimevr/update-config-generator
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [49ce283]
+  - @slimevr/update-manifest@0.0.2
+
 ## 0.0.2
 
 ### Patch Changes
