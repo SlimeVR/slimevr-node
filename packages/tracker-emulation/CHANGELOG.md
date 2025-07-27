@@ -1,5 +1,11 @@
 # @slimevr/tracker-emulation
 
+## 0.2.6
+
+### Patch Changes
+
+- a7711c7: remove unnecessary files from npm
+
 ## 0.2.5
 
 ### Patch Changes
