@@ -231,18 +231,18 @@ importers:
         specifier: workspace:*
         version: link:../../packages/tracker-emulation
       quaternion:
-        specifier: ^1.5.1
-        version: 1.6.5
+        specifier: ^2.2.0
+        version: 2.2.0
     devDependencies:
       '@slimevr/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@types/node':
-        specifier: ^18.17.2
-        version: 18.19.130
+        specifier: ^22.20.5
+        version: 22.20.5
       concurrently:
-        specifier: ^8.2.0
-        version: 8.2.2
+        specifier: ^10.0.7
+        version: 10.0.7
       nodemon:
         specifier: ^3.0.1
         version: 3.1.14
@@ -3909,8 +3909,8 @@ packages:
     resolution: {integrity: sha512-+Owyggi9IxT1ePKGafcI87ubSmxol6smwJ+RAHDQlx9+9cPwFWDiKFFCPuWhr9ignlGpZ9vDQLw67N4dcTVFEA==}
     engines: {node: '>=20'}
 
-  quaternion@1.6.5:
-    resolution: {integrity: sha512-twQ544NPLbwSktOmFXVUo4e2u3ROqXcxJuBw1JnJGwQf2/EBuVkEdT9GnkumuCV2tPT7+kkVyr7oWb6iQIcxaw==}
+  quaternion@2.2.0:
+    resolution: {integrity: sha512-dVX+rdN3RZU/XPPyfayxuyZdWjLlbp2ZRHWAhKFXgfZ91mM/YUTUassEzWJV8VNynq2kCaaHoa4Kkckj2AA4sQ==}
 
   quick-lru@5.1.1:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
@@ -8277,7 +8277,7 @@ snapshots:
     dependencies:
       hookified: 2.2.0
 
-  quaternion@1.6.5: {}
+  quaternion@2.2.0: {}
 
   quick-lru@5.1.1: {}
 
