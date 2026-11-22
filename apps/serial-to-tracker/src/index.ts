@@ -20,7 +20,7 @@ import {
 } from '@slimevr/firmware-protocol';
 import { createSocket, RemoteInfo, Socket } from 'node:dgram';
 import { SerialPort } from 'serialport';
-import { portFlag } from './utils';
+import { portFlag } from './utils.js';
 
 const READY_TYPE = 0x00;
 const ROTATION_DATA_TYPE = 0x01;
