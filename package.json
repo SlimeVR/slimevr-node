@@ -14,19 +14,19 @@
     "release": "npm run build && changeset publish"
   },
   "devDependencies": {
-    "@babel/cli": "^7.24.6",
-    "@babel/core": "^7.24.6",
-    "@babel/plugin-transform-export-namespace-from": "^7.24.6",
-    "@babel/plugin-transform-modules-commonjs": "^7.24.6",
-    "@changesets/cli": "^2.26.2",
+    "@babel/cli": "^7.29.7",
+    "@babel/core": "^7.29.13",
+    "@babel/plugin-transform-export-namespace-from": "^7.29.15",
+    "@babel/plugin-transform-modules-commonjs": "^7.29.14",
+    "@changesets/cli": "^2.31.1",
     "@slimevr/eslint-config": "workspace:*",
     "prettier": "^2.8.8",
-    "rimraf": "^5.0.1",
+    "rimraf": "^5.0.10",
     "turbo": "1.13.3",
     "typescript": "5.8.3"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@9.11.0+sha512.0a203ffaed5a3f63242cd064c8fb5892366c103e328079318f78062f24ea8c9d50bc6a47aa3567cabefd824d170e78fa2745ed1f16b132e16436146b7688f19b"
+  "packageManager": "pnpm@12.23.0+sha512.02da94ffaf133f46074322afe552f90d40b5f71ae259aefbccdacc5085b1d617e98d65e0131f5748b9b67445978ee5055d7d59a473f1eef0d504854fefcd5975"
 }
