@@ -16,7 +16,7 @@
     "build": "pnpm run build:esm && pnpm run build:cjs",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "dev": "pnpm run build:esm -- -w",
+    "dev": "tsc -p tsconfig.esm.json --watch",
     "clean": "rimraf dist"
   },
   "dependencies": {
