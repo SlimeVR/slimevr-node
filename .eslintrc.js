@@ -5,7 +5,9 @@ module.exports = {
     project: [
       './packages/*/tsconfig.esm.json',
       './apps/*/tsconfig.json',
-      './apps/firmware-protocol-debugger-gui/backend/tsconfig.json'
+      './apps/firmware-protocol-debugger-gui/backend/tsconfig.json',
+      './apps/update-config-generator/tsconfig.app.json',
+      './apps/update-config-generator/tsconfig.node.json'
     ]
   },
   rules: {

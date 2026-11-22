@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import { IpcRenderer, IpcRendererEvent } from 'electron';
 import { SerializedTracker, ServerStatus } from './shared/IPCMessages';
 

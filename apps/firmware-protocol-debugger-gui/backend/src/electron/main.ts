@@ -74,7 +74,7 @@ const createWindow = async () => {
     height: 600,
     width: 800,
     webPreferences: {
-      preload: join(import.meta.dirname, 'preload.mjs')
+      preload: join(import.meta.dirname, 'preload.cjs')
     }
   });
 
