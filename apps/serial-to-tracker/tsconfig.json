@@ -4,6 +4,7 @@
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "target": "ES2022",
+    "rootDir": "src",
     "outDir": "./dist"
   }
 }

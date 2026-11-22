@@ -1,4 +1,18 @@
-export const makeFeatureFlagContainer = <T extends Record<string, number>>(available: T) => {
+export type FeatureFlagContainer<T extends Record<string, number>> = {
+  readonly isAvailable: boolean;
+  pack(): Buffer;
+  has(flag: keyof T): boolean;
+  getAllEnabled(): (keyof T)[];
+};
+
+export type FeatureFlagContainerConstructor<T extends Record<string, number>> = {
+  new (flags?: Map<keyof T, boolean>): FeatureFlagContainer<T>;
+  unpack(packed: Buffer): FeatureFlagContainer<T>;
+};
+
+export const makeFeatureFlagContainer = <T extends Record<string, number>>(
+  available: T
+): FeatureFlagContainerConstructor<T> => {
   const allFlags = Object.entries<number>(available) as [keyof T, number][];
 
   return class {

@@ -6,6 +6,7 @@
     "target": "ESNext",
     "module": "CommonJS",
     "esModuleInterop": true,
+    "rootDir": "src/electron",
     "outDir": "../build/backend/electron",
     "moduleResolution": "Node"
   }
