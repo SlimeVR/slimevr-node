@@ -175,7 +175,11 @@ export const App = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-2">
-              <Input placeholder="Platform (e.g. windows)" value={platform} onChange={(e) => setPlatform(e.target.value)} />
+              <Input
+                placeholder="Platform (e.g. windows)"
+                value={platform}
+                onChange={(e) => setPlatform(e.target.value)}
+              />
               <Input placeholder="Architecture (e.g. x86_64)" value={arch} onChange={(e) => setArch(e.target.value)} />
               <Input placeholder="URL (can use $VERSION$)" value={url} onChange={(e) => setUrl(e.target.value)} />
               <div className="flex items-center gap-2">
@@ -210,14 +214,22 @@ export const App = () => {
           Object.entries(archs).map(([architecture, build]) => (
             <Card key={`${platform}-${architecture}`}>
               <CardHeader>
-                <CardTitle>{platform} - {architecture}</CardTitle>
+                <CardTitle>
+                  {platform} - {architecture}
+                </CardTitle>
               </CardHeader>
-              <CardContent className='flex-1'>
-                <p><strong>URL:</strong> {build.url}</p>
-                <p><strong>Run:</strong> <InlineCode>{build.run.join(' ')}</InlineCode></p>
+              <CardContent className="flex-1">
+                <p>
+                  <strong>URL:</strong> {build.url}
+                </p>
+                <p>
+                  <strong>Run:</strong> <InlineCode>{build.run.join(' ')}</InlineCode>
+                </p>
               </CardContent>
               <CardFooter>
-                <Button variant="destructive" onClick={() => removeOverride(platform, architecture)}>Remove</Button>
+                <Button variant="destructive" onClick={() => removeOverride(platform, architecture)}>
+                  Remove
+                </Button>
               </CardFooter>
             </Card>
           ))

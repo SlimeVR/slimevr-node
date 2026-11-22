@@ -8,7 +8,10 @@ export class VectorAggregator<T extends number[] | { bytes: readonly number[] }>
 
   private _latestData: T;
 
-  constructor(private readonly components: number, initialData: T) {
+  constructor(
+    private readonly components: number,
+    initialData: T
+  ) {
     this.samples = new Array(components).fill(0);
     this.averages = new Array(components).fill(0);
     this.deviances = new Array(components).fill(0);

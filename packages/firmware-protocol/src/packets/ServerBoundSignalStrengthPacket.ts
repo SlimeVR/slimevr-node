@@ -1,7 +1,10 @@
 import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundSignalStrengthPacket extends PacketWithSensorId {
-  constructor(sensorId: number, readonly signalStrength: number) {
+  constructor(
+    sensorId: number,
+    readonly signalStrength: number
+  ) {
     super(ServerBoundSignalStrengthPacket.type, sensorId);
   }
 

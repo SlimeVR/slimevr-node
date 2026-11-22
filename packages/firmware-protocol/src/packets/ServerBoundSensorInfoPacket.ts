@@ -2,7 +2,11 @@ import { SensorStatus, SensorType } from '../constants.js';
 import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundSensorInfoPacket extends PacketWithSensorId {
-  constructor(sensorId: number, readonly sensorStatus: SensorStatus, readonly sensorType: SensorType) {
+  constructor(
+    sensorId: number,
+    readonly sensorStatus: SensorStatus,
+    readonly sensorType: SensorType
+  ) {
     super(ServerBoundSensorInfoPacket.type, sensorId);
   }
 

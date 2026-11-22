@@ -1,7 +1,10 @@
 import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundTapPacket extends PacketWithSensorId {
-  constructor(sensorId: number, readonly value: number) {
+  constructor(
+    sensorId: number,
+    readonly value: number
+  ) {
     super(ServerBoundTapPacket.type, sensorId);
   }
 

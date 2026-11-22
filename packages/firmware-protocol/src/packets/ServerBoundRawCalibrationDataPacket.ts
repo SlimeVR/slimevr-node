@@ -3,7 +3,11 @@ import { RawCalibrationDataType } from '../constants.js';
 import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundRawCalibrationDataPacket extends PacketWithSensorId {
-  constructor(sensorId: number, readonly dataType: RawCalibrationDataType, readonly data: Vector) {
+  constructor(
+    sensorId: number,
+    readonly dataType: RawCalibrationDataType,
+    readonly data: Vector
+  ) {
     super(ServerBoundRawCalibrationDataPacket.type, sensorId);
   }
 

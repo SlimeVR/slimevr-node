@@ -1,7 +1,10 @@
 import { Packet } from './Packet.js';
 
 export class ServerBoundBatteryLevelPacket extends Packet {
-  constructor(readonly voltage: number, readonly percentage: number) {
+  constructor(
+    readonly voltage: number,
+    readonly percentage: number
+  ) {
     super(ServerBoundBatteryLevelPacket.type);
   }
 
