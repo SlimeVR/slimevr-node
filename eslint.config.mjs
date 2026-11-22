@@ -21,6 +21,7 @@ export default [
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
         project: [
           './packages/*/tsconfig.esm.json',
           './apps/*/tsconfig.json',

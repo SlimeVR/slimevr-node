@@ -9,18 +9,12 @@ export class ServerBoundBatteryLevelPacket extends Packet {
   }
 
   static fromBuffer(data: Buffer) {
-    let voltage = 0;
-    let percentage = 0;
-
     const tmp = data.readFloatBE(0);
     data = data.slice(4);
 
-    if (data.length >= 4) {
-      percentage = data.readFloatBE(0) * 100;
-      voltage = tmp;
-    } else {
-      percentage = tmp;
-    }
+    const hasVoltage = data.length >= 4;
+    const voltage = hasVoltage ? tmp : 0;
+    const percentage = hasVoltage ? data.readFloatBE(0) * 100 : tmp;
 
     return new ServerBoundBatteryLevelPacket(voltage, percentage);
   }
