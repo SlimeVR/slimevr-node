@@ -4,7 +4,7 @@
 
 ## Requirements
 
-- [Node.JS >= 22.12.0](https://nodejs.org)
+- [Node.JS >= 22.13.0](https://nodejs.org)
 
 ## Getting Started
 
