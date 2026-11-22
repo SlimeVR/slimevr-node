@@ -6,7 +6,7 @@ module.exports = [
     files: ['**/*.{ts,tsx}'],
     ...js.configs.recommended
   },
-  ...tseslint.configs.recommended.map(config => ({
+  ...tseslint.configs.recommended.map((config) => ({
     ...config,
     files: ['**/*.{ts,tsx}']
   }))
