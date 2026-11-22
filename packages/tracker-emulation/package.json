@@ -41,6 +41,6 @@
   },
   "devDependencies": {
     "@slimevr/tsconfig": "workspace:*",
-    "@types/node": "^18.17.2"
+    "@types/node": "^22.20.5"
   }
 }
