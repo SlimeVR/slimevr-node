@@ -32,10 +32,10 @@
     "@slimevr/firmware-protocol-debugger-shared": "workspace:*",
     "@slimevr/firmware-protocol-debugger-utils": "workspace:*",
     "@slimevr/tsconfig": "workspace:*",
-    "@types/node": "17.0.45",
-    "concurrently": "7.5.0",
-    "cross-env": "7.0.3",
-    "nodemon": "^2.0.20",
+    "@types/node": "^22.20.5",
+    "concurrently": "^10.0.7",
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.14",
     "rollup": "^4.40.0",
     "wait-for-it": "1.0.0"
   },
@@ -45,6 +45,6 @@
     "clean": "rimraf dist"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=22.13.0"
   }
 }

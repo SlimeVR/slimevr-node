@@ -8,6 +8,7 @@
     "module": "nodenext",
     "isolatedModules": true,
     "moduleResolution": "nodenext",
+    "rootDir": "src",
     "outDir": "./dist",
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,

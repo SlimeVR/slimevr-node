@@ -10,7 +10,10 @@ export abstract class Packet {
 }
 
 export abstract class PacketWithSensorId extends Packet {
-  constructor(type: number, readonly sensorId: number) {
+  constructor(
+    type: number,
+    readonly sensorId: number
+  ) {
     super(type);
   }
 }

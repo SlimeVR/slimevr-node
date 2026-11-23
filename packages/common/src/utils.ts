@@ -1,6 +1,10 @@
 export type VectorInit = [number, number, number] | { x: number; y: number; z: number };
 export class Vector {
-  constructor(public x: number, public y: number, public z: number) {}
+  constructor(
+    public x: number,
+    public y: number,
+    public z: number
+  ) {}
 
   static from(init: VectorInit) {
     if (Array.isArray(init)) {
@@ -49,7 +53,12 @@ export class Vector {
 
 export type QuaternionInit = [number, number, number, number] | { x: number; y: number; z: number; w: number };
 export class Quaternion {
-  constructor(public x: number, public y: number, public z: number, public w: number) {}
+  constructor(
+    public x: number,
+    public y: number,
+    public z: number,
+    public w: number
+  ) {}
 
   static from(init: QuaternionInit) {
     if (Array.isArray(init)) {

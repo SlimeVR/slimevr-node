@@ -94,7 +94,7 @@ const main = async () => {
         const v = i / 5;
         const better = BetterQuaternion.fromEuler(idx == 0 ? v : 0, idx == 1 ? v : 0, idx == 2 ? v : 0);
 
-        sensor.sendRotation(RotationDataType.NORMAL, new Quaternion(better.x, better.y, better.z, better.w), 0);
+        sensor.sendRotation(RotationDataType.NORMAL, new Quaternion(better.w, better.x, better.y, better.z), 0);
       });
 
       i += 0.1;

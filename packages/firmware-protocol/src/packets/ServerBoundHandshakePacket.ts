@@ -19,7 +19,6 @@ export class ServerBoundHandshakePacket extends Packet {
     let imuType = SensorType.UNKNOWN;
     let mcuType = MCUType.UNKNOWN;
     let firmwareBuild = -1;
-    let firmware = '';
     let mac = MACAddress.zero();
 
     if (data.length >= 4) {
@@ -68,7 +67,7 @@ export class ServerBoundHandshakePacket extends Packet {
       data = data.slice(1);
     }
 
-    firmware = this.readAscii(data, length);
+    const firmware = this.readAscii(data, length);
     data = data.slice(length);
 
     if (data.length >= 6) {

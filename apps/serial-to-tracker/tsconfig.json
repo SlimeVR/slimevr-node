@@ -4,6 +4,9 @@
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": "src",
     "outDir": "./dist"
   }
 }

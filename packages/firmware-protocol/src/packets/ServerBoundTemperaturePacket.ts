@@ -1,7 +1,10 @@
 import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundTemperaturePacket extends PacketWithSensorId {
-  constructor(sensorId: number, readonly temperature: number) {
+  constructor(
+    sensorId: number,
+    readonly temperature: number
+  ) {
     super(ServerBoundTemperaturePacket.type, sensorId);
   }
 

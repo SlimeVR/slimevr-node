@@ -1,7 +1,10 @@
 import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundCalibrationFinishedPacket extends PacketWithSensorId {
-  constructor(sensorId: number, readonly dataType: number) {
+  constructor(
+    sensorId: number,
+    readonly dataType: number
+  ) {
     super(ServerBoundCalibrationFinishedPacket.type, sensorId);
   }
 

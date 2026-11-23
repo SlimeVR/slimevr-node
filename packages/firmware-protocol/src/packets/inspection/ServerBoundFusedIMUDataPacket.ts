@@ -3,7 +3,10 @@ import { PacketWithSensorId } from '../Packet.js';
 import { DataType } from './constants.js';
 
 export class ServerBoundFusedIMUDataPacket extends PacketWithSensorId {
-  constructor(sensorId: number, readonly quaternion: Quaternion) {
+  constructor(
+    sensorId: number,
+    readonly quaternion: Quaternion
+  ) {
     super(ServerBoundFusedIMUDataPacket.type, sensorId);
   }
 

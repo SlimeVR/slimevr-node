@@ -1,5 +1,13 @@
-module.exports = {
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended']
-};
+const js = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+
+module.exports = [
+  {
+    files: ['**/*.{ts,tsx}'],
+    ...js.configs.recommended
+  },
+  ...tseslint.configs.recommended.map((config) => ({
+    ...config,
+    files: ['**/*.{ts,tsx}']
+  }))
+];

@@ -20,9 +20,9 @@ export class ServerBoundRawIMUDataPacket extends PacketWithSensorId {
 
     const dataType = data.readUintBE(1, 1);
 
-    let rotation = Vector.zero();
-    let acceleration = Vector.zero();
-    let magnetometer = Vector.zero();
+    let rotation: Vector;
+    let acceleration: Vector;
+    let magnetometer: Vector;
 
     if (dataType === DataType.INT) {
       rotation = Vector.readInt32BE(data, 2);

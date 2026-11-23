@@ -1,7 +1,10 @@
 import { PacketWithSensorId } from './Packet.js';
 
 export class ServerBoundErrorPacket extends PacketWithSensorId {
-  constructor(sensorId: number, readonly reason: number) {
+  constructor(
+    sensorId: number,
+    readonly reason: number
+  ) {
     super(ServerBoundErrorPacket.type, sensorId);
   }
 
