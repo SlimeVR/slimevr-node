@@ -12,7 +12,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SlimeVR/slimevr-node.git/tree/master/apps/firmware-protocol-debugger-gui"
+    "url": "git+https://github.com/SlimeVR/slimevr-node.git",
+    "directory": "apps/firmware-protocol-debugger-gui"
   },
   "bugs": {
     "url": "https://github.com/SlimeVR/slimevr-node/issues"
