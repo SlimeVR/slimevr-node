@@ -1,5 +1,14 @@
 # slimevr-firmware-protocol-debugger-gui
 
+## 0.2.17
+
+### Patch Changes
+
+- Updated dependencies [36cafc0]
+  - @slimevr/firmware-protocol@0.6.7
+  - @slimevr/firmware-protocol-debugger-shared@0.0.14
+  - @slimevr/firmware-protocol-debugger-utils@0.0.14
+
 ## 0.2.16
 
 ### Patch Changes
