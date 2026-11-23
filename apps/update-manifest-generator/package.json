@@ -39,7 +39,7 @@
     "tslib": "^2.8.1"
   },
   "scripts": {
-    "dev": "concurrently \"tsc -w\" \"GITHUB_REPOSITORY=SlimeVR/SlimeVR-Server nodemon .\"",
+    "dev": "concurrently \"tsc -w\" \"GITHUB_REPOSITORY=SlimeVR/SlimeVR-Server nodemon --watch dist --ext mjs --exec 'node .' --exitcrash\"",
     "build": "rollup -c",
     "clean": "rimraf dist"
   },
