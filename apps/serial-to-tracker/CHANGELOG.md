@@ -1,5 +1,16 @@
 # @slimevr/serial-to-tracker
 
+## 0.2.0
+
+### Minor Changes
+
+- 183b0c9: Switch to ESM, upgrade dependencies, require Node 22.13+
+
+### Patch Changes
+
+- Updated dependencies [183b0c9]
+  - @slimevr/firmware-protocol@0.6.8
+
 ## 0.1.14
 
 ### Patch Changes

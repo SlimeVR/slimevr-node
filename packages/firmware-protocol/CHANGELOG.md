@@ -1,5 +1,11 @@
 # @slimevr/firmware-protocol
 
+## 0.6.8
+
+### Patch Changes
+
+- 183b0c9: Expose TS types for generasted feature flag containers
+
 ## 0.6.7
 
 ### Patch Changes
