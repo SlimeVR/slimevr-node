@@ -1,5 +1,11 @@
 # @slimevr/firmware-protocol
 
+## 0.6.7
+
+### Patch Changes
+
+- 36cafc0: add support for ICM45686, ICM45605, ICM55686 and ADC resistance sensor types
+
 ## 0.6.6
 
 ### Patch Changes
