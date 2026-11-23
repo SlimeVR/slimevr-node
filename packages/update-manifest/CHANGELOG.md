@@ -1,5 +1,11 @@
 # @slimevr/update-manifest-shared
 
+## 0.0.3
+
+### Patch Changes
+
+- 183b0c9: Upgrade dependencies
+
 ## 0.0.2
 
 ### Patch Changes

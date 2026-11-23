@@ -1,6 +1,6 @@
 {
   "name": "@slimevr/serial-to-tracker",
-  "version": "0.1.14",
+  "version": "0.2.0",
   "main": "dist/index.js",
   "type": "module",
   "license": "(MIT OR Apache-2.0)",

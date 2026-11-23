@@ -1,5 +1,13 @@
 # @slimevr/update-manifest-generator
 
+## 0.0.8
+
+### Patch Changes
+
+- 183b0c9: Upgrade dependencies
+- Updated dependencies [183b0c9]
+  - @slimevr/update-manifest@0.0.3
+
 ## 0.0.7
 
 ### Patch Changes

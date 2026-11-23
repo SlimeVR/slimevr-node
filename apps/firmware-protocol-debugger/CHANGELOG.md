@@ -1,5 +1,16 @@
 # @slimevr/firmware-protocol-debugger
 
+## 0.3.0
+
+### Minor Changes
+
+- 183b0c9: Upgrade dependencies, require Node 22.13+
+
+### Patch Changes
+
+- Updated dependencies [183b0c9]
+  - @slimevr/firmware-protocol@0.6.8
+
 ## 0.2.18
 
 ### Patch Changes
