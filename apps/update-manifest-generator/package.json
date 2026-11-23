@@ -9,7 +9,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SlimeVR/slimevr-node.git/tree/master/apps/update-manifest-generator"
+    "url": "git+https://github.com/SlimeVR/slimevr-node.git",
+    "directory": "apps/update-manifest-generator"
   },
   "bugs": {
     "url": "https://github.com/SlimeVR/slimevr-node/issues"

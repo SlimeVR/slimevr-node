@@ -10,7 +10,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SlimeVR/slimevr-node.git/tree/master/apps/serial-to-tracker"
+    "url": "git+https://github.com/SlimeVR/slimevr-node.git",
+    "directory": "apps/serial-to-tracker"
   },
   "bugs": {
     "url": "https://github.com/SlimeVR/slimevr-node/issues"
